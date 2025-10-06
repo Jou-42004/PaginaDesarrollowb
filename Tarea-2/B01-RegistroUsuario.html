@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro - Fit Express</title>
+  <meta name="description" content="Regístrate en Fit Express para disfrutar de bowls proteicos y snacks saludables">
+  <style>
+    :root{
+      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+      --error:#ef4444; --success:#10b981;
+      --hero-overlay: radial-gradient(900px 700px at 110% -10%, rgba(34,197,94,.30) 0%, rgba(34,197,94,0) 60%);
+    }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+    
+    /* Header */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+      border-bottom:1px solid rgba(183,210,192,.18);
+      padding: 8px 0;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      height: 60px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      flex-shrink: 0;
+    }
+    .logo{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#19c268;
+      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .brand span{font-size:20px; color: var(--text);}
+    
+    /* Acciones */
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-left: auto;
+    }
+    .icon-btn{
+      display:inline-grid;
+      place-items:center;
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(183,210,192,.25);
+      background:rgba(17, 57, 35, 0.6);
+      text-decoration:none;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .icon-btn:hover{
+      border-color:var(--accent);
+      background:rgba(34,197,94,.15);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34,197,94,.2);
+    }
+    .icon{
+      width:20px;
+      height:20px;
+      stroke:#e2e8f0;
+      stroke-width:2;
+    }
+    
+    /* Main Content */
+    .main-content {
+      min-height: calc(100vh - 160px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    
+    .registration-card {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.3);
+    }
+    
+    .registration-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .registration-header h1 {
+      font-size: 28px;
+      margin: 0 0 10px;
+      color: var(--text);
+    }
+    
+    .registration-header p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 16px;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .form-row .form-group {
+      flex: 1;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(11, 42, 24, 0.7);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+    
+    .form-control.error {
+      border-color: var(--error);
+    }
+    
+    .error-message {
+      color: var(--error);
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .form-control.error + .error-message {
+      display: block;
+    }
+    
+    .password-requirements {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    
+    /* Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    
+    .btn-primary {
+      background: var(--cta);
+      color: var(--cta-text);
+    }
+    
+    .btn-primary:hover {
+      filter: brightness(.9);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
+    }
+    
+    .btn-secondary {
+      background: rgba(183,210,192,.1);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(183,210,192,.2);
+      transform: translateY(-1px);
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(183,210,192,.2);
+    }
+    
+    .divider span {
+      padding: 0 15px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
+    /* Verification Steps */
+    .verification-step {
+      display: none;
+      text-align: center;
+    }
+    
+    .verification-step.active {
+      display: block;
+    }
+    
+    .verification-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    
+    .verification-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--success);
+    }
+    
+    .timer {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    
+    .resend-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .resend-link:hover {
+      text-decoration: underline;
+    }
+    
+    .resend-link:disabled {
+      color: var(--muted);
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+    
+    footer{
+      padding:30px 16px 50px;
+      color:var(--muted);
+      text-align:center;
+      border-top:1px solid rgba(183,210,192,.18);
+      background:var(--panel);
+    }
+    
+    /* Responsive */
+    @media (max-width: 576px) {
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .registration-card {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">FE</div>
+        <span>Fit Express</span>
+      </div>
+
+      <nav class="actions" aria-label="Acciones">
+        <a class="icon-btn" href="index.html" title="Inicio">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </a>
+        <a class="icon-btn" href="perfil.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
+            <path d="M20 21a8 8 0 1 0-16 0"></path>
+          </svg>
+        </a>
+        <a class="icon-btn" href="carrito.html" title="Carrito de compras">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M6 7h12l-1 12H7L6 7Z"></path>
+            <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container">
+      <div class="registration-card">
+        <!-- Step 1: Registration Form -->
+        <div id="step1" class="verification-step active">
+          <div class="registration-header">
+            <h1>Crear Cuenta</h1>
+            <p>Regístrate para disfrutar de nuestros bowls proteicos y snacks saludables</p>
+          </div>
+          
+          <form id="registrationForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Nombre</label>
+                <input type="text" id="name" class="form-control" placeholder="Ana Pérez" required>
+                <div class="error-message">Por favor ingresa tu nombre</div>
+              </div>
+              <div class="form-group">
+                <label for="rut">RUT/ID</label>
+                <input type="text" id="rut" class="form-control" placeholder="12.345.678-9" required>
+                <div class="error-message">Por favor ingresa tu RUT/ID</div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" class="form-control" placeholder="ana@example.com" required>
+              <div class="error-message">Por favor ingresa un correo válido</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="password">Contraseña</label>
+              <input type="password" id="password" class="form-control" placeholder="**********" required>
+              <div class="error-message">La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números</div>
+              <div class="password-requirements">Mínimo 8 caracteres, con mayúsculas, minúsculas y números</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="address">Dirección</label>
+              <input type="text" id="address" class="form-control" placeholder="Calle y número" required>
+              <div class="error-message">Por favor ingresa tu dirección</div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="commune">Comuna</label>
+                <input type="text" id="commune" class="form-control" placeholder="Comuna" required>
+                <div class="error-message">Por favor ingresa tu comuna</div>
+              </div>
+              <div class="form-group">
+                <label for="region">Región</label>
+                <input type="text" id="region" class="form-control" placeholder="Región" required>
+                <div class="error-message">Por favor ingresa tu región</div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Teléfono</label>
+              <input type="tel" id="phone" class="form-control" placeholder="+56 9 1234 5678" required>
+              <div class="error-message">Por favor ingresa tu teléfono</div>
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Crear cuenta y enviar enlace</button>
+            </div>
+          </form>
+          
+          <div class="divider"><span>o</span></div>
+          
+          <div class="form-group">
+            <a href="login.html" class="btn btn-secondary">¿Ya tienes cuenta? Inicia sesión</a>
+          </div>
+        </div>
+        
+        <!-- Step 2: Email Verification Sent -->
+        <div id="step2" class="verification-step">
+          <div class="registration-header">
+            <div class="verification-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="m22 2-7 20-4-9-9-4Z"></path>
+                <path d="M22 2 11 13"></path>
+              </svg>
+            </div>
+            <h1>Verificación de correo</h1>
+            <p>Hemos enviado un enlace de activación a <strong id="userEmail">ana@example.com</strong></p>
+            <p>Tienes 15 minutos para activar tu cuenta.</p>
+          </div>
+          
+          <div class="form-group">
+            <button id="resendBtn" class="btn btn-secondary" disabled>Solicitar reenvío (disponible en <span id="countdown">5:00</span>)</button>
+          </div>
+          
+          <div class="form-group">
+            <button id="backToForm" class="btn btn-secondary">Volver al formulario</button>
+          </div>
+        </div>
+        
+        <!-- Step 3: Account Activated -->
+        <div id="step3" class="verification-step">
+          <div class="registration-header">
+            <div class="verification-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <h1>¡Cuenta Activada!</h1>
+            <p>Tu cuenta ha sido activada correctamente. Ya puedes iniciar sesión.</p>
+          </div>
+          
+          <div class="form-group">
+            <a href="login.html" class="btn btn-primary">Iniciar sesión</a>
+          </div>
+        </div>
+        
+        <!-- Step 4: Token Expired -->
+        <div id="step4" class="verification-step">
+          <div class="registration-header">
+            <div class="verification-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <h1>Enlace Expirado</h1>
+            <p>El enlace de activación ha expirado. Puedes solicitar un nuevo enlace.</p>
+          </div>
+          
+          <div class="form-group">
+            <button id="requestNewLink" class="btn btn-primary">Solicitar nuevo enlace</button>
+          </div>
+          
+          <div class="form-group">
+            <button id="backToForm2" class="btn btn-secondary">Volver al formulario</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    
+    // Form validation and step navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('registrationForm');
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+      const step4 = document.getElementById('step4');
+      const userEmail = document.getElementById('userEmail');
+      const resendBtn = document.getElementById('resendBtn');
+      const countdown = document.getElementById('countdown');
+      const backToForm = document.getElementById('backToForm');
+      const backToForm2 = document.getElementById('backToForm2');
+      const requestNewLink = document.getElementById('requestNewLink');
+      
+      let countdownInterval;
+      
+      // Form submission
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Basic validation
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        let isValid = true;
+        
+        // Email validation (RFC-5322 simplified)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          document.getElementById('email').classList.add('error');
+          isValid = false;
+        } else {
+          document.getElementById('email').classList.remove('error');
+        }
+        
+        // Password validation (min 8 chars, uppercase, lowercase, number)
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!passwordRegex.test(password)) {
+          document.getElementById('password').classList.add('error');
+          isValid = false;
+        } else {
+          document.getElementById('password').classList.remove('error');
+        }
+        
+        if (isValid) {
+          // Show step 2
+          userEmail.textContent = email;
+          step1.classList.remove('active');
+          step2.classList.add('active');
+          
+          // Start countdown for resend button
+          startCountdown(300); // 5 minutes in seconds
+        }
+      });
+      
+      // Back to form from step 2
+      backToForm.addEventListener('click', function() {
+        step2.classList.remove('active');
+        step1.classList.add('active');
+        clearInterval(countdownInterval);
+      });
+      
+      // Back to form from step 4
+      backToForm2.addEventListener('click', function() {
+        step4.classList.remove('active');
+        step1.classList.add('active');
+      });
+      
+      // Request new link from step 4
+      requestNewLink.addEventListener('click', function() {
+        step4.classList.remove('active');
+        step2.classList.add('active');
+        startCountdown(300); // 5 minutes in seconds
+      });
+      
+      // Resend button functionality
+      resendBtn.addEventListener('click', function() {
+        if (!resendBtn.disabled) {
+          // Reset countdown
+          startCountdown(300); // 5 minutes in seconds
+          
+          // In a real app, this would make an API call to resend the activation email
+          alert('Se ha enviado un nuevo enlace de activación a tu correo.');
+        }
+      });
+      
+      // Countdown function
+      function startCountdown(seconds) {
+        resendBtn.disabled = true;
+        let remaining = seconds;
+        
+        updateCountdownDisplay(remaining);
+        
+        countdownInterval = setInterval(function() {
+          remaining--;
+          updateCountdownDisplay(remaining);
+          
+          if (remaining <= 0) {
+            clearInterval(countdownInterval);
+            resendBtn.disabled = false;
+            countdown.textContent = 'Listo';
+          }
+        }, 1000);
+      }
+      
+      function updateCountdownDisplay(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        countdown.textContent = `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+      
+      // Demo functionality to simulate different scenarios
+      // In a real app, these would be handled by server responses
+      
+      // Simulate successful activation (for demo purposes)
+      setTimeout(function() {
+        // Uncomment the line below to automatically show step 3 after 3 seconds
+        // showStep(3);
+      }, 3000);
+      
+      // Simulate token expiration (for demo purposes)
+      setTimeout(function() {
+        // Uncomment the line below to automatically show step 4 after 6 seconds
+        // showStep(4);
+      }, 6000);
+      
+      // Function to show specific step (for demo purposes)
+      function showStep(stepNumber) {
+        step1.classList.remove('active');
+        step2.classList.remove('active');
+        step3.classList.remove('active');
+        step4.classList.remove('active');
+        
+        if (stepNumber === 1) step1.classList.add('active');
+        if (stepNumber === 2) step2.classList.add('active');
+        if (stepNumber === 3) step3.classList.add('active');
+        if (stepNumber === 4) step4.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>
