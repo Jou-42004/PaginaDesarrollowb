@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fit Express — Bowls proteicos y snacks saludables</title>
+  <meta name="description" content="Comida rápida saludable: bowls proteicos y snacks listos en minutos.">
+  <style>
+    :root{
+      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+      /* 👉 Guarda tu foto como /img/bowl-proteina.jpg */
+      --hero-img:url("img/bowl-proteina.jpg");
+      --hero-overlay: radial-gradient(900px 700px at 110% -10%, rgba(34,197,94,.30) 0%, rgba(34,197,94,0) 60%);
+    }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+    
+    /* Header mejorado */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+      border-bottom:1px solid rgba(183,210,192,.18);
+      padding: 8px 0;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      height: 60px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      flex-shrink: 0;
+    }
+    .logo{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#19c268;
+      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .brand span{font-size:20px; color: var(--text);}
+    
+    /* Acciones - Iconos mejorados */
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-left: auto;
+    }
+    .icon-btn{
+      display:inline-grid;
+      place-items:center;
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(183,210,192,.25);
+      background:rgba(17, 57, 35, 0.6);
+      text-decoration:none;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .icon-btn:hover{
+      border-color:var(--accent);
+      background:rgba(34,197,94,.15);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34,197,94,.2);
+    }
+    .icon{
+      width:20px;
+      height:20px;
+      stroke:#e2e8f0;
+      stroke-width:2;
+    }
+    
+    /* Notificación en carrito */
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--cta);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* Hero con fondo bowl */
+    .hero-wrap{
+      background: var(--hero-overlay), var(--hero-img);
+      background-size: cover, cover;
+      background-position: center right;
+      border-bottom-left-radius:36px;
+      border-bottom-right-radius:36px;
+      margin-top: 0;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.1fr 0.9fr;
+      gap:24px;
+      align-items:center;
+      padding:60px 16px 70px;
+    }
+    @media (max-width:900px){.hero{grid-template-columns:1fr}}
+    .pill{
+      display:inline-block;
+      background:#d1fae5;
+      color:#065f46;
+      padding:8px 16px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:12px;
+      margin-bottom: 16px;
+    }
+    h1{
+      font-size:clamp(32px,5vw,48px);
+      margin:.6rem 0 .4rem;
+      line-height: 1.2;
+    }
+    .lead{
+      color:var(--muted);
+      margin:0 0 1.5rem;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--cta);
+      color:var(--cta-text);
+      font-weight:900;
+      padding:16px 24px;
+      border-radius:12px;
+      border:1px solid rgba(0,0,0,.15);
+      text-decoration:none;
+      margin-top:14px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    .cta:hover{
+      filter:brightness(.9);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
+    }
+
+    /* ¿Por qué elegir…? */
+    .reasons{
+      background:#fff;
+      color:#0f172a;
+      padding:60px 16px;
+    }
+    .reasons h2{
+      font-size:clamp(24px,3.6vw,36px);
+      text-align:center;
+      margin:0 0 40px;
+      color:#0b3b26;
+    }
+    .reason-grid{
+      display:grid;
+      gap:24px;
+      grid-template-columns:repeat(1,minmax(0,1fr));
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    @media (min-width:700px){.reason-grid{grid-template-columns:repeat(4,1fr)}}
+    .reason{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      gap:12px;
+      padding:24px 16px;
+      border-radius:16px;
+      border:1px solid #e2e8f0;
+      background:#fafafa;
+      transition: transform 0.2s ease;
+    }
+    .reason:hover{
+      transform: translateY(-5px);
+    }
+    .ico{
+      width:84px;
+      height:84px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid #e5e7eb;
+      background:#fff;
+      box-shadow:0 10px 18px rgba(2,6,23,.08)
+    }
+    .reason h3{
+      margin:6px 0 2px;
+      font-size:18px;
+      color:#0b3b26;
+    }
+    .reason p{
+      margin:0;
+      color:#334155;
+      font-size:14px;
+      line-height: 1.4;
+    }
+
+    /* Tarjetas de accesos rápidos */
+    .quick{
+      padding:40px 16px 60px;
+    }
+    .grid{
+      display:grid;
+      gap:20px;
+      grid-template-columns:repeat(1,minmax(0,1fr));
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    @media (min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .card{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      background:linear-gradient(180deg, rgba(18,56,35,.55), rgba(10,38,23,.55));
+      border:1px solid rgba(183,210,192,.18);
+      border-radius:16px;
+      padding:24px 20px;
+      transition:.18s ease;
+      transition-property:transform,background,border-color,box-shadow;
+      height: 100%;
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      background:linear-gradient(180deg, rgba(23,72,45,.65), rgba(12,41,24,.65));
+      border-color:rgba(183,210,192,.4);
+      box-shadow:0 10px 30px rgba(0,0,0,.25),0 0 0 4px var(--ring)
+    }
+    .card h3{
+      margin:2px 0 8px;
+      font-size:18px;
+      color:var(--text);
+    }
+    .card p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+    .card a{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      text-decoration:none;
+      margin-top:10px;
+      padding:12px 16px;
+      border-radius:12px;
+      background:var(--accent);
+      color:#052e16;
+      font-weight:700;
+      border:1px solid rgba(0,0,0,.15);
+      transition: all 0.2s ease;
+    }
+    .card a:hover{
+      filter:brightness(.95);
+      transform: translateY(-1px);
+    }
+
+    footer{
+      padding:30px 16px 50px;
+      color:var(--muted);
+      text-align:center;
+      border-top:1px solid rgba(183,210,192,.18);
+      background:var(--panel);
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV MEJORADO -->
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">FE</div>
+        <span>Fit Express</span>
+      </div>
+
+      <!-- ICONOS DE ACCIONES MEJORADOS -->
+      <nav class="actions" aria-label="Acciones">
+        <!-- Buscar -->
+        <a class="icon-btn" href="buscar.html" title="Buscar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.3-4.3"></path>
+          </svg>
+        </a>
+        <!-- Perfil -->
+        <a class="icon-btn" href="perfil.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
+            <path d="M20 21a8 8 0 1 0-16 0"></path>
+          </svg>
+        </a>
+        <!-- Carrito con notificación -->
+        <a class="icon-btn" href="carrito.html" title="Carrito de compras">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M6 7h12l-1 12H7L6 7Z"></path>
+            <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
+          </svg>
+          <span class="cart-badge">3</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO con fondo de bowl proteico -->
+  <section class="hero-wrap">
+    <div class="container hero">
+      <div>
+        <span class="pill">¡Rápido, rico y saludable en minutos!</span>
+        <h1>Bowls proteicos y snacks listos para disfrutar</h1>
+        <p class="lead">
+          Comer saludable puede ser <strong>muy rico</strong>: bases frescas, proteínas magras,
+          salsas caseras y snacks crujientes. Todo balanceado y listo en pocos minutos.
+        </p>
+        <a class="cta" href="catalogo-macros.html">¡Arma tu bowl ahora! ⚡</a>
+      </div>
+      <figure class="hero-image">
+  <img src="imagenes/bowl-prote.png" alt="Bowl proteico Fit Express con frutas y granola" 
+       style="width:100%;max-width:500px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,.3);">
+</figure>
+    </div>
+  </section>
+
+  <!-- ¿Por qué elegir…? -->
+  <section class="reasons">
+    <div class="container">
+      <h2>¿Por qué elegir nuestras comidas saludables?</h2>
+      <div class="reason-grid">
+        <article class="reason">
+          <div class="ico">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="13" r="7" stroke="#0ea5e9" stroke-width="2"/>
+              <path d="M12 13V9M12 13l3 2" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Rápidos</h3><p>Calienta y disfruta en minutos.</p>
+        </article>
+        <article class="reason">
+          <div class="ico">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 14c5-2 7-6 8-10 2 5 5 8 10 9-2 4-6 7-10 7S5 18 3 14Z" stroke="#10b981" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3>Proteicos</h3><p>Porciones con proteína magra y balance.</p>
+        </article>
+        <article class="reason">
+          <div class="ico">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1L3 9.4l6.1-.9L12 3Z" stroke="#f59e0b" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3>Sabor real</h3><p>Ingredientes de verdad, cero aburrido.</p>
+        </article>
+        <article class="reason">
+          <div class="ico">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 15h18M5 15a7 7 0 0 1 14 0" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 5v2" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Variedad</h3><p>Elige bases, toppings y snacks a tu gusto.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accesos rápidos a otras vistas -->
+  <section class="quick">
+    <div class="container grid">
+      <article class="card"><h3>Catálogo de Bowls</h3><p>Explora por proteína, carbo y verduras.</p><a href="catalogo-macros.html">Abrir catálogo</a></article>
+      <article class="card"><h3>Promociones</h3><p>Kits semanales y combos de snacks.</p><a href="promociones-combos.html">Ver promociones</a></article>
+      <article class="card"><h3>Carrito</h3><p>Revisa y finaliza tu pedido.</p><a href="carrito.html">Abrir carrito</a></article>
+    </div>
+  </section>
+
+  <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
