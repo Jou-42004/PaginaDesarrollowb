@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tu carrito — Fit Express</title>
+  <meta name="description" content="Revisa y finaliza tu pedido.">
+  <style>
+    :root{
+      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+    }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+    
+    /* Header mejorado */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+      border-bottom:1px solid rgba(183,210,192,.18);
+      padding: 8px 0;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      height: 60px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      flex-shrink: 0;
+    }
+    .logo{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#19c268;
+      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .brand span{font-size:20px; color: var(--text);}
+    
+    /* Acciones - Iconos mejorados */
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-left: auto;
+    }
+    .icon-btn{
+      display:inline-grid;
+      place-items:center;
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(183,210,192,.25);
+      background:rgba(17, 57, 35, 0.6);
+      text-decoration:none;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .icon-btn:hover{
+      border-color:var(--accent);
+      background:rgba(34,197,94,.15);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34,197,94,.2);
+    }
+    .icon{
+      width:20px;
+      height:20px;
+      stroke:#e2e8f0;
+      stroke-width:2;
+    }
+    
+    /* Notificación en carrito */
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--cta);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* Contenido principal */
+    .main-content {
+      padding: 40px 16px;
+      min-height: calc(100vh - 140px);
+    }
+    
+    /* Encabezado del carrito */
+    .cart-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .cart-title {
+      font-size: 32px;
+      margin: 0;
+      color: var(--text);
+    }
+    
+    /* Tabla de carrito */
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .cart-table th {
+      background: rgba(17, 57, 35, 0.8);
+      padding: 16px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 1px solid rgba(183,210,192,.18);
+    }
+    
+    .cart-table td {
+      padding: 16px 12px;
+      border-bottom: 1px solid rgba(183,210,192,.1);
+    }
+    
+    .cart-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .product-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .product-price, .product-total {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .quantity-btn {
+      background: rgba(17, 57, 35, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 6px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .quantity-btn:hover {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.15);
+    }
+    
+    .quantity-display {
+      min-width: 30px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: underline;
+      padding: 0;
+      margin-left: 8px;
+    }
+    
+    .remove-btn:hover {
+      color: #dc2626;
+    }
+    
+    /* Resumen del carrito */
+    .cart-summary {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+    
+    .summary-label {
+      color: var(--text);
+    }
+    
+    .summary-value {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .discount {
+      color: #ef4444;
+    }
+    
+    .total-row {
+      border-top: 1px solid rgba(183,210,192,.18);
+      margin-top: 8px;
+      padding-top: 16px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    
+    /* Botón de pago */
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: var(--cta);
+      color: var(--cta-text);
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      text-decoration: none;
+    }
+    
+    .checkout-btn:hover {
+      filter: brightness(.9);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
+    }
+    
+    footer{
+      padding:30px 16px 50px;
+      color:var(--muted);
+      text-align:center;
+      border-top:1px solid rgba(183,210,192,.18);
+      background:var(--panel);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .cart-table {
+        font-size: 14px;
+      }
+      
+      .cart-table th,
+      .cart-table td {
+        padding: 12px 8px;
+      }
+      
+      .quantity-controls {
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV MEJORADO -->
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">FE</div>
+        <span>Fit Express</span>
+      </div>
+
+      <!-- ICONOS DE ACCIONES MEJORADOS -->
+      <nav class="actions" aria-label="Acciones">
+        <!-- Buscar -->
+        <a class="icon-btn" href="buscar.html" title="Buscar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.3-4.3"></path>
+          </svg>
+        </a>
+        <!-- Perfil -->
+        <a class="icon-btn" href="B01-RegistroUsuario.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
+            <path d="M20 21a8 8 0 1 0-16 0"></path>
+          </svg>
+        </a>
+        <!-- Carrito con notificación -->
+        <a class="icon-btn" href="carrito.html" title="Carrito de compras">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M6 7h12l-1 12H7L6 7Z"></path>
+            <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
+          </svg>
+          <span class="cart-badge">2</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="container">
+      <!-- Encabezado -->
+      <div class="cart-header">
+        <h1 class="cart-title">Tu carrito</h1>
+      </div>
+
+      <!-- Tabla de productos -->
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cant.</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="product-name">Bowl Quinoa</div>
+            </td>
+            <td class="product-price">$7,990</td>
+            <td>
+              <div class="quantity-controls">
+                <button class="quantity-btn">-</button>
+                <span class="quantity-display">1</span>
+                <button class="quantity-btn">+</button>
+              </div>
+            </td>
+            <td class="product-total">$7,990</td>
+            <td>
+              <button class="remove-btn">Quitar</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="product-name">Snack Almendras</div>
+            </td>
+            <td class="product-price">$1,990</td>
+            <td>
+              <div class="quantity-controls">
+                <button class="quantity-btn">-</button>
+                <span class="quantity-display">2</span>
+                <button class="quantity-btn">+</button>
+              </div>
+            </td>
+            <td class="product-total">$3,980</td>
+            <td>
+              <button class="remove-btn">Quitar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Resumen del carrito -->
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span class="summary-label">Subtotal</span>
+          <span class="summary-value">$11,970</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Descuentos</span>
+          <span class="summary-value discount">~$1,195</span>
+        </div>
+        <div class="summary-row total-row">
+          <span class="summary-label">Total</span>
+          <span class="summary-value">$10,775</span>
+        </div>
+      </div>
+
+      <!-- Botón de pago -->
+      <a href="pago.html" class="checkout-btn">Continuar al pago</a>
+    </div>
+  </div>
+
+  <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Datos del carrito
+    const cartItems = [
+      {
+        id: 1,
+        name: "Bowl Quinoa",
+        price: 7990,
+        quantity: 1,
+        total: 7990
+      },
+      {
+        id: 3,
+        name: "Snack Almendras",
+        price: 1990,
+        quantity: 2,
+        total: 3980
+      }
+    ];
+
+    // Calcular totales
+    function updateCartTotals() {
+      const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0);
+      const discount = Math.round(subtotal * 0.1); // 10% de descuento
+      const total = subtotal - discount;
+      
+      // Actualizar la interfaz
+      document.querySelector('.summary-row:nth-child(1) .summary-value').textContent = `$${subtotal.toLocaleString()}`;
+      document.querySelector('.summary-row:nth-child(2) .summary-value').textContent = `~$${discount.toLocaleString()}`;
+      document.querySelector('.total-row .summary-value').textContent = `$${total.toLocaleString()}`;
+    }
+
+    // Funcionalidad de los botones de cantidad
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const quantityDisplay = row.querySelector('.quantity-display');
+        const priceElement = row.querySelector('.product-price');
+        const totalElement = row.querySelector('.product-total');
+        const productName = row.querySelector('.product-name').textContent;
+        
+        let quantity = parseInt(quantityDisplay.textContent);
+        const price = parseInt(priceElement.textContent.replace('$', '').replace(',', ''));
+        
+        if (this.textContent === '+') {
+          quantity++;
+        } else if (this.textContent === '-' && quantity > 1) {
+          quantity--;
+        }
+        
+        quantityDisplay.textContent = quantity;
+        const total = price * quantity;
+        totalElement.textContent = `$${total.toLocaleString()}`;
+        
+        // Actualizar en los datos
+        const cartItem = cartItems.find(item => item.name === productName);
+        if (cartItem) {
+          cartItem.quantity = quantity;
+          cartItem.total = total;
+          updateCartTotals();
+        }
+      });
+    });
+
+    // Funcionalidad de quitar productos
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const productName = row.querySelector('.product-name').textContent;
+        
+        // Eliminar de los datos
+        const index = cartItems.findIndex(item => item.name === productName);
+        if (index !== -1) {
+          cartItems.splice(index, 1);
+        }
+        
+        // Eliminar de la interfaz
+        row.remove();
+        
+        // Actualizar totales y badge del carrito
+        updateCartTotals();
+        updateCartBadge();
+        
+        // Si no hay productos, mostrar mensaje
+        if (cartItems.length === 0) {
+          document.querySelector('.cart-table tbody').innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 40px; color: var(--muted);">
+                Tu carrito está vacío
+              </td>
+            </tr>
+          `;
+        }
+      });
+    });
+
+    // Actualizar badge del carrito
+    function updateCartBadge() {
+      const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      document.querySelector('.cart-badge').textContent = totalItems;
+    }
+
+    // Inicializar
+    updateCartTotals();
+    updateCartBadge();
+  </script>
+</body>
+</html>

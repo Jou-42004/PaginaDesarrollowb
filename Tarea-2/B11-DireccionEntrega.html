@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dirección de entrega — Fit Express</title>
+  <meta name="description" content="Ingresa tu dirección para calcular el envío y continuar la compra.">
+  <style>
+    :root{
+      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+      --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+    }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+
+    /* Header (mismo estilo de tu index) */
+    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);
+      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+      border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
+    .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    .topbar{display:flex;align-items:center;gap:12px;height:60px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900}
+    .logo{width:32px;height:32px;border-radius:8px;background:#19c268;box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px}
+    .brand span{font-size:20px;color:var(--text)}
+    .actions{display:flex;align-items:center;gap:16px;margin-left:auto}
+    .icon-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17,57,35,.6);text-decoration:none;transition:.2s}
+    .icon-btn:hover{border-color:var(--accent);background:rgba(34,197,94,.15);transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,197,94,.2)}
+    .icon{width:20px;height:20px;stroke:#e2e8f0;stroke-width:2}
+
+    /* Página */
+    .page{padding:32px 16px}
+    h1{font-size:clamp(24px,3.8vw,32px);margin:0 0 8px}
+    .sub{color:var(--muted);margin:0 0 24px}
+
+    /* Card contenedor */
+    .grid{display:grid;gap:24px;grid-template-columns:1fr 360px}
+    @media (max-width:960px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:linear-gradient(180deg, rgba(18,56,35,.55), rgba(10,38,23,.55));
+      border:1px solid rgba(183,210,192,.18);
+      border-radius:16px;padding:20px
+    }
+
+    /* Form */
+    .form-row{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+    .form-row-3{display:grid;gap:16px;grid-template-columns:1fr 1fr 1fr}
+    .field{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+    label{font-weight:700;font-size:14px;color:#e2f7ea}
+    input, select, textarea{
+      width:100%;padding:12px 14px;border-radius:12px;
+      border:1px solid rgba(183,210,192,.25);background:rgba(17,57,35,.35);
+      color:var(--text);outline:none;transition:border .15s, box-shadow .15s
+    }
+    input:focus, select:focus, textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
+    .help{color:var(--muted);font-size:12px;margin-top:-6px}
+    .check{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
+    .cta{
+      display:inline-flex;align-items:center;justify-content:center;
+      background:var(--cta);color:var(--cta-text);font-weight:900;
+      padding:14px 18px;border-radius:12px;border:1px solid rgba(0,0,0,.15);
+      text-decoration:none;cursor:pointer;transition:.18s;font-size:15px;width:100%
+    }
+    .cta:hover{filter:brightness(.92);transform:translateY(-1px);box-shadow:0 8px 20px rgba(109,40,217,.3)}
+    .muted-btn{background:transparent;border:1px dashed rgba(183,210,192,.35);color:var(--muted)}
+    .row-actions{display:flex;gap:12px;margin-top:8px}
+    .error{color:#fecaca;font-size:13px;margin-top:6px;display:none}
+    .error.show{display:block}
+
+    /* Resumen de envío */
+    .summary .title{font-weight:800;margin:0 0 12px}
+    .summary .line{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(183,210,192,.18)}
+    .summary .line:last-child{border-bottom:0}
+    .price{font-weight:900}
+    .tag{display:inline-block;background:#d1fae5;color:#052e16;border-radius:999px;padding:4px 10px;font-weight:800;font-size:12px}
+
+    /* Footer mini */
+    footer{padding:24px 16px 40px;color:var(--muted);text-align:center;border-top:1px solid rgba(183,210,192,.18);background:var(--panel);margin-top:28px}
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <header>
+    <div class="container topbar">
+      <div class="brand"><div class="logo">FE</div><span>Fit Express</span></div>
+      <nav class="actions" aria-label="Acciones">
+        <a class="icon-btn" href="B09-Carrito.html" title="Volver al carrito">
+          <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" /></svg>
+        </a>
+        <a class="icon-btn" href="B01-RegistroUsuario.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
+            <path d="M20 21a8 8 0 1 0-16 0"></path>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENIDO -->
+  <main class="page">
+    <div class="container">
+      <h1>Dirección de entrega</h1>
+      <p class="sub">Ingresa tu dirección para validar y calcular el envío.</p>
+
+      <div class="grid">
+        <!-- Formulario -->
+        <section class="card">
+          <form id="addressForm" novalidate>
+            <div class="field">
+              <label for="calle">Calle y número</label>
+              <input id="calle" name="calle" autocomplete="address-line1" placeholder="Av. Providencia 1234" required />
+              <div class="error" id="err-calle">Ingresa una calle y número válidos.</div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="depto">Depto / Oficina <span class="help">(opcional)</span></label>
+                <input id="depto" name="depto" autocomplete="address-line2" placeholder="Dpto 702" />
+              </div>
+              <div class="field">
+                <label for="comuna">Comuna</label>
+                <select id="comuna" name="comuna" required>
+                  <option value="" hidden>Selecciona comuna</option>
+                  <option>Providencia</option>
+                  <option>Santiago</option>
+                  <option>Las Condes</option>
+                  <option>Ñuñoa</option>
+                  <option>La Reina</option>
+                </select>
+                <div class="error" id="err-comuna">Selecciona una comuna.</div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="ref">Referencia para el repartidor</label>
+              <input id="ref" name="ref" placeholder="Portón negro, timbre 702" />
+            </div>
+
+            <label class="check">
+              <input id="fav" type="checkbox" />
+              <span>Guardar como dirección favorita</span>
+            </label>
+
+            <button class="cta" type="submit">Validar y calcular envío</button>
+
+            <div class="row-actions">
+              <a class="cta muted-btn" href="B09-Carrito.html">Volver al carrito</a>
+              <!-- Ajusta este href cuando agregues el paso de pago -->
+              <a id="btnContinuar" class="cta" style="display:none" href="B12-EmisionBoleta.html">Continuar al pago</a>
+            </div>
+          </form>
+        </section>
+
+        <!-- Resumen de envío -->
+        <aside class="card summary" id="summary">
+          <p class="title">Resumen de envío <span class="tag" id="tagEstado">Pendiente</span></p>
+          <div class="line"><span>Dirección</span><span id="sumDir">—</span></div>
+          <div class="line"><span>Comuna</span><span id="sumComuna">—</span></div>
+          <div class="line"><span>Costo de envío</span><span class="price" id="sumCosto">$—</span></div>
+          <div class="line"><span>Tiempo estimado</span><span id="sumTiempo">—</span></div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer>© <span id="y"></span> Fit Express</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const form = document.getElementById('addressForm');
+    const errCalle = document.getElementById('err-calle');
+    const errComuna = document.getElementById('err-comuna');
+
+    const sumDir = document.getElementById('sumDir');
+    const sumComuna = document.getElementById('sumComuna');
+    const sumCosto = document.getElementById('sumCosto');
+    const sumTiempo = document.getElementById('sumTiempo');
+    const tagEstado = document.getElementById('tagEstado');
+    const btnContinuar = document.getElementById('btnContinuar');
+
+    // Tarifas de ejemplo por comuna (ajústalas a tu lógica real)
+    const tarifas = {
+      "Providencia": { costo: 2000, min: 35, max: 45 },
+      "Santiago":    { costo: 1800, min: 30, max: 40 },
+      "Las Condes":  { costo: 2500, min: 40, max: 55 },
+      "Ñuñoa":       { costo: 1900, min: 32, max: 42 },
+      "La Reina":    { costo: 2300, min: 38, max: 50 }
+    };
+
+    function fmtCLP(n){ return n.toLocaleString('es-CL', {style:'currency', currency:'CLP'}); }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const calle = form.calle.value.trim();
+      const comuna = form.comuna.value;
+      const depto = form.depto.value.trim();
+      const ref   = form.ref.value.trim();
+      const fav   = document.getElementById('fav').checked;
+
+      // Validación simple
+      let ok = true;
+      if(!calle || calle.length < 5){ errCalle.classList.add('show'); ok = false; } else { errCalle.classList.remove('show'); }
+      if(!comuna){ errComuna.classList.add('show'); ok = false; } else { errComuna.classList.remove('show'); }
+      if(!ok) return;
+
+      // Guardar favorita (demo con localStorage)
+      if(fav){
+        localStorage.setItem('fe_fav_address', JSON.stringify({calle, depto, comuna, ref}));
+      }
+
+      // Calcular resumen
+      const t = tarifas[comuna] || { costo: 2200, min: 35, max: 50 };
+      sumDir.textContent = depto ? `${calle}, ${depto}` : calle;
+      sumComuna.textContent = comuna;
+      sumCosto.textContent = fmtCLP(t.costo);
+      sumTiempo.textContent = `${t.min} a ${t.max} min`;
+
+      tagEstado.textContent = 'Validado';
+      tagEstado.style.background = '#bbf7d0';
+
+      // habilitar avanzar
+      btnContinuar.style.display = 'inline-flex';
+    });
+
+    // Precargar dirección favorita si existe
+    const fav = localStorage.getItem('fe_fav_address');
+    if(fav){
+      try{
+        const a = JSON.parse(fav);
+        if(a.calle) form.calle.value = a.calle;
+        if(a.depto) form.depto.value = a.depto;
+        if(a.comuna) form.comuna.value = a.comuna;
+        if(a.ref) form.ref.value = a.ref;
+      }catch{}
+    }
+  </script>
+</body>
+</html>

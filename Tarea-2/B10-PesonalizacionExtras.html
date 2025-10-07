@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Personaliza tu bowl — Fit Express</title>
+<meta name="description" content="Elige tipo de bowl, extras y salsas con reglas de compatibilidad.">
+<style>
+  :root{
+    --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+    --accent:#22c55e; --cta:#2563eb; --cta-text:#fff;
+    --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+  }
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+  .container{max-width:1000px;margin:0 auto;padding:0 16px}
+
+  /* Header como index */
+  header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);
+    background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+    border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
+  .topbar{display:flex;align-items:center;gap:12px;height:60px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:900}
+  .logo{width:32px;height:32px;border-radius:8px;background:#19c268;box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px}
+  .brand span{font-size:20px}
+  .actions{margin-left:auto}
+  .link{color:var(--muted);text-decoration:none;border:1px solid rgba(183,210,192,.25);padding:10px 14px;border-radius:12px;background:rgba(17,57,35,.6)}
+  .link:hover{border-color:var(--accent);background:rgba(34,197,94,.15);box-shadow:0 4px 12px rgba(34,197,94,.2)}
+
+  main{padding:24px 0 40px;display:grid;gap:20px}
+  .panel{background:linear-gradient(180deg, rgba(18,56,35,.55), rgba(10,38,23,.55));border:1px solid rgba(183,210,192,.18);border-radius:16px;padding:18px}
+  h1{margin:0 0 6px}
+  .sub{color:var(--muted);font-size:13px}
+
+  .grid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  /* Inputs */
+  select, input[type="text"]{
+    background:rgba(17,57,35,.6); color:var(--text); border:1px solid rgba(183,210,192,.25);
+    border-radius:12px; padding:10px 12px; outline:none
+  }
+  select:focus,input[type="text"]:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
+
+  .group{display:grid;gap:10px;margin-bottom:8px}
+  .label{font-weight:800}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(183,210,192,.35); background:rgba(17,57,35,.45); user-select:none
+  }
+  .chip input{appearance:none;width:16px;height:16px;border:1px solid rgba(183,210,192,.35);border-radius:4px;background:transparent;display:grid;place-items:center}
+  .chip input:checked{background:#22c55e;border-color:#22c55e}
+  .chip.disabled{opacity:.45;pointer-events:none}
+
+  .counter{display:inline-flex;align-items:center;gap:6px;background:#052e16;border:1px solid rgba(183,210,192,.25);padding:4px 8px;border-radius:8px;font-weight:800}
+  .hint{font-size:12px;color:var(--muted)}
+
+  /* Banners */
+  .banner{border:1px solid rgba(183,210,192,.25);border-left-width:4px;padding:10px 12px;border-radius:12px;margin:10px 0 0}
+  .ok{border-left-color:var(--ok);background:#052e16}
+  .warn{border-left-color:var(--warn);background:#38290b}
+  .err{border-left-color:var(--err);background:#451a1a}
+
+  /* Resumen */
+  .summary .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(183,210,192,.18)}
+  .summary .row:last-child{border-bottom:none}
+  .total{font-weight:900}
+  .price-old{color:var(--muted);text-decoration:line-through;margin-right:8px}
+
+  .btn{
+    width:100%;margin-top:14px;display:inline-flex;justify-content:center;align-items:center;
+    padding:14px 16px;border-radius:12px;border:1px solid rgba(0,0,0,.15);font-weight:900;cursor:pointer
+  }
+  .primary{background:var(--cta);color:var(--cta-text)}
+  .primary:disabled{opacity:.6;cursor:not-allowed}
+</style>
+</head>
+<body>
+<header>
+  <div class="container topbar">
+    <div class="brand"><div class="logo">FE</div><span>Fit Express</span></div>
+    <nav class="actions">
+      <a class="link" href="B05-CatalogoMacros.html">Volver al catálogo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="panel">
+    <h1>Personaliza tu bowl</h1>
+    <div class="sub">Máx. <b>2</b> extras de proteína · Compatibilidades según tipo</div>
+  </section>
+
+  <section class="grid">
+    <!-- Configuración -->
+    <section class="panel" aria-labelledby="cfg">
+      <h2 id="cfg" style="margin:0 0 8px">Opciones</h2>
+
+      <!-- Tipo de bowl -->
+      <div class="group">
+        <label class="label" for="bowlType">Tipo de bowl</label>
+        <select id="bowlType">
+          <option value="vegano">Vegano</option>
+          <option value="proteico">Proteico</option>
+          <option value="sin-gluten">Sin gluten</option>
+        </select>
+      </div>
+
+      <!-- Extras de proteína (máx 2) -->
+      <div class="group">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span class="label">Extras de proteína</span>
+          <span class="counter"><span id="count">0</span>/2</span>
+        </div>
+        <div class="chips" id="extras">
+          <!-- value, precio CLP -->
+          <label class="chip"><input type="checkbox" data-price="1200" value="pollo"> Pollo +$1.200</label>
+          <label class="chip"><input type="checkbox" data-price="900" value="tofu" data-tags="vegano"> Tofu +$900</label>
+          <label class="chip"><input type="checkbox" data-price="700" value="garbanzos" data-tags="vegano"> Garbanzos +$700</label>
+          <label class="chip"><input type="checkbox" data-price="1000" value="huevo"> Huevo +$1.000</label>
+        </div>
+        <div id="limitMsg" class="banner ok" style="display:none">Máx. 2 extras de proteína. Para agregar otro, desmarca uno.</div>
+      </div>
+
+      <!-- Salsas (con compatibilidad) -->
+      <div class="group">
+        <span class="label">Salsas</span>
+        <div class="chips" id="sauces">
+          <label class="chip"><input type="checkbox" value="tahini" data-tags="vegano,sin-gluten"> Tahini</label>
+          <label class="chip"><input type="checkbox" value="yogurt" data-tags="lacteo"> Yogurt</label>
+          <label class="chip"><input type="checkbox" value="cesar"  data-tags="lacteo,gluten"> César</label>
+          <label class="chip"><input type="checkbox" value="pesto"  data-tags="vegano"> Pesto</label>
+        </div>
+        <div id="compatMsg" class="banner err" style="display:none"></div>
+      </div>
+
+      <div class="hint">Reglas: “Vegano” no permite lácteos; “Sin gluten” no permite salsas con gluten.</div>
+    </section>
+
+    <!-- Resumen -->
+    <aside class="panel summary" aria-labelledby="sum">
+      <h2 id="sum" style="margin:0 0 8px">Resumen</h2>
+      <div class="row"><span>Bowl base</span><span id="basePrice">$6.990</span></div>
+      <div class="row"><span>Extras</span><span id="extrasPrice">$0</span></div>
+      <div class="row total"><span>Total</span><span id="totalPrice">$6.990</span></div>
+
+      <button id="confirm" class="btn primary" disabled>Confirmar bowl</button>
+      <div id="okMsg" class="banner ok" style="display:none;margin-top:12px">Listo para confirmar</div>
+    </aside>
+  </section>
+</main>
+
+<script>
+  // ===== Config =====
+  const BASE_PRICE = 6990; // CLP
+  const CLP = v => v.toLocaleString('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0});
+
+  // ===== Helpers =====
+  const qs = s => document.querySelector(s);
+  const qa = s => Array.from(document.querySelectorAll(s));
+
+  const countEl = qs('#count');
+  const baseEl = qs('#basePrice');
+  const extrasEl = qs('#extrasPrice');
+  const totalEl = qs('#totalPrice');
+  const limitMsg = qs('#limitMsg');
+  const compatMsg = qs('#compatMsg');
+  const okMsg = qs('#okMsg');
+  const confirmBtn = qs('#confirm');
+
+  baseEl.textContent = CLP(BASE_PRICE);
+
+  // ===== Lógica de selección =====
+  const bowlTypeEl = qs('#bowlType');
+  const extrasWrap = qs('#extras');
+  const saucesWrap = qs('#sauces');
+
+  function selectedExtras(){
+    return qa('#extras input:checked').map(i=>({ id:i.value, price:Number(i.dataset.price) }));
+  }
+  function selectedSauces(){
+    return qa('#sauces input:checked').map(i=>({ id:i.value, tags:(i.dataset.tags||'').split(',') }));
+  }
+
+  // Límite de 2 extras
+  function enforceExtrasLimit(){
+    const sel = selectedExtras();
+    const all = qa('#extras input');
+    countEl.textContent = sel.length;
+    const atLimit = sel.length >= 2;
+
+    limitMsg.style.display = atLimit ? '' : 'none';
+    all.forEach(i=>{
+      if(!i.checked) i.closest('.chip').classList.toggle('disabled', atLimit);
+      i.disabled = (!i.checked && atLimit);
+    });
+  }
+
+  // Compatibilidades por tipo de bowl
+  function validateCompatibility(){
+    const type = bowlTypeEl.value; // vegano | proteico | sin-gluten
+    let msg = '';
+    let ok = true;
+
+    // Reglas simples
+    const saucesChecked = qa('#sauces input:checked');
+    saucesChecked.forEach(i=>{
+      const tags = (i.dataset.tags||'').split(',');
+      if(type==='vegano' && tags.includes('lacteo')){ ok=false; msg = 'Compatibilidad: Bowl "Vegano" no permite salsas lácteas (Yogurt, César).'; }
+      if(type==='sin-gluten' && tags.includes('gluten')){ ok=false; msg = 'Compatibilidad: Bowl "Sin gluten" no permite salsas con gluten (César).'; }
+    });
+
+    compatMsg.style.display = ok ? 'none' : '';
+    compatMsg.textContent = msg;
+    return ok;
+  }
+
+  // Calcular precios
+  function recalc(){
+    const extras = selectedExtras();
+    const extrasTotal = extras.reduce((a,b)=>a+b.price,0);
+    extrasEl.textContent = '+' + CLP(extrasTotal);
+    totalEl.textContent = CLP(BASE_PRICE + extrasTotal);
+
+    const valid = validateCompatibility();
+    confirmBtn.disabled = !valid;
+    okMsg.style.display = valid ? '' : 'none';
+  }
+
+  // Listeners
+  extrasWrap.addEventListener('change', ()=>{ enforceExtrasLimit(); recalc(); });
+  saucesWrap.addEventListener('change', ()=>{ recalc(); });
+  bowlTypeEl.addEventListener('change', ()=>{ recalc(); });
+
+  // Confirmar → guardar y redirigir a carrito
+  confirmBtn.addEventListener('click', ()=>{
+    const payload = {
+      type: bowlTypeEl.value,
+      basePrice: BASE_PRICE,
+      extras: selectedExtras(),
+      sauces: selectedSauces().map(s=>s.id),
+      total: BASE_PRICE + selectedExtras().reduce((a,b)=>a+b.price,0),
+      createdAt: new Date().toISOString()
+    };
+    localStorage.setItem('fe_custom_bowl', JSON.stringify(payload));
+    // Redirige a tu carrito
+    window.location.href = 'B09-Carrito.html?added=custom-bowl';
+  });
+
+  // Init
+  enforceExtrasLimit();
+  recalc();
+</script>
+</body>
+</html>

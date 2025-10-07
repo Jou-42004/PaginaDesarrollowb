@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catálogo saludable — Fit Express</title>
+  <meta name="description" content="Explora nuestros bowls y snacks saludables.">
+  <style>
+    :root{
+      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+    }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+    
+    /* Header mejorado */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+      border-bottom:1px solid rgba(183,210,192,.18);
+      padding: 8px 0;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      height: 60px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      flex-shrink: 0;
+    }
+    .logo{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#19c268;
+      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .brand span{font-size:20px; color: var(--text);}
+    
+    /* Acciones - Iconos mejorados */
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-left: auto;
+    }
+    .icon-btn{
+      display:inline-grid;
+      place-items:center;
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(183,210,192,.25);
+      background:rgba(17, 57, 35, 0.6);
+      text-decoration:none;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .icon-btn:hover{
+      border-color:var(--accent);
+      background:rgba(34,197,94,.15);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34,197,94,.2);
+    }
+    .icon{
+      width:20px;
+      height:20px;
+      stroke:#e2e8f0;
+      stroke-width:2;
+    }
+    
+    /* Notificación en carrito */
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--cta);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* Contenido principal */
+    .main-content {
+      padding: 40px 16px;
+      min-height: calc(100vh - 140px);
+    }
+    
+    /* Encabezado del catálogo */
+    .catalog-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .catalog-title {
+      font-size: 32px;
+      margin: 0 0 20px 0;
+      color: var(--text);
+    }
+    
+    /* Filtros */
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      background: rgba(17, 57, 35, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .filter-btn:hover {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.15);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34,197,94,.2);
+    }
+    
+    .filter-btn.active {
+      background: var(--cta);
+      color: var(--cta-text);
+      border-color: var(--cta);
+    }
+    
+    /* Grid de productos */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    @media (min-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    .product-card {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,.2);
+      border-color: rgba(183,210,192,.4);
+    }
+    
+    .product-card.unavailable {
+      opacity: 0.6;
+    }
+    
+    .product-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    
+    .product-calories {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    
+    .product-macros {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    
+    .product-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    
+    .product-availability {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    
+    .available {
+      color: #22c55e;
+    }
+    
+    .unavailable-text {
+      color: #ef4444;
+    }
+    
+    .availability-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    
+    .available .availability-dot {
+      background: #22c55e;
+    }
+    
+    .unavailable-text .availability-dot {
+      background: #ef4444;
+    }
+    
+    /* Botones de producto */
+    .product-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .btn-add-cart {
+      background: var(--cta);
+      color: var(--cta-text);
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    
+    .btn-add-cart:hover {
+      filter: brightness(.9);
+      transform: translateY(-1px);
+    }
+    
+    .btn-add-cart:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-customize {
+      background: rgba(17, 57, 35, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    
+    .btn-customize:hover {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.15);
+    }
+    
+    .btn-customize:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Pie del catálogo */
+    .catalog-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .results-count {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
+    .pagination {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .page-btn {
+      background: rgba(17, 57, 35, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    
+    .page-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.15);
+    }
+    
+    .page-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    footer{
+      padding:30px 16px 50px;
+      color:var(--muted);
+      text-align:center;
+      border-top:1px solid rgba(183,210,192,.18);
+      background:var(--panel);
+    }
+
+    /* Toast de notificación */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--cta);
+      color: var(--cta-text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV MEJORADO -->
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">FE</div>
+        <span>Fit Express</span>
+      </div>
+
+      <!-- ICONOS DE ACCIONES MEJORADOS -->
+      <nav class="actions" aria-label="Acciones">
+        <!-- Buscar -->
+        <a class="icon-btn" href="buscar.html" title="Buscar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.3-4.3"></path>
+          </svg>
+        </a>
+        <!-- Perfil -->
+        <a class="icon-btn" href="B01-RegistroUsuario.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
+            <path d="M20 21a8 8 0 1 0-16 0"></path>
+          </svg>
+        </a>
+        <!-- Carrito con notificación -->
+        <a class="icon-btn" href="B09-Carrito.html" title="Carrito de compras">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M6 7h12l-1 12H7L6 7Z"></path>
+            <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
+          </svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="container">
+      <!-- Encabezado -->
+      <div class="catalog-header">
+        <h1 class="catalog-title">Catálogo saludable</h1>
+        
+        <!-- Botones de filtro -->
+        <div class="filters">
+          <button class="filter-btn active">Bowl</button>
+          <a href="B08-PromocionesCombos.html" class="filter-btn">Promociones Combos</a>
+        </div>
+      </div>
+
+      <!-- Grid de productos -->
+      <div class="products-grid" id="productsGrid">
+        <!-- Los productos se generarán dinámicamente con JavaScript -->
+      </div>
+
+      <!-- Pie: texto de conteo a la izquierda, paginación a la derecha -->
+      <div class="catalog-footer">
+        <div class="results-count" id="resultsCount">Mostrando 8 de 24 productos</div>
+        <div class="pagination">
+          <button class="page-btn" id="prevPage">Anterior</button>
+          <button class="page-btn" id="nextPage">Siguiente</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de notificación -->
+  <div class="toast" id="toast"></div>
+
+  <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Datos de productos - Bowls y barras de proteína
+    const products = [
+      {
+        id: 1,
+        name: "Bowl Quinoa Power",
+        calories: "420 kcal",
+        macros: "P24 / F12 / C54",
+        price: 7990,
+        available: true,
+        type: "bowl"
+      },
+      {
+        id: 2,
+        name: "Bowl Proteico Plus",
+        calories: "520 kcal",
+        macros: "P40 / F18 / C50",
+        price: 8990,
+        available: true,
+        type: "bowl"
+      },
+      {
+        id: 3,
+        name: "Barra Proteína Almendras",
+        calories: "180 kcal",
+        macros: "P15 / F8 / C12",
+        price: 1990,
+        available: true,
+        type: "snack"
+      },
+      {
+        id: 4,
+        name: "Bowl Energía Verde",
+        calories: "380 kcal",
+        macros: "P22 / F10 / C48",
+        price: 7490,
+        available: true,
+        type: "bowl"
+      },
+      {
+        id: 5,
+        name: "Bowl Vegano Supreme",
+        calories: "430 kcal",
+        macros: "P20 / F14 / C60",
+        price: 8490,
+        available: true,
+        type: "bowl"
+      },
+      {
+        id: 6,
+        name: "Barra Proteína Chocolate",
+        calories: "210 kcal",
+        macros: "P18 / F9 / C15",
+        price: 2190,
+        available: true,
+        type: "snack"
+      },
+      {
+        id: 7,
+        name: "Bowl Mediterráneo",
+        calories: "480 kcal",
+        macros: "P28 / F16 / C52",
+        price: 8990,
+        available: true,
+        type: "bowl"
+      },
+      {
+        id: 8,
+        name: "Barra Proteína Frutos Rojos",
+        calories: "190 kcal",
+        macros: "P16 / F7 / C14",
+        price: 2090,
+        available: true,
+        type: "snack"
+      }
+    ];
+
+    // Carrito de compras
+    let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+
+    // Elementos DOM
+    const productsGrid = document.getElementById('productsGrid');
+    const resultsCount = document.getElementById('resultsCount');
+    const cartBadge = document.getElementById('cartBadge');
+    const toast = document.getElementById('toast');
+
+    // Función para formatear precio
+    function formatPrice(price) {
+      return `$${price.toLocaleString()}`;
+    }
+
+    // Función para mostrar toast
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Función para actualizar badge del carrito
+    function updateCartBadge() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartBadge.textContent = totalItems;
+      localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+    }
+
+    // Función para agregar producto al carrito
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        // Verificar si el producto ya está en el carrito
+        const existingItem = cart.find(item => item.id === productId);
+        
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1
+          });
+        }
+        
+        updateCartBadge();
+        showToast('¡Producto agregado al carrito!');
+      }
+    }
+
+    // Función para renderizar productos
+    function renderProducts() {
+      productsGrid.innerHTML = '';
+      
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = `product-card ${product.available ? '' : 'unavailable'}`;
+        
+        productCard.innerHTML = `
+          <div class="product-name">${product.name}</div>
+          <div class="product-calories">${product.calories}</div>
+          <div class="product-macros">${product.macros}</div>
+          <div class="product-price">${formatPrice(product.price)}</div>
+          <div class="product-availability ${product.available ? 'available' : 'unavailable-text'}">
+            <span class="availability-dot"></span>
+            ${product.available ? 'Disponible' : 'No disponible'}
+          </div>
+          <div class="product-actions">
+            <button class="btn-add-cart" ${!product.available ? 'disabled' : ''} 
+                    onclick="addToCart(${product.id})">
+              Agregar al Carrito
+            </button>
+            ${product.type === 'bowl' ? `
+              <button class="btn-customize" ${!product.available ? 'disabled' : ''}
+                      onclick="customizeProduct(${product.id})">
+                Personalizar extras
+              </button>
+            ` : ''}
+          </div>
+        `;
+        
+        productsGrid.appendChild(productCard);
+      });
+      
+      resultsCount.textContent = `Mostrando ${products.length} de ${products.length} productos`;
+    }
+
+    // Función para personalizar producto (placeholder)
+    function customizeProduct(productId) {
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        showToast(`Próximamente: Personalizar ${product.name}`);
+      }
+    }
+
+    // Inicializar
+    renderProducts();
+    updateCartBadge();
+
+    // Funcionalidad de paginación básica
+    document.getElementById('prevPage').addEventListener('click', () => {
+      showToast('Página anterior');
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+      showToast('Página siguiente');
+    });
+  </script>
+</body>
+</html>
