@@ -164,6 +164,176 @@
       box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
     }
 
+    /* Sección Bowls de Proteína */
+    .bowls-section {
+      padding: 60px 16px;
+      background: linear-gradient(180deg, #0b1f14 0%, #0e2a1a 100%);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .recipe-count {
+      display: inline-block;
+      background: var(--accent);
+      color: #052e16;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    /* Carrusel de Bowls */
+    .carousel-container {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-slide {
+      min-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .bowl-card {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 16px;
+      padding: 0;
+      overflow: hidden;
+      max-width: 300px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
+      transition: transform 0.3s ease;
+    }
+
+    .bowl-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .bowl-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(45deg, #22c55e, #16a34a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .bowl-content {
+      padding: 20px;
+    }
+
+    .bowl-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .bowl-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .bowl-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #f59e0b;
+    }
+
+    .bowl-time {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .bowl-description {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    /* Controles del carrusel */
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .carousel-btn {
+      background: var(--accent);
+      color: #052e16;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .carousel-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .carousel-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(183,210,192,.3);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .carousel-dot.active {
+      background: var(--accent);
+      transform: scale(1.2);
+    }
+
     /* ¿Por qué elegir…? */
     .reasons{
       background:#fff;
@@ -290,6 +460,13 @@
       border-top:1px solid rgba(183,210,192,.18);
       background:var(--panel);
     }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.3);
+    }
   </style>
 </head>
 <body>
@@ -311,7 +488,7 @@
           </svg>
         </a>
         <!-- Perfil -->
-        <a class="icon-btn" href="perfil.html" title="Mi perfil">
+        <a class="icon-btn" href="B01-RegistroUsuario.html" title="Mi perfil">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
             <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
             <path d="M20 21a8 8 0 1 0-16 0"></path>
@@ -323,7 +500,7 @@
             <path d="M6 7h12l-1 12H7L6 7Z"></path>
             <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
           </svg>
-          <span class="cart-badge">3</span>
+          <span class="cart-badge"></span>
         </a>
       </nav>
     </div>
@@ -339,12 +516,113 @@
           Comer saludable puede ser <strong>muy rico</strong>: bases frescas, proteínas magras,
           salsas caseras y snacks crujientes. Todo balanceado y listo en pocos minutos.
         </p>
-        <a class="cta" href="catalogo-macros.html">¡Arma tu bowl ahora! ⚡</a>
+        <a class="cta" href="B05-CatalogoMacros.html">¡Arma tu bowl ahora! ⚡</a>
       </div>
       <figure class="hero-image">
-  <img src="imagenes/bowl-prote.png" alt="Bowl proteico Fit Express con frutas y granola" 
-       style="width:100%;max-width:500px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,.3);">
-</figure>
+        <img src="imagenes/bowl-prote.png" alt="Bowl proteico Fit Express con frutas y granola">
+      </figure>
+    </div>
+  </section>
+
+  <!-- Sección Bowls de Proteína -->
+  <section class="bowls-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="recipe-count">8 Recetas</span>
+        <h2>BOWLS DE PROTEÍNA</h2>
+        <p>Tanto si eres un amante de las plantas como un carnívoro, hay un bowl de proteína para ti. Estos bowls están cargados de proteínas magras y saludables, están repletos de tantos nutrientes que te mantendrán lleno y activo durante todo el día. Una comida equilibrada y satisfactoria, todo en un bowl.</p>
+      </div>
+
+      <div class="carousel-container">
+        <div class="carousel-track" id="carouselTrack">
+          <!-- Slide 1 -->
+          <div class="carousel-slide">
+            <div class="bowl-card">
+              <div class="bowl-image" style="background: linear-gradient(45deg, #dc2626, #ef4444);">
+                Bowl de Carne Coreano TH6
+              </div>
+              <div class="bowl-content">
+                <h3 class="bowl-title">Bowl de Carne Coreano TH6</h3>
+                <div class="bowl-meta">
+                  <div class="bowl-rating">
+                    ★★★★★ <span>(13)</span>
+                  </div>
+                  <div class="bowl-time">1h</div>
+                </div>
+                <p class="bowl-description">Carne marinada estilo coreano con vegetales frescos y arroz integral.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="carousel-slide">
+            <div class="bowl-card">
+              <div class="bowl-image" style="background: linear-gradient(45deg, #0ea5e9, #38bdf8);">
+                Bowl de Atún y Aguacate
+              </div>
+              <div class="bowl-content">
+                <h3 class="bowl-title">Bowl de Atún y Aguacate</h3>
+                <div class="bowl-meta">
+                  <div class="bowl-rating">
+                    ★★★★★ <span>(20)</span>
+                  </div>
+                  <div class="bowl-time">45min</div>
+                </div>
+                <p class="bowl-description">Atún fresco con aguacate, quinoa y vegetales de temporada.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="carousel-slide">
+            <div class="bowl-card">
+              <div class="bowl-image" style="background: linear-gradient(45deg, #f59e0b, #fbbf24);">
+                Bowl de Cerdo
+              </div>
+              <div class="bowl-content">
+                <h3 class="bowl-title">Bowl de Cerdo</h3>
+                <div class="bowl-meta">
+                  <div class="bowl-rating">
+                    ★★★★☆ <span>(7)</span>
+                  </div>
+                  <div class="bowl-time">1h 15min</div>
+                </div>
+                <p class="bowl-description">Cerdo asado con batata y vegetales al wok.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4 -->
+          <div class="carousel-slide">
+            <div class="bowl-card">
+              <div class="bowl-image" style="background: linear-gradient(45deg, #10b981, #34d399);">
+                Bowl con Falafel
+              </div>
+              <div class="bowl-content">
+                <h3 class="bowl-title">Bowl con Falafel de Lentejas</h3>
+                <div class="bowl-meta">
+                  <div class="bowl-rating">
+                    ★★★★★ <span>(13)</span>
+                  </div>
+                  <div class="bowl-time">2h 35min</div>
+                </div>
+                <p class="bowl-description">Falafel de lentejas con granada y salsa tahini.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-controls">
+          <button class="carousel-btn" id="prevBtn">‹</button>
+          <div class="carousel-dots" id="carouselDots">
+            <div class="carousel-dot active" data-index="0"></div>
+            <div class="carousel-dot" data-index="1"></div>
+            <div class="carousel-dot" data-index="2"></div>
+            <div class="carousel-dot" data-index="3"></div>
+          </div>
+          <button class="carousel-btn" id="nextBtn">›</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -394,13 +672,62 @@
   <!-- Accesos rápidos a otras vistas -->
   <section class="quick">
     <div class="container grid">
-      <article class="card"><h3>Catálogo de Bowls</h3><p>Explora por proteína, carbo y verduras.</p><a href="catalogo-macros.html">Abrir catálogo</a></article>
-      <article class="card"><h3>Promociones</h3><p>Kits semanales y combos de snacks.</p><a href="promociones-combos.html">Ver promociones</a></article>
-      <article class="card"><h3>Carrito</h3><p>Revisa y finaliza tu pedido.</p><a href="carrito.html">Abrir carrito</a></article>
+      <article class="card"><h3>Catálogo de Bowls</h3><p>Explora por proteína, carbo y verduras.</p><a href="B05-CatalogoMacros.html">Abrir catálogo</a></article>
+      <article class="card"><h3>Promociones</h3><p>Kits semanales y combos de snacks.</p><a href="B08-PromocionesCombos.html">Ver promociones</a></article>
+      <article class="card"><h3>Carrito</h3><p>Revisa y finaliza tu pedido.</p><a href="B09-Carrito.html">Abrir carrito</a></article>
     </div>
   </section>
 
   <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Carrusel functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const track = document.getElementById('carouselTrack');
+      const slides = document.querySelectorAll('.carousel-slide');
+      const dots = document.querySelectorAll('.carousel-dot');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      let currentIndex = 0;
+      const totalSlides = slides.length;
+
+      function updateCarousel() {
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // Update dots
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentIndex);
+        });
+      }
+
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        updateCarousel();
+      }
+
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        updateCarousel();
+      }
+
+      // Event listeners
+      nextBtn.addEventListener('click', nextSlide);
+      prevBtn.addEventListener('click', prevSlide);
+
+      // Dot navigation
+      dots.forEach(dot => {
+        dot.addEventListener('click', function() {
+          currentIndex = parseInt(this.getAttribute('data-index'));
+          updateCarousel();
+        });
+      });
+
+      // Auto-advance every 5 seconds
+      setInterval(nextSlide, 5000);
+    });
+  </script>
 </body>
 </html>
