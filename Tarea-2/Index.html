@@ -9,7 +9,6 @@
     :root{
       --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
       --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
-      /* 👉 Guarda tu foto como /img/bowl-proteina.jpg */
       --hero-img:url("img/bowl-proteina.jpg");
       --hero-overlay: radial-gradient(900px 700px at 110% -10%, rgba(34,197,94,.30) 0%, rgba(34,197,94,0) 60%);
     }
@@ -40,6 +39,11 @@
       gap:12px;
       font-weight:900;
       flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .brand:hover {
+      transform: scale(1.05);
     }
     .logo{
       width:32px;
@@ -200,10 +204,10 @@
       margin-bottom: 16px;
     }
 
-    /* Carrusel de Bowls */
+    /* Carrusel de Bowls - CORREGIDO */
     .carousel-container {
       position: relative;
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
       overflow: hidden;
       border-radius: 20px;
@@ -212,14 +216,32 @@
     .carousel-track {
       display: flex;
       transition: transform 0.5s ease;
+      gap: 20px;
     }
 
     .carousel-slide {
-      min-width: 100%;
+      min-width: calc(25% - 15px); /* 4 elementos por vista con gap */
+      flex: 0 0 auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .carousel-slide {
+        min-width: calc(33.333% - 14px); /* 3 elementos por vista */
+      }
+    }
+
+    @media (max-width: 768px) {
+      .carousel-slide {
+        min-width: calc(50% - 10px); /* 2 elementos por vista */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .carousel-slide {
+        min-width: 100%; /* 1 elemento por vista */
+      }
     }
 
     .bowl-card {
@@ -228,9 +250,12 @@
       border-radius: 16px;
       padding: 0;
       overflow: hidden;
-      max-width: 300px;
+      width: 100%;
       box-shadow: 0 10px 30px rgba(0,0,0,.3);
       transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     .bowl-card:hover {
@@ -239,18 +264,23 @@
 
     .bowl-image {
       width: 100%;
-      height: 200px;
-      background: linear-gradient(45deg, #22c55e, #16a34a);
+      height: 180px;
+      background-size: cover;
+      background-position: center;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: bold;
       font-size: 18px;
+      position: relative;
     }
 
     .bowl-content {
       padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .bowl-title {
@@ -283,6 +313,36 @@
       color: var(--muted);
       font-size: 14px;
       line-height: 1.4;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .bowl-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .add-to-cart {
+      background: var(--cta);
+      color: var(--cta-text);
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .add-to-cart:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
     }
 
     /* Controles del carrusel */
@@ -473,7 +533,7 @@
   <!-- NAV MEJORADO -->
   <header>
     <div class="container topbar">
-      <div class="brand">
+      <div class="brand" id="logoBrand">
         <div class="logo">FE</div>
         <span>Fit Express</span>
       </div>
@@ -500,7 +560,7 @@
             <path d="M6 7h12l-1 12H7L6 7Z"></path>
             <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
           </svg>
-          <span class="cart-badge"></span>
+          <span class="cart-badge" id="cartBadge">0</span>
         </a>
       </nav>
     </div>
@@ -528,97 +588,20 @@
   <section class="bowls-section">
     <div class="container">
       <div class="section-header">
-        <span class="recipe-count">8 Recetas</span>
+        <span class="recipe-count">6 Bowls</span>
         <h2>BOWLS DE PROTEÍNA</h2>
         <p>Tanto si eres un amante de las plantas como un carnívoro, hay un bowl de proteína para ti. Estos bowls están cargados de proteínas magras y saludables, están repletos de tantos nutrientes que te mantendrán lleno y activo durante todo el día. Una comida equilibrada y satisfactoria, todo en un bowl.</p>
       </div>
 
       <div class="carousel-container">
         <div class="carousel-track" id="carouselTrack">
-          <!-- Slide 1 -->
-          <div class="carousel-slide">
-            <div class="bowl-card">
-              <div class="bowl-image" style="background: linear-gradient(45deg, #dc2626, #ef4444);">
-                Bowl de Carne Coreano TH6
-              </div>
-              <div class="bowl-content">
-                <h3 class="bowl-title">Bowl de Carne Coreano TH6</h3>
-                <div class="bowl-meta">
-                  <div class="bowl-rating">
-                    ★★★★★ <span>(13)</span>
-                  </div>
-                  <div class="bowl-time">1h</div>
-                </div>
-                <p class="bowl-description">Carne marinada estilo coreano con vegetales frescos y arroz integral.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Slide 2 -->
-          <div class="carousel-slide">
-            <div class="bowl-card">
-              <div class="bowl-image" style="background: linear-gradient(45deg, #0ea5e9, #38bdf8);">
-                Bowl de Atún y Aguacate
-              </div>
-              <div class="bowl-content">
-                <h3 class="bowl-title">Bowl de Atún y Aguacate</h3>
-                <div class="bowl-meta">
-                  <div class="bowl-rating">
-                    ★★★★★ <span>(20)</span>
-                  </div>
-                  <div class="bowl-time">45min</div>
-                </div>
-                <p class="bowl-description">Atún fresco con aguacate, quinoa y vegetales de temporada.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Slide 3 -->
-          <div class="carousel-slide">
-            <div class="bowl-card">
-              <div class="bowl-image" style="background: linear-gradient(45deg, #f59e0b, #fbbf24);">
-                Bowl de Cerdo
-              </div>
-              <div class="bowl-content">
-                <h3 class="bowl-title">Bowl de Cerdo</h3>
-                <div class="bowl-meta">
-                  <div class="bowl-rating">
-                    ★★★★☆ <span>(7)</span>
-                  </div>
-                  <div class="bowl-time">1h 15min</div>
-                </div>
-                <p class="bowl-description">Cerdo asado con batata y vegetales al wok.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Slide 4 -->
-          <div class="carousel-slide">
-            <div class="bowl-card">
-              <div class="bowl-image" style="background: linear-gradient(45deg, #10b981, #34d399);">
-                Bowl con Falafel
-              </div>
-              <div class="bowl-content">
-                <h3 class="bowl-title">Bowl con Falafel de Lentejas</h3>
-                <div class="bowl-meta">
-                  <div class="bowl-rating">
-                    ★★★★★ <span>(13)</span>
-                  </div>
-                  <div class="bowl-time">2h 35min</div>
-                </div>
-                <p class="bowl-description">Falafel de lentejas con granada y salsa tahini.</p>
-              </div>
-            </div>
-          </div>
+          <!-- Los productos se generarán dinámicamente con JavaScript -->
         </div>
 
         <div class="carousel-controls">
           <button class="carousel-btn" id="prevBtn">‹</button>
           <div class="carousel-dots" id="carouselDots">
-            <div class="carousel-dot active" data-index="0"></div>
-            <div class="carousel-dot" data-index="1"></div>
-            <div class="carousel-dot" data-index="2"></div>
-            <div class="carousel-dot" data-index="3"></div>
+            <!-- Los puntos se generarán dinámicamente con JavaScript -->
           </div>
           <button class="carousel-btn" id="nextBtn">›</button>
         </div>
@@ -683,34 +666,228 @@
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Carrusel functionality
+    // Productos de Fit Express con precios reales
+    const fitExpressProducts = [
+      {
+        id: 1,
+        name: "Bowl Quinoa Power",
+        calories: "420 kcal",
+        macros: "P24 / F12 / C54",
+        price: 7990,
+        available: true,
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        rating: 4.8,
+        reviews: 24,
+        time: "15 min",
+        description: "Quinoa, garbanzos, aguacate y vegetales asados con aderezo de limón."
+      },
+      {
+        id: 2,
+        name: "Bowl Proteico Plus",
+        calories: "520 kcal",
+        macros: "P40 / F18 / C50",
+        price: 8990,
+        available: true,
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        rating: 4.9,
+        reviews: 31,
+        time: "12 min",
+        description: "Pollo glaseado con salsa teriyaki, arroz y vegetales al vapor."
+      },
+      {
+        id: 3,
+        name: "Bowl Energía Verde",
+        calories: "380 kcal",
+        macros: "P22 / F10 / C48",
+        price: 7490,
+        available: true,
+        image: "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        rating: 4.7,
+        reviews: 18,
+        time: "10 min",
+        description: "Espinacas, kale, aguacate, semillas y proteína vegetal."
+      },
+      {
+        id: 4,
+        name: "Bowl Vegano Supreme",
+        calories: "430 kcal",
+        macros: "P20 / F14 / C60",
+        price: 8490,
+        available: true,
+        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        rating: 4.6,
+        reviews: 22,
+        time: "18 min",
+        description: "Falafel de lentejas con granada, quinoa y salsa tahini."
+      },
+      {
+        id: 5,
+        name: "Bowl Mediterráneo",
+        calories: "480 kcal",
+        macros: "P28 / F16 / C52",
+        price: 8990,
+        available: true,
+        image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        rating: 4.9,
+        reviews: 29,
+        time: "14 min",
+        description: "Atún fresco con aguacate, quinoa y vegetales de temporada."
+      },
+      {
+        id: 6,
+        name: "Bowl Carne Coreana",
+        calories: "550 kcal",
+        macros: "P35 / F20 / C45",
+        price: 9490,
+        available: true,
+        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        rating: 4.8,
+        reviews: 27,
+        time: "16 min",
+        description: "Carne marinada estilo coreano con vegetales frescos y arroz integral."
+      }
+    ];
+
+    // Carrusel functionality - CORREGIDO
     document.addEventListener('DOMContentLoaded', function() {
       const track = document.getElementById('carouselTrack');
-      const slides = document.querySelectorAll('.carousel-slide');
-      const dots = document.querySelectorAll('.carousel-dot');
+      const dotsContainer = document.getElementById('carouselDots');
       const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
+      const cartBadge = document.getElementById('cartBadge');
+      const logoBrand = document.getElementById('logoBrand');
       
       let currentIndex = 0;
-      const totalSlides = slides.length;
+      const totalSlides = fitExpressProducts.length;
+      
+      // Función para formatear precio
+      function formatPrice(price) {
+        return `$${price.toLocaleString()}`;
+      }
+      
+      // Función para generar estrellas de rating
+      function generateStars(rating) {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 !== 0;
+        let stars = '';
+        
+        for (let i = 0; i < fullStars; i++) {
+          stars += '★';
+        }
+        
+        if (hasHalfStar) {
+          stars += '½';
+        }
+        
+        // Completar con estrellas vacías si es necesario
+        const emptyStars = 5 - Math.ceil(rating);
+        for (let i = 0; i < emptyStars; i++) {
+          stars += '☆';
+        }
+        
+        return stars;
+      }
+      
+      // Renderizar productos en el carrusel
+      function renderProducts() {
+        track.innerHTML = '';
+        
+        fitExpressProducts.forEach(product => {
+          const slide = document.createElement('div');
+          slide.className = 'carousel-slide';
+          
+          slide.innerHTML = `
+            <div class="bowl-card">
+              <div class="bowl-image" style="background-image: url('${product.image}');">
+                <div style="background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 10px;">${product.name}</div>
+              </div>
+              <div class="bowl-content">
+                <h3 class="bowl-title">${product.name}</h3>
+                <div class="bowl-meta">
+                  <div class="bowl-rating">
+                    ${generateStars(product.rating)} <span>(${product.reviews})</span>
+                  </div>
+                  <div class="bowl-time">${product.time}</div>
+                </div>
+                <div class="bowl-calories">${product.calories}</div>
+                <div class="bowl-macros">${product.macros}</div>
+                <p class="bowl-description">${product.description}</p>
+                <div class="bowl-price">${formatPrice(product.price)}</div>
+                <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 7h12l-1 12H7L6 7Z"></path>
+                    <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
+                  </svg>
+                  Agregar al carrito
+                </button>
+              </div>
+            </div>
+          `;
+          
+          track.appendChild(slide);
+        });
+        
+        // Actualizar contador de recetas
+        document.querySelector('.recipe-count').textContent = `${fitExpressProducts.length} Bowls`;
+      }
+      
+      // Calcular items por vista según el ancho de la pantalla
+      function getItemsPerView() {
+        const width = window.innerWidth;
+        if (width <= 480) return 1;
+        if (width <= 768) return 2;
+        if (width <= 1100) return 3;
+        return 4;
+      }
+      
+      let itemsPerView = getItemsPerView();
+      const totalPages = Math.ceil(totalSlides / itemsPerView);
+      
+      // Crear puntos de navegación
+      function createDots() {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'carousel-dot';
+          if (i === 0) dot.classList.add('active');
+          dot.setAttribute('data-index', i);
+          dotsContainer.appendChild(dot);
+        }
+      }
+      
+      createDots();
+      const dots = document.querySelectorAll('.carousel-dot');
 
       function updateCarousel() {
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        const slideWidth = 100 / itemsPerView;
+        const translateX = -currentIndex * slideWidth * itemsPerView;
+        track.style.transform = `translateX(${translateX}%)`;
         
         // Update dots
         dots.forEach((dot, index) => {
           dot.classList.toggle('active', index === currentIndex);
         });
+        
+        // Mostrar/ocultar botones según la posición
+        prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
+        prevBtn.style.cursor = currentIndex === 0 ? 'default' : 'pointer';
+        
+        nextBtn.style.opacity = currentIndex >= totalPages - 1 ? '0.5' : '1';
+        nextBtn.style.cursor = currentIndex >= totalPages - 1 ? 'default' : 'pointer';
       }
 
       function nextSlide() {
-        currentIndex = (currentIndex + 1) % totalSlides;
-        updateCarousel();
+        if (currentIndex < totalPages - 1) {
+          currentIndex++;
+          updateCarousel();
+        }
       }
 
       function prevSlide() {
-        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-        updateCarousel();
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateCarousel();
+        }
       }
 
       // Event listeners
@@ -725,8 +902,134 @@
         });
       });
 
-      // Auto-advance every 5 seconds
-      setInterval(nextSlide, 5000);
+      // Recargar página al hacer clic en el logo
+      logoBrand.addEventListener('click', function() {
+        location.reload();
+      });
+
+      // Funcionalidad del carrito
+      let cartCount = 0;
+      
+      // Delegación de eventos para los botones de agregar al carrito
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
+          const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
+          const productId = button.getAttribute('data-id');
+          const productName = button.getAttribute('data-name');
+          const productPrice = parseFloat(button.getAttribute('data-price'));
+          
+          cartCount++;
+          cartBadge.textContent = cartCount;
+          
+          // Animación del botón
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = '';
+          }, 200);
+          
+          // Mostrar notificación
+          showNotification(`¡${productName} agregado al carrito!`);
+          
+          // Guardar en localStorage
+          saveToCart(productId, productName, productPrice);
+        }
+      });
+      
+      function saveToCart(id, name, price) {
+        let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+        
+        // Verificar si el producto ya está en el carrito
+        const existingItem = cart.find(item => item.id === id);
+        
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({
+            id: id,
+            name: name,
+            price: price,
+            quantity: 1
+          });
+        }
+        
+        localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+      }
+      
+      function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          background: var(--accent);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 10px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+          z-index: 1000;
+          animation: slideIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 300);
+        }, 3000);
+      }
+      
+      // Añadir estilos para la animación de notificación
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(100%); opacity: 0; }
+        }
+        .bowl-calories {
+          color: var(--muted);
+          font-size: 14px;
+          margin-bottom: 4px;
+        }
+        .bowl-macros {
+          color: var(--muted);
+          font-size: 12px;
+          margin-bottom: 8px;
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Actualizar en redimensionamiento de ventana
+      window.addEventListener('resize', function() {
+        itemsPerView = getItemsPerView();
+        const newTotalPages = Math.ceil(totalSlides / itemsPerView);
+        
+        // Ajustar currentIndex si es necesario
+        if (currentIndex >= newTotalPages) {
+          currentIndex = newTotalPages - 1;
+        }
+        
+        createDots();
+        updateCarousel();
+      });
+      
+      // Cargar carrito desde localStorage
+      function loadCart() {
+        const cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartBadge.textContent = totalItems;
+      }
+      
+      // Inicializar
+      renderProducts();
+      loadCart();
+      updateCarousel();
     });
   </script>
 </body>

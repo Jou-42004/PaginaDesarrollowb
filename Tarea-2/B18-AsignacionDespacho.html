@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asignación de Despacho — Fit Express</title>
+  <meta name="description" content="Selecciona tu método de entrega">
+  <style>
+    :root{
+      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+    }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+    
+    /* Header mejorado */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+      border-bottom:1px solid rgba(183,210,192,.18);
+      padding: 8px 0;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      height: 60px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand:hover {
+      transform: scale(1.05);
+    }
+    .logo{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#19c268;
+      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .brand span{font-size:20px; color: var(--text);}
+    
+    /* Contenido principal */
+    .main-content {
+      padding: 40px 16px;
+      min-height: calc(100vh - 140px);
+    }
+    
+    /* Encabezado */
+    .delivery-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .delivery-title {
+      font-size: 32px;
+      margin: 0 0 15px 0;
+      color: var(--text);
+    }
+    
+    .delivery-subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .address-display {
+      background: rgba(34,197,94,.1);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .address-label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    
+    .address-value {
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    /* Progreso de compra */
+    .progress-steps {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 50px;
+      position: relative;
+    }
+    
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(17, 57, 35, 0.6);
+      border: 2px solid rgba(183,210,192,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .step-number.active {
+      background: var(--cta);
+      border-color: var(--cta);
+      color: var(--cta-text);
+    }
+    
+    .step-number.completed {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #052e16;
+    }
+    
+    .step-label {
+      font-size: 14px;
+      color: var(--muted);
+      text-align: center;
+    }
+    
+    .step-label.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .progress-line {
+      position: absolute;
+      top: 20px;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: rgba(183,210,192,.25);
+      z-index: 1;
+    }
+    
+    /* Opciones de despacho */
+    .delivery-options {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    @media (min-width: 768px) {
+      .delivery-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    .delivery-option {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 2px solid rgba(183,210,192,.18);
+      border-radius: 12px;
+      padding: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .delivery-option:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    
+    .delivery-option.selected {
+      border-color: var(--cta);
+      background: linear-gradient(180deg, rgba(30,64,175,.2), rgba(10,38,23,.85));
+    }
+    
+    .option-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    
+    .option-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+    }
+    
+    .option-description {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+    
+    .option-details {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .option-details li {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .option-details li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: bold;
+    }
+    
+    .delivery-estimate {
+      background: rgba(34,197,94,.1);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+    
+    .estimate-label {
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    
+    .estimate-value {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .selected-badge {
+      position: absolute;
+      top: -10px;
+      right: 15px;
+      background: var(--cta);
+      color: var(--cta-text);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    
+    /* Resumen del pedido */
+    .order-summary {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .summary-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+      text-align: center;
+    }
+    
+    .summary-items {
+      margin-bottom: 20px;
+    }
+    
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(183,210,192,.1);
+    }
+    
+    .item-name {
+      color: var(--text);
+      font-weight: 500;
+    }
+    
+    .item-quantity {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    
+    .item-price {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .summary-totals {
+      border-top: 1px solid rgba(183,210,192,.18);
+      padding-top: 15px;
+    }
+    
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+    
+    .total-label {
+      color: var(--text);
+    }
+    
+    .total-value {
+      color: var(--text);
+      font-weight: 600;
+    }
+    
+    .grand-total {
+      font-size: 18px;
+      font-weight: 700;
+      border-top: 1px solid rgba(183,210,192,.18);
+      padding-top: 12px;
+      margin-top: 8px;
+    }
+    
+    /* Botones de acción */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .btn-back {
+      background: rgba(17, 57, 35, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+    
+    .btn-back:hover {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.15);
+    }
+    
+    .btn-continue {
+      background: var(--cta);
+      color: var(--cta-text);
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 2;
+    }
+    
+    .btn-continue:hover {
+      filter: brightness(.9);
+      transform: translateY(-2px);
+    }
+    
+    .btn-continue:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    footer{
+      padding:30px 16px 50px;
+      color:var(--muted);
+      text-align:center;
+      border-top:1px solid rgba(183,210,192,.18);
+      background:var(--panel);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .progress-steps {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .progress-line {
+        display: none;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV MEJORADO -->
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="brand">
+        <div class="logo">FE</div>
+        <span>Fit Express</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="container">
+      <!-- Encabezado -->
+      <div class="delivery-header">
+        <h1 class="delivery-title">Método de Despacho</h1>
+        <p class="delivery-subtitle">Selecciona cómo quieres recibir tu pedido</p>
+        
+        <!-- Mostrar dirección guardada -->
+        <div class="address-display" id="addressDisplay" style="display: none;">
+          <div class="address-label">Dirección de entrega:</div>
+          <div class="address-value" id="addressValue"></div>
+        </div>
+      </div>
+
+      <!-- Progreso de compra -->
+      <div class="progress-steps">
+        <div class="progress-line"></div>
+        <div class="progress-step">
+          <div class="step-number completed">1</div>
+          <div class="step-label">Carrito</div>
+        </div>
+        <div class="progress-step">
+          <div class="step-number completed">2</div>
+          <div class="step-label">Dirección</div>
+        </div>
+        <div class="progress-step">
+          <div class="step-number active">3</div>
+          <div class="step-label active">Despacho</div>
+        </div>
+        <div class="progress-step">
+          <div class="step-number">4</div>
+          <div class="step-label">Pago</div>
+        </div>
+        <div class="progress-step">
+          <div class="step-number">5</div>
+          <div class="step-label">Confirmación</div>
+        </div>
+      </div>
+
+      <!-- Opciones de despacho -->
+      <div class="delivery-options">
+        <div class="delivery-option" data-type="delivery" data-price="1990">
+          <div class="option-header">
+            <h3 class="option-title">Delivery</h3>
+          </div>
+          <p class="option-description">Recibe tu pedido directamente en tu domicilio</p>
+          <ul class="option-details">
+            <li>Entrega directa a domicilio</li>
+            <li>Seguimiento en tiempo real</li>
+            <li>Contacto directo con repartidor</li>
+            <li>Pago contra entrega disponible</li>
+          </ul>
+          <div class="delivery-estimate" id="deliveryEstimate">
+            <div class="estimate-label">Tiempo estimado:</div>
+            <div class="estimate-value" id="deliveryTime">30-45 minutos</div>
+          </div>
+        </div>
+
+        <div class="delivery-option" data-type="pickup" data-price="0">
+          <div class="option-header">
+            <h3 class="option-title">Retiro en Local</h3>
+          </div>
+          <p class="option-description">Retira tu pedido en nuestro local principal</p>
+          <ul class="option-details">
+            <li>Sin costo de envío</li>
+            <li>Listo en 15-20 minutos</li>
+            <li>Estacionamiento gratuito</li>
+            <li>Horario: 8:00 - 22:00 hrs</li>
+          </ul>
+          <div class="delivery-estimate">
+            <div class="estimate-label">Dirección del local:</div>
+            <div class="estimate-value">Av. Principal 123, Santiago Centro</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen del pedido -->
+      <div class="order-summary">
+        <h3 class="summary-title">Resumen de tu Pedido</h3>
+        <div class="summary-items" id="orderItems">
+          <!-- Los productos se cargarán dinámicamente -->
+        </div>
+        <div class="summary-totals">
+          <div class="total-row">
+            <span class="total-label">Subtotal:</span>
+            <span class="total-value" id="subtotal">$0</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">Descuento:</span>
+            <span class="total-value" id="discount">$0</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">Envío:</span>
+            <span class="total-value" id="shipping">$0</span>
+          </div>
+          <div class="total-row grand-total">
+            <span class="total-label">Total:</span>
+            <span class="total-value" id="total">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="action-buttons">
+        <a href="B11-DireccionEntrega.html" class="btn-back">← Volver Atrás</a>
+        <button class="btn-continue" id="continueBtn" disabled>Continuar al Pago</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Variables globales
+    let selectedDeliveryType = null;
+    let shippingCost = 0;
+
+    // Cargar datos desde localStorage
+    const cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+    const deliveryAddress = JSON.parse(localStorage.getItem('deliveryAddress')) || {};
+
+    // Elementos DOM
+    const continueBtn = document.getElementById('continueBtn');
+    const orderItems = document.getElementById('orderItems');
+    const subtotalElement = document.getElementById('subtotal');
+    const discountElement = document.getElementById('discount');
+    const shippingElement = document.getElementById('shipping');
+    const totalElement = document.getElementById('total');
+    const addressDisplay = document.getElementById('addressDisplay');
+    const addressValue = document.getElementById('addressValue');
+    const deliveryTime = document.getElementById('deliveryTime');
+
+    // Función para formatear precio
+    function formatPrice(price) {
+      return `$${price.toLocaleString()}`;
+    }
+
+    // Función para calcular tiempo estimado basado en la zona
+    function calculateDeliveryTime(comuna) {
+      const tiempos = {
+        'santiago': '25-35 minutos',
+        'providencia': '30-40 minutos',
+        'las condes': '35-45 minutos',
+        'ñuñoa': '30-40 minutos',
+        'maipú': '45-60 minutos',
+        'la reina': '35-45 minutos',
+        'vitacura': '40-50 minutos'
+      };
+      
+      const comunaLower = comuna.toLowerCase();
+      return tiempos[comunaLower] || '45-60 minutos';
+    }
+
+    // Función para mostrar la dirección guardada
+    function displaySavedAddress() {
+      if (deliveryAddress.address && deliveryAddress.comuna) {
+        addressValue.textContent = `${deliveryAddress.address}, ${deliveryAddress.comuna}`;
+        addressDisplay.style.display = 'block';
+        
+        // Actualizar tiempo de delivery basado en la comuna
+        const calculatedTime = calculateDeliveryTime(deliveryAddress.comuna);
+        deliveryTime.textContent = calculatedTime;
+      }
+    }
+
+    // Función para calcular totales
+    function updateTotals() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const discount = Math.round(subtotal * 0.1); // 10% de descuento
+      const total = subtotal - discount + shippingCost;
+      
+      subtotalElement.textContent = formatPrice(subtotal);
+      discountElement.textContent = formatPrice(discount);
+      shippingElement.textContent = formatPrice(shippingCost);
+      totalElement.textContent = formatPrice(total);
+    }
+
+    // Función para renderizar productos
+    function renderOrderItems() {
+      if (cart.length === 0) {
+        orderItems.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 20px;">No hay productos en el carrito</div>';
+        return;
+      }
+
+      orderItems.innerHTML = cart.map(item => `
+        <div class="summary-item">
+          <div>
+            <div class="item-name">${item.name}</div>
+            <div class="item-quantity">Cantidad: ${item.quantity}</div>
+          </div>
+          <div class="item-price">${formatPrice(item.price * item.quantity)}</div>
+        </div>
+      `).join('');
+    }
+
+    // Función para seleccionar método de despacho
+    function selectDeliveryOption(option) {
+      // Remover selección anterior
+      document.querySelectorAll('.delivery-option').forEach(opt => {
+        opt.classList.remove('selected');
+        const badge = opt.querySelector('.selected-badge');
+        if (badge) badge.remove();
+      });
+
+      // Agregar selección nueva
+      option.classList.add('selected');
+      
+      // Agregar badge de seleccionado
+      const badge = document.createElement('div');
+      badge.className = 'selected-badge';
+      badge.textContent = 'Seleccionado';
+      option.appendChild(badge);
+
+      // Actualizar variables
+      selectedDeliveryType = option.dataset.type;
+      shippingCost = parseInt(option.dataset.price);
+      
+      // Habilitar botón de continuar
+      continueBtn.disabled = false;
+      
+      // Actualizar totales
+      updateTotals();
+    }
+
+    // Función para continuar al pago
+    function continueToPayment() {
+      if (!selectedDeliveryType) return;
+
+      // Guardar información de despacho
+      const deliveryInfo = {
+        type: selectedDeliveryType,
+        cost: shippingCost,
+        address: deliveryAddress,
+        estimatedTime: selectedDeliveryType === 'delivery' ? deliveryTime.textContent : '15-20 minutos'
+      };
+
+      localStorage.setItem('deliveryInfo', JSON.stringify(deliveryInfo));
+      
+      // Redirigir a página de pago
+      window.location.href = 'E03-PagoExterno.html';
+    }
+
+    // Event Listeners
+    document.querySelectorAll('.delivery-option').forEach(option => {
+      option.addEventListener('click', () => selectDeliveryOption(option));
+    });
+
+    continueBtn.addEventListener('click', continueToPayment);
+
+    // Inicializar
+    displaySavedAddress();
+    renderOrderItems();
+    updateTotals();
+  </script>
+</body>
+</html>

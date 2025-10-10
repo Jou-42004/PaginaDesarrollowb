@@ -37,6 +37,13 @@
       gap:12px;
       font-weight:900;
       flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand:hover {
+      transform: scale(1.05);
     }
     .logo{
       width:32px;
@@ -120,6 +127,25 @@
       color: var(--text);
     }
     
+    /* Estado del carrito vacío */
+    .empty-cart {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    
+    .empty-cart-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      color: var(--muted);
+    }
+    
+    .empty-cart h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    
     /* Tabla de carrito */
     .cart-table {
       width: 100%;
@@ -147,6 +173,21 @@
     
     .cart-table tr:last-child td {
       border-bottom: none;
+    }
+    
+    .product-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .product-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
     }
     
     .product-name {
@@ -196,13 +237,13 @@
       color: #ef4444;
       cursor: pointer;
       font-size: 14px;
-      text-decoration: underline;
-      padding: 0;
-      margin-left: 8px;
+      padding: 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
     }
     
     .remove-btn:hover {
-      color: #dc2626;
+      background: rgba(239, 68, 68, 0.1);
     }
     
     /* Resumen del carrito */
@@ -231,7 +272,7 @@
     }
     
     .discount {
-      color: #ef4444;
+      color: #22c55e;
     }
     
     .total-row {
@@ -242,21 +283,52 @@
       font-size: 18px;
     }
     
-    /* Botón de pago */
+    /* Botones de acción */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .btn-back {
+      background: rgba(17, 57, 35, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+    
+    .btn-back:hover {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.15);
+      transform: translateY(-2px);
+    }
+    
     .checkout-btn {
-      display: block;
-      width: 100%;
-      padding: 16px;
       background: var(--cta);
       color: var(--cta-text);
       border: none;
       border-radius: 12px;
+      padding: 16px 24px;
       font-weight: 700;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       transition: all 0.2s ease;
       text-align: center;
       text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 2;
     }
     
     .checkout-btn:hover {
@@ -265,12 +337,55 @@
       box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
     }
     
+    .clear-cart-btn {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+    
+    .clear-cart-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      transform: translateY(-2px);
+    }
+    
     footer{
       padding:30px 16px 50px;
       color:var(--muted);
       text-align:center;
       border-top:1px solid rgba(183,210,192,.18);
       background:var(--panel);
+    }
+    
+    /* Toast de notificación */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--cta);
+      color: var(--cta-text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
     }
     
     /* Responsive */
@@ -284,9 +399,19 @@
         padding: 12px 8px;
       }
       
-      .quantity-controls {
+      .product-info {
         flex-direction: column;
-        gap: 4px;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .cart-table {
+        display: block;
+        overflow-x: auto;
       }
     }
   </style>
@@ -295,10 +420,10 @@
   <!-- NAV MEJORADO -->
   <header>
     <div class="container topbar">
-      <div class="brand">
+      <a href="index.html" class="brand">
         <div class="logo">FE</div>
         <span>Fit Express</span>
-      </div>
+      </a>
 
       <!-- ICONOS DE ACCIONES MEJORADOS -->
       <nav class="actions" aria-label="Acciones">
@@ -317,12 +442,12 @@
           </svg>
         </a>
         <!-- Carrito con notificación -->
-        <a class="icon-btn" href="carrito.html" title="Carrito de compras">
+        <a class="icon-btn" href="B09-Carrito.html" title="Carrito de compras">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
             <path d="M6 7h12l-1 12H7L6 7Z"></path>
             <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
           </svg>
-          <span class="cart-badge">2</span>
+          <span class="cart-badge" id="cartBadge">0</span>
         </a>
       </nav>
     </div>
@@ -336,184 +461,250 @@
         <h1 class="cart-title">Tu carrito</h1>
       </div>
 
-      <!-- Tabla de productos -->
-      <table class="cart-table">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Precio</th>
-            <th>Cant.</th>
-            <th>Total</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="product-name">Bowl Quinoa</div>
-            </td>
-            <td class="product-price">$7,990</td>
-            <td>
-              <div class="quantity-controls">
-                <button class="quantity-btn">-</button>
-                <span class="quantity-display">1</span>
-                <button class="quantity-btn">+</button>
-              </div>
-            </td>
-            <td class="product-total">$7,990</td>
-            <td>
-              <button class="remove-btn">Quitar</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="product-name">Snack Almendras</div>
-            </td>
-            <td class="product-price">$1,990</td>
-            <td>
-              <div class="quantity-controls">
-                <button class="quantity-btn">-</button>
-                <span class="quantity-display">2</span>
-                <button class="quantity-btn">+</button>
-              </div>
-            </td>
-            <td class="product-total">$3,980</td>
-            <td>
-              <button class="remove-btn">Quitar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Resumen del carrito -->
-      <div class="cart-summary">
-        <div class="summary-row">
-          <span class="summary-label">Subtotal</span>
-          <span class="summary-value">$11,970</span>
-        </div>
-        <div class="summary-row">
-          <span class="summary-label">Descuentos</span>
-          <span class="summary-value discount">~$1,195</span>
-        </div>
-        <div class="summary-row total-row">
-          <span class="summary-label">Total</span>
-          <span class="summary-value">$10,775</span>
-        </div>
+      <!-- Carrito vacío -->
+      <div class="empty-cart" id="emptyCart" style="display: none;">
+        <div class="empty-cart-icon">🛒</div>
+        <h2>Tu carrito está vacío</h2>
+        <p>¡Descubre nuestros deliciosos bowls y snacks saludables!</p>
+        <a href="B05-CatalogoMacros.html" class="checkout-btn" style="margin-top: 20px; display: inline-flex; width: auto;">
+          Explorar Catálogo
+        </a>
       </div>
 
-      <!-- Botón de pago -->
-      <a href="pago.html" class="checkout-btn">Continuar al pago</a>
+      <!-- Tabla de productos -->
+      <div id="cartContent" style="display: none;">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cartItems">
+            <!-- Los productos se cargarán dinámicamente -->
+          </tbody>
+        </table>
+
+        <!-- Resumen del carrito -->
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span class="summary-label">Subtotal</span>
+            <span class="summary-value" id="subtotal">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Descuento (10%)</span>
+            <span class="summary-value discount" id="discount">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Envío</span>
+            <span class="summary-value" id="shipping">$0</span>
+          </div>
+          <div class="summary-row total-row">
+            <span class="summary-label">Total</span>
+            <span class="summary-value" id="total">$0</span>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="action-buttons">
+          <a href="B05-CatalogoMacros.html" class="btn-back">← Seguir Comprando</a>
+          <button class="clear-cart-btn" id="clearCartBtn">Vaciar Carrito</button>
+          <a href="B11-DireccionEntrega.html" class="checkout-btn" id="checkoutBtn">Continuar al Pago</a>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Toast de notificación -->
+  <div class="toast" id="toast"></div>
 
   <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Datos del carrito
-    const cartItems = [
-      {
-        id: 1,
-        name: "Bowl Quinoa",
+    // Productos de Fit Express con imágenes
+    const fitExpressProducts = {
+      1: {
+        name: "Bowl Quinoa Power",
         price: 7990,
-        quantity: 1,
-        total: 7990
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
       },
-      {
-        id: 3,
-        name: "Snack Almendras",
-        price: 1990,
-        quantity: 2,
-        total: 3980
+      2: {
+        name: "Bowl Proteico Plus",
+        price: 8990,
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+      },
+      3: {
+        name: "Bowl Energía Verde",
+        price: 7490,
+        image: "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+      },
+      4: {
+        name: "Bowl Vegano Supreme",
+        price: 8490,
+        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+      },
+      5: {
+        name: "Bowl Mediterráneo",
+        price: 8990,
+        image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+      },
+      6: {
+        name: "Bowl Carne Coreana",
+        price: 9490,
+        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
       }
-    ];
+    };
 
-    // Calcular totales
-    function updateCartTotals() {
-      const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0);
-      const discount = Math.round(subtotal * 0.1); // 10% de descuento
-      const total = subtotal - discount;
-      
-      // Actualizar la interfaz
-      document.querySelector('.summary-row:nth-child(1) .summary-value').textContent = `$${subtotal.toLocaleString()}`;
-      document.querySelector('.summary-row:nth-child(2) .summary-value').textContent = `~$${discount.toLocaleString()}`;
-      document.querySelector('.total-row .summary-value').textContent = `$${total.toLocaleString()}`;
+    // Cargar carrito desde localStorage
+    let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+
+    // Elementos DOM
+    const cartItems = document.getElementById('cartItems');
+    const cartBadge = document.getElementById('cartBadge');
+    const subtotalElement = document.getElementById('subtotal');
+    const discountElement = document.getElementById('discount');
+    const shippingElement = document.getElementById('shipping');
+    const totalElement = document.getElementById('total');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    const emptyCart = document.getElementById('emptyCart');
+    const cartContent = document.getElementById('cartContent');
+    const toast = document.getElementById('toast');
+
+    // Función para formatear precio
+    function formatPrice(price) {
+      return `$${price.toLocaleString()}`;
     }
 
-    // Funcionalidad de los botones de cantidad
-    document.querySelectorAll('.quantity-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const quantityDisplay = row.querySelector('.quantity-display');
-        const priceElement = row.querySelector('.product-price');
-        const totalElement = row.querySelector('.product-total');
-        const productName = row.querySelector('.product-name').textContent;
-        
-        let quantity = parseInt(quantityDisplay.textContent);
-        const price = parseInt(priceElement.textContent.replace('$', '').replace(',', ''));
-        
-        if (this.textContent === '+') {
-          quantity++;
-        } else if (this.textContent === '-' && quantity > 1) {
-          quantity--;
-        }
-        
-        quantityDisplay.textContent = quantity;
-        const total = price * quantity;
-        totalElement.textContent = `$${total.toLocaleString()}`;
-        
-        // Actualizar en los datos
-        const cartItem = cartItems.find(item => item.name === productName);
-        if (cartItem) {
-          cartItem.quantity = quantity;
-          cartItem.total = total;
-          updateCartTotals();
-        }
-      });
-    });
+    // Función para mostrar toast
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
 
-    // Funcionalidad de quitar productos
-    document.querySelectorAll('.remove-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const productName = row.querySelector('.product-name').textContent;
-        
-        // Eliminar de los datos
-        const index = cartItems.findIndex(item => item.name === productName);
-        if (index !== -1) {
-          cartItems.splice(index, 1);
+    // Función para actualizar badge del carrito
+    function updateCartBadge() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartBadge.textContent = totalItems;
+    }
+
+    // Función para actualizar totales
+    function updateCartTotals() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const discount = Math.round(subtotal * 0.1); // 10% de descuento
+      const shipping = subtotal > 15000 ? 0 : 2000; // Envío gratis sobre $15.000
+      const total = subtotal - discount + shipping;
+      
+      subtotalElement.textContent = formatPrice(subtotal);
+      discountElement.textContent = formatPrice(discount);
+      shippingElement.textContent = shipping === 0 ? "Gratis" : formatPrice(shipping);
+      totalElement.textContent = formatPrice(total);
+      
+      // Guardar total para usar en el proceso de pago
+      localStorage.setItem('cartTotal', total);
+    }
+
+    // Función para actualizar cantidad
+    function updateQuantity(productId, change) {
+      const item = cart.find(item => item.id == productId);
+      if (item) {
+        item.quantity += change;
+        if (item.quantity < 1) {
+          removeFromCart(productId);
+        } else {
+          localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+          renderCart();
+          showToast(`Cantidad actualizada: ${item.name}`);
         }
+      }
+    }
+
+    // Función para eliminar producto
+    function removeFromCart(productId) {
+      const item = cart.find(item => item.id == productId);
+      cart = cart.filter(item => item.id != productId);
+      localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+      renderCart();
+      if (item) {
+        showToast(`${item.name} eliminado del carrito`);
+      }
+    }
+
+    // Función para vaciar carrito
+    function clearCart() {
+      if (cart.length > 0) {
+        if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+          cart = [];
+          localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+          renderCart();
+          showToast('Carrito vaciado');
+        }
+      }
+    }
+
+    // Función para renderizar carrito
+    function renderCart() {
+      if (cart.length === 0) {
+        emptyCart.style.display = 'block';
+        cartContent.style.display = 'none';
+      } else {
+        emptyCart.style.display = 'none';
+        cartContent.style.display = 'block';
         
-        // Eliminar de la interfaz
-        row.remove();
-        
-        // Actualizar totales y badge del carrito
-        updateCartTotals();
-        updateCartBadge();
-        
-        // Si no hay productos, mostrar mensaje
-        if (cartItems.length === 0) {
-          document.querySelector('.cart-table tbody').innerHTML = `
+        cartItems.innerHTML = cart.map(item => {
+          const product = fitExpressProducts[item.id];
+          if (!product) return '';
+          
+          return `
             <tr>
-              <td colspan="5" style="text-align: center; padding: 40px; color: var(--muted);">
-                Tu carrito está vacío
+              <td>
+                <div class="product-info">
+                  <div class="product-image" style="background-image: url('${product.image}')"></div>
+                  <div>
+                    <div class="product-name">${product.name}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="product-price">${formatPrice(item.price)}</td>
+              <td>
+                <div class="quantity-controls">
+                  <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                  <span class="quantity-display">${item.quantity}</span>
+                  <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                </div>
+              </td>
+              <td class="product-total">${formatPrice(item.price * item.quantity)}</td>
+              <td>
+                <button class="remove-btn" onclick="removeFromCart(${item.id})" title="Eliminar producto">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
               </td>
             </tr>
           `;
-        }
-      });
-    });
-
-    // Actualizar badge del carrito
-    function updateCartBadge() {
-      const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-      document.querySelector('.cart-badge').textContent = totalItems;
+        }).join('');
+      }
+      
+      updateCartTotals();
+      updateCartBadge();
     }
 
+    // Event Listeners
+    clearCartBtn.addEventListener('click', clearCart);
+
     // Inicializar
-    updateCartTotals();
-    updateCartBadge();
+    renderCart();
   </script>
 </body>
 </html>

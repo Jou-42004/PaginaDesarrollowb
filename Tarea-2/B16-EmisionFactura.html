@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura - Pedido #12345</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body { 
+            background-color: #f5f7fa; 
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .invoice-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #2c3e50;
+        }
+        .company-info, .client-info {
+            margin-bottom: 30px;
+        }
+        .details { 
+            margin-bottom: 20px; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        th { 
+            background-color: #f2f2f2; 
+        }
+        .total { 
+            font-weight: bold; 
+            font-size: 1.2em; 
+        }
+        .footer { 
+            margin-top: 40px; 
+            text-align: center; 
+            color: #666; 
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <h1>FACTURA ELECTRÓNICA</h1>
+            <p>N° F-12345</p>
+            <p>Fecha: 15 de Noviembre, 2023</p>
+        </div>
+        
+        <div class="company-info">
+            <h2>EMISOR</h2>
+            <p><strong>Mi Empresa S.A.</strong></p>
+            <p>RUT: 76.543.210-1</p>
+            <p>Av. Principal 1234, Santiago</p>
+            <p>Teléfono: +56 2 2345 6789</p>
+            <p>Email: ventas@miempresa.cl</p>
+        </div>
+        
+        <div class="client-info">
+            <h2>RECEPTOR</h2>
+            <p><strong id="client-name">Nombre del Cliente</strong></p>
+            <p>RUT: <span id="client-rut">12.345.678-9</span></p>
+            <p>Dirección: <span id="client-address">Dirección del cliente</span></p>
+            <p>Giro: <span id="client-giro">Giro del cliente</span></p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Bouti Prolacio</td>
+                    <td>1</td>
+                    <td>$9.990</td>
+                    <td>$9.990</td>
+                </tr>
+                <tr>
+                    <td>Envío estándar</td>
+                    <td>1</td>
+                    <td>$785</td>
+                    <td>$785</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                    <td class="total">$10.775</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div class="footer">
+            <p>¡Gracias por su compra!</p>
+            <p>Para consultas, contacte a: servicio@miempresa.cl</p>
+            <p>Factura generada electrónicamente - No requiere firma ni timbre</p>
+        </div>
+        
+        <div class="actions">
+            <button onclick="window.print()">Imprimir Factura</button>
+            <button onclick="window.location.href='index.html'">Volver al Inicio</button>
+        </div>
+    </div>
+
+    <script>
+        // Recuperar datos del localStorage si existen
+        document.addEventListener('DOMContentLoaded', function() {
+            const clientRut = localStorage.getItem('clientRut');
+            const clientName = localStorage.getItem('clientName');
+            const clientAddress = localStorage.getItem('clientAddress');
+            const clientGiro = localStorage.getItem('clientGiro');
+            
+            if (clientRut) document.getElementById('client-rut').textContent = clientRut;
+            if (clientName) document.getElementById('client-name').textContent = clientName;
+            if (clientAddress) document.getElementById('client-address').textContent = clientAddress;
+            if (clientGiro) document.getElementById('client-giro').textContent = clientGiro;
+        });
+    </script>
+</body>
+</html>

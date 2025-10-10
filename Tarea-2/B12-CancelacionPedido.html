@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cancelar Pedido — Fit Express</title>
+  <meta name="description" content="Gestiona la cancelación de tu pedido.">
+  <style>
+    :root{
+      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+      --danger:#ef4444; --danger-text:#fef2f2;
+    }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
+    
+    /* Header mejorado */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
+      border-bottom:1px solid rgba(183,210,192,.18);
+      padding: 8px 0;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      height: 60px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      flex-shrink: 0;
+    }
+    .logo{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#19c268;
+      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .brand span{font-size:20px; color: var(--text);}
+    
+    /* Acciones - Iconos mejorados */
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-left: auto;
+    }
+    .icon-btn{
+      display:inline-grid;
+      place-items:center;
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(183,210,192,.25);
+      background:rgba(17, 57, 35, 0.6);
+      text-decoration:none;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .icon-btn:hover{
+      border-color:var(--accent);
+      background:rgba(34,197,94,.15);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34,197,94,.2);
+    }
+    .icon{
+      width:20px;
+      height:20px;
+      stroke:#e2e8f0;
+      stroke-width:2;
+    }
+    
+    /* Notificación en carrito */
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--cta);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* Contenido principal */
+    .main-content {
+      padding: 40px 16px;
+      min-height: calc(100vh - 140px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Tarjeta de pedido */
+    .order-card {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,.3);
+    }
+    
+    .order-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .order-title {
+      font-size: 28px;
+      margin: 0 0 8px 0;
+      color: var(--text);
+    }
+    
+    .order-number {
+      color: var(--muted);
+      font-size: 16px;
+      margin: 0;
+    }
+    
+    /* Información del pedido */
+    .order-info {
+      margin-bottom: 30px;
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(183,210,192,.1);
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      color: var(--muted);
+      font-weight: 600;
+    }
+    
+    .info-value {
+      text-align: right;
+      font-weight: 600;
+    }
+    
+    .status-badge {
+      background: rgba(34,197,94,.2);
+      color: #22c55e;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid rgba(34,197,94,.3);
+    }
+    
+    .total-amount {
+      font-size: 18px;
+      color: var(--accent);
+    }
+    
+    /* Botón de cancelar */
+    .cancel-section {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    
+    .btn-cancel {
+      background: var(--danger);
+      color: var(--danger-text);
+      border: none;
+      border-radius: 12px;
+      padding: 16px 32px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .btn-cancel:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    }
+    
+    /* Política de cancelación */
+    .policy-section {
+      background: rgba(17, 57, 35, 0.6);
+      border: 1px solid rgba(183,210,192,.15);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 25px;
+    }
+    
+    .policy-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    
+    .policy-text {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    /* Modal de confirmación */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: linear-gradient(180deg, rgba(18,56,35,.95), rgba(10,38,23,.95));
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+    
+    .modal-title {
+      font-size: 24px;
+      margin: 0 0 16px 0;
+      color: var(--text);
+    }
+    
+    .modal-text {
+      color: var(--muted);
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    
+    .btn-secondary {
+      background: rgba(17, 57, 35, 0.6);
+      color: var(--text);
+      border: 1px solid rgba(183,210,192,.25);
+      border-radius: 8px;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+    
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.15);
+    }
+    
+    .btn-danger {
+      background: var(--danger);
+      color: var(--danger-text);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+    
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+    
+    /* Toast de notificación */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--cta);
+      color: var(--cta-text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    footer{
+      padding:30px 16px 50px;
+      color:var(--muted);
+      text-align:center;
+      border-top:1px solid rgba(183,210,192,.18);
+      background:var(--panel);
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV MEJORADO -->
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="logo">FE</div>
+        <span>Fit Express</span>
+      </div>
+
+      <!-- ICONOS DE ACCIONES MEJORADOS -->
+      <nav class="actions" aria-label="Acciones">
+        <!-- Buscar -->
+        <a class="icon-btn" href="buscar.html" title="Buscar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.3-4.3"></path>
+          </svg>
+        </a>
+        <!-- Perfil -->
+        <a class="icon-btn" href="B01-RegistroUsuario.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
+            <path d="M20 21a8 8 0 1 0-16 0"></path>
+          </svg>
+        </a>
+        <!-- Carrito con notificación -->
+        <a class="icon-btn" href="carrito.html" title="Carrito de compras">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M6 7h12l-1 12H7L6 7Z"></path>
+            <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
+          </svg>
+          <span class="cart-badge">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="container">
+      <div class="order-card">
+        <!-- Encabezado del pedido -->
+        <div class="order-header">
+          <h1 class="order-title">Pedido #12345</h1>
+          <p class="order-number">Detalles y gestión de cancelación</p>
+        </div>
+
+        <!-- Información del pedido -->
+        <div class="order-info">
+          <div class="info-row">
+            <span class="info-label">Estado</span>
+            <div class="info-value">
+              <span class="status-badge">Recibido (acepta cancelación)</span>
+            </div>
+          </div>
+          
+          <div class="info-row">
+            <span class="info-label">Total</span>
+            <span class="info-value total-amount">$10.775</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="info-label">Método de pago</span>
+            <span class="info-value">Tarjeta (reembolso automático)</span>
+          </div>
+        </div>
+
+        <!-- Botón de cancelar -->
+        <div class="cancel-section">
+          <button class="btn-cancel" id="cancelButton">Cancelar pedido</button>
+        </div>
+
+        <!-- Política de cancelación -->
+        <div class="policy-section">
+          <div class="policy-title">Política de cancelación</div>
+          <p class="policy-text">
+            Se puede cancelar mientras el estado sea Recibido o Aprobado. 
+            No aplica si está en Preparación o En ruta.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <h2 class="modal-title">Confirmar Cancelación</h2>
+      <p class="modal-text">
+        ¿Estás seguro de que deseas cancelar el pedido #12345? 
+        Esta acción no se puede deshacer y se procesará el reembolso automático.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancelConfirm">No, mantener pedido</button>
+        <button class="btn-danger" id="confirmCancel">Sí, cancelar pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de notificación -->
+  <div class="toast" id="toast"></div>
+
+  <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Elementos DOM
+    const cancelButton = document.getElementById('cancelButton');
+    const confirmModal = document.getElementById('confirmModal');
+    const cancelConfirm = document.getElementById('cancelConfirm');
+    const confirmCancel = document.getElementById('confirmCancel');
+    const toast = document.getElementById('toast');
+
+    // Función para mostrar toast
+    function showToast(message, isError = false) {
+      toast.textContent = message;
+      toast.style.background = isError ? '#ef4444' : '#22c55e';
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+
+    // Función para simular cancelación de pedido
+    function cancelOrder() {
+      // Simular llamada a API
+      setTimeout(() => {
+        showToast('✅ Pedido cancelado exitosamente. Reembolso en proceso.');
+        
+        // Actualizar interfaz
+        document.querySelector('.status-badge').textContent = 'Cancelado';
+        document.querySelector('.status-badge').style.background = 'rgba(239, 68, 68, 0.2)';
+        document.querySelector('.status-badge').style.color = '#ef4444';
+        document.querySelector('.status-badge').style.borderColor = 'rgba(239, 68, 68, 0.3)';
+        
+        cancelButton.disabled = true;
+        cancelButton.textContent = 'Pedido Cancelado';
+        cancelButton.style.background = '#6b7280';
+        cancelButton.style.cursor = 'not-allowed';
+        
+        // Actualizar política
+        document.querySelector('.policy-text').innerHTML = 
+          '<strong>Este pedido ha sido cancelado.</strong> El reembolso se procesará automáticamente en un plazo de 3-5 días hábiles.';
+      }, 1500);
+    }
+
+    // Event Listeners
+    cancelButton.addEventListener('click', () => {
+      confirmModal.style.display = 'flex';
+    });
+
+    cancelConfirm.addEventListener('click', () => {
+      confirmModal.style.display = 'none';
+      showToast('El pedido se mantiene activo.', true);
+    });
+
+    confirmCancel.addEventListener('click', () => {
+      confirmModal.style.display = 'none';
+      cancelOrder();
+    });
+
+    // Cerrar modal al hacer clic fuera
+    window.addEventListener('click', (e) => {
+      if (e.target === confirmModal) {
+        confirmModal.style.display = 'none';
+      }
+    });
+
+    // Simular estado del pedido (para demo)
+    function simulateOrderStatus() {
+      const statuses = [
+        { text: 'Recibido (acepta cancelación)', canCancel: true },
+        { text: 'Aprobado (acepta cancelación)', canCancel: true },
+        { text: 'En preparación (no cancelable)', canCancel: false },
+        { text: 'En ruta (no cancelable)', canCancel: false }
+      ];
+      
+      // Para demo, mantener el estado como "Recibido"
+      const currentStatus = statuses[0];
+      
+      if (!currentStatus.canCancel) {
+        cancelButton.disabled = true;
+        cancelButton.textContent = 'No Cancelable';
+        cancelButton.style.background = '#6b7280';
+        cancelButton.style.cursor = 'not-allowed';
+        
+        document.querySelector('.policy-text').innerHTML = 
+          '<strong>Este pedido no se puede cancelar</strong> porque ya está en proceso de preparación.';
+      }
+    }
+
+    // Inicializar
+    simulateOrderStatus();
+  </script>
+</body>
+</html>

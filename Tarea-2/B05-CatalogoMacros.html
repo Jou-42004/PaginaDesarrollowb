@@ -37,6 +37,13 @@
       gap:12px;
       font-weight:900;
       flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand:hover {
+      transform: scale(1.05);
     }
     .logo{
       width:32px;
@@ -156,6 +163,29 @@
       border-color: var(--cta);
     }
     
+    /* Indicador de filtros activos */
+    .filter-indicator {
+      background: var(--accent);
+      color: #052e16;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      display: inline-block;
+    }
+    
+    .clear-filters {
+      background: none;
+      border: none;
+      color: #052e16;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: 10px;
+      font-weight: 700;
+    }
+    
     /* Grid de productos */
     .products-grid {
       display: grid;
@@ -174,18 +204,49 @@
       background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
       border: 1px solid rgba(183,210,192,.18);
       border-radius: 12px;
-      padding: 16px;
+      padding: 0;
+      overflow: hidden;
       transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
     }
     
     .product-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,.2);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,.3);
       border-color: rgba(183,210,192,.4);
     }
     
     .product-card.unavailable {
       opacity: 0.6;
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 160px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .product-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+    }
+    
+    .product-content {
+      padding: 16px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
     
     .product-name {
@@ -249,6 +310,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      margin-top: auto;
     }
     
     .btn-add-cart {
@@ -273,69 +335,6 @@
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
-    }
-    
-    .btn-customize {
-      background: rgba(17, 57, 35, 0.6);
-      color: var(--text);
-      border: 1px solid rgba(183,210,192,.25);
-      border-radius: 8px;
-      padding: 10px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      width: 100%;
-    }
-    
-    .btn-customize:hover {
-      border-color: var(--accent);
-      background: rgba(34,197,94,.15);
-    }
-    
-    .btn-customize:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    /* Pie del catálogo */
-    .catalog-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    
-    .results-count {
-      color: var(--muted);
-      font-size: 14px;
-    }
-    
-    .pagination {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .page-btn {
-      background: rgba(17, 57, 35, 0.6);
-      color: var(--text);
-      border: 1px solid rgba(183,210,192,.25);
-      border-radius: 6px;
-      padding: 8px 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 14px;
-    }
-    
-    .page-btn:hover:not(:disabled) {
-      border-color: var(--accent);
-      background: rgba(34,197,94,.15);
-    }
-    
-    .page-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
     }
     
     footer{
@@ -366,16 +365,34 @@
       transform: translateY(0);
       opacity: 1;
     }
+    
+    /* Mensaje sin resultados */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    
+    .no-results h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    
+    .no-results p {
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <!-- NAV MEJORADO -->
   <header>
     <div class="container topbar">
-      <div class="brand">
+      <a href="index.html" class="brand">
         <div class="logo">FE</div>
         <span>Fit Express</span>
-      </div>
+      </a>
 
       <!-- ICONOS DE ACCIONES MEJORADOS -->
       <nav class="actions" aria-label="Acciones">
@@ -412,10 +429,19 @@
       <div class="catalog-header">
         <h1 class="catalog-title">Catálogo saludable</h1>
         
+        <!-- Indicador de filtros activos -->
+        <div id="filterIndicator" style="display: none;">
+          <div class="filter-indicator">
+            Mostrando bowls filtrados 
+            <button class="clear-filters" onclick="clearFilters()">Mostrar todos</button>
+          </div>
+        </div>
+        
         <!-- Botones de filtro -->
         <div class="filters">
-          <button class="filter-btn active">Bowl</button>
+          <a href="B06-FiltroBowl.html" class="filter-btn">Filtro Bowl</a>
           <a href="B08-PromocionesCombos.html" class="filter-btn">Promociones Combos</a>
+          <a href="B10-PesonalizacionExtras.html" class="filter-btn">Personalizar Bowl</a>
         </div>
       </div>
 
@@ -424,13 +450,9 @@
         <!-- Los productos se generarán dinámicamente con JavaScript -->
       </div>
 
-      <!-- Pie: texto de conteo a la izquierda, paginación a la derecha -->
+      <!-- Pie: solo texto de conteo -->
       <div class="catalog-footer">
-        <div class="results-count" id="resultsCount">Mostrando 8 de 24 productos</div>
-        <div class="pagination">
-          <button class="page-btn" id="prevPage">Anterior</button>
-          <button class="page-btn" id="nextPage">Siguiente</button>
-        </div>
+        <div class="results-count" id="resultsCount">Mostrando 8 de 8 productos</div>
       </div>
     </div>
   </div>
@@ -452,7 +474,14 @@
         macros: "P24 / F12 / C54",
         price: 7990,
         available: true,
-        type: "bowl"
+        type: "bowl",
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        filters: {
+          protein: ["vegan"],
+          calories: ["medium"],
+          features: ["vegan", "glutenfree"],
+          price: ["medium"]
+        }
       },
       {
         id: 2,
@@ -461,7 +490,14 @@
         macros: "P40 / F18 / C50",
         price: 8990,
         available: true,
-        type: "bowl"
+        type: "bowl",
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        filters: {
+          protein: ["chicken"],
+          calories: ["high"],
+          features: ["highprotein"],
+          price: ["high"]
+        }
       },
       {
         id: 3,
@@ -470,7 +506,8 @@
         macros: "P15 / F8 / C12",
         price: 1990,
         available: true,
-        type: "snack"
+        type: "snack",
+        image: "https://images.unsplash.com/photo-1619601875086-009b81185dcc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
       },
       {
         id: 4,
@@ -479,7 +516,14 @@
         macros: "P22 / F10 / C48",
         price: 7490,
         available: true,
-        type: "bowl"
+        type: "bowl",
+        image: "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        filters: {
+          protein: ["vegan"],
+          calories: ["low"],
+          features: ["vegan", "glutenfree", "lowcarb"],
+          price: ["medium"]
+        }
       },
       {
         id: 5,
@@ -488,7 +532,14 @@
         macros: "P20 / F14 / C60",
         price: 8490,
         available: true,
-        type: "bowl"
+        type: "bowl",
+        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        filters: {
+          protein: ["vegan"],
+          calories: ["medium"],
+          features: ["vegan", "glutenfree"],
+          price: ["medium"]
+        }
       },
       {
         id: 6,
@@ -497,7 +548,8 @@
         macros: "P18 / F9 / C15",
         price: 2190,
         available: true,
-        type: "snack"
+        type: "snack",
+        image: "https://images.unsplash.com/photo-1628149332315-482992f5f4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
       },
       {
         id: 7,
@@ -506,7 +558,14 @@
         macros: "P28 / F16 / C52",
         price: 8990,
         available: true,
-        type: "bowl"
+        type: "bowl",
+        image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+        filters: {
+          protein: ["fish"],
+          calories: ["medium"],
+          features: ["highprotein"],
+          price: ["high"]
+        }
       },
       {
         id: 8,
@@ -515,18 +574,21 @@
         macros: "P16 / F7 / C14",
         price: 2090,
         available: true,
-        type: "snack"
+        type: "snack",
+        image: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
       }
     ];
 
     // Carrito de compras
     let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+    let showingFilteredResults = false;
 
     // Elementos DOM
     const productsGrid = document.getElementById('productsGrid');
     const resultsCount = document.getElementById('resultsCount');
     const cartBadge = document.getElementById('cartBadge');
     const toast = document.getElementById('toast');
+    const filterIndicator = document.getElementById('filterIndicator');
 
     // Función para formatear precio
     function formatPrice(price) {
@@ -563,13 +625,101 @@
             id: product.id,
             name: product.name,
             price: product.price,
-            quantity: 1
+            quantity: 1,
+            image: product.image
           });
         }
         
         updateCartBadge();
         showToast('¡Producto agregado al carrito!');
       }
+    }
+
+    // Función para aplicar filtros desde localStorage
+    function applyStoredFilters() {
+      const storedFilters = JSON.parse(localStorage.getItem('bowlFilters'));
+      
+      if (!storedFilters) return;
+      
+      // Limpiar filtros después de usarlos
+      localStorage.removeItem('bowlFilters');
+      
+      // Verificar si hay filtros activos
+      const hasActiveFilters = Object.values(storedFilters).some(arr => arr.length > 0);
+      if (!hasActiveFilters) return;
+      
+      // Filtrar productos (solo bowls)
+      const filteredProducts = products.filter(product => {
+        if (product.type !== 'bowl') return false;
+        
+        // Verificar cada categoría de filtro
+        for (const [category, selectedValues] of Object.entries(storedFilters)) {
+          if (selectedValues.length > 0) {
+            // Si el bowl no tiene ningún valor que coincida en esta categoría, excluirlo
+            const hasMatch = selectedValues.some(value => 
+              product.filters && product.filters[category] && product.filters[category].includes(value)
+            );
+            
+            if (!hasMatch) {
+              return false;
+            }
+          }
+        }
+        return true;
+      });
+
+      // Actualizar productos mostrados
+      if (filteredProducts.length > 0) {
+        renderFilteredProducts(filteredProducts);
+        showToast(`Mostrando ${filteredProducts.length} bowls filtrados`);
+      } else {
+        showToast('No se encontraron bowls con los filtros seleccionados');
+      }
+    }
+
+    // Función para renderizar productos filtrados
+    function renderFilteredProducts(filteredProducts) {
+      showingFilteredResults = true;
+      filterIndicator.style.display = 'block';
+      
+      productsGrid.innerHTML = '';
+      
+      filteredProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = `product-card ${product.available ? '' : 'unavailable'}`;
+        
+        productCard.innerHTML = `
+          <div class="product-image" style="background-image: url('${product.image}')"></div>
+          <div class="product-content">
+            <div class="product-name">${product.name}</div>
+            <div class="product-calories">${product.calories}</div>
+            <div class="product-macros">${product.macros}</div>
+            <div class="product-price">${formatPrice(product.price)}</div>
+            <div class="product-availability ${product.available ? 'available' : 'unavailable-text'}">
+              <span class="availability-dot"></span>
+              ${product.available ? 'Disponible' : 'No disponible'}
+            </div>
+            <div class="product-actions">
+              <button class="btn-add-cart" ${!product.available ? 'disabled' : ''} 
+                      onclick="addToCart(${product.id})">
+                Agregar al Carrito
+              </button>
+            </div>
+          </div>
+        `;
+        
+        productsGrid.appendChild(productCard);
+      });
+      
+      resultsCount.textContent = `Mostrando ${filteredProducts.length} bowls filtrados`;
+    }
+
+    // Función para limpiar filtros y mostrar todos los productos
+    function clearFilters() {
+      showingFilteredResults = false;
+      filterIndicator.style.display = 'none';
+      renderProducts();
+      showToast('Mostrando todos los productos');
     }
 
     // Función para renderizar productos
@@ -581,25 +731,22 @@
         productCard.className = `product-card ${product.available ? '' : 'unavailable'}`;
         
         productCard.innerHTML = `
-          <div class="product-name">${product.name}</div>
-          <div class="product-calories">${product.calories}</div>
-          <div class="product-macros">${product.macros}</div>
-          <div class="product-price">${formatPrice(product.price)}</div>
-          <div class="product-availability ${product.available ? 'available' : 'unavailable-text'}">
-            <span class="availability-dot"></span>
-            ${product.available ? 'Disponible' : 'No disponible'}
-          </div>
-          <div class="product-actions">
-            <button class="btn-add-cart" ${!product.available ? 'disabled' : ''} 
-                    onclick="addToCart(${product.id})">
-              Agregar al Carrito
-            </button>
-            ${product.type === 'bowl' ? `
-              <button class="btn-customize" ${!product.available ? 'disabled' : ''}
-                      onclick="customizeProduct(${product.id})">
-                Personalizar extras
+          <div class="product-image" style="background-image: url('${product.image}')"></div>
+          <div class="product-content">
+            <div class="product-name">${product.name}</div>
+            <div class="product-calories">${product.calories}</div>
+            <div class="product-macros">${product.macros}</div>
+            <div class="product-price">${formatPrice(product.price)}</div>
+            <div class="product-availability ${product.available ? 'available' : 'unavailable-text'}">
+              <span class="availability-dot"></span>
+              ${product.available ? 'Disponible' : 'No disponible'}
+            </div>
+            <div class="product-actions">
+              <button class="btn-add-cart" ${!product.available ? 'disabled' : ''} 
+                      onclick="addToCart(${product.id})">
+                Agregar al Carrito
               </button>
-            ` : ''}
+            </div>
           </div>
         `;
         
@@ -609,26 +756,10 @@
       resultsCount.textContent = `Mostrando ${products.length} de ${products.length} productos`;
     }
 
-    // Función para personalizar producto (placeholder)
-    function customizeProduct(productId) {
-      const product = products.find(p => p.id === productId);
-      if (product) {
-        showToast(`Próximamente: Personalizar ${product.name}`);
-      }
-    }
-
     // Inicializar
     renderProducts();
     updateCartBadge();
-
-    // Funcionalidad de paginación básica
-    document.getElementById('prevPage').addEventListener('click', () => {
-      showToast('Página anterior');
-    });
-
-    document.getElementById('nextPage').addEventListener('click', () => {
-      showToast('Página siguiente');
-    });
+    applyStoredFilters();
   </script>
 </body>
 </html>

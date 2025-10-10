@@ -3,214 +3,721 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Promociones y Combos — Fit Express</title>
-  <meta name="description" content="Promociones vigentes y combos de Fit Express.">
+  <title>Promociones Combos — Fit Express</title>
+  <meta name="description" content="Combos especiales y promociones exclusivas">
   <style>
     :root{
       --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
-      --accent:#22c55e; --cta:#2563eb; --cta-text:#fff;
+      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
     }
     *{box-sizing:border-box} html,body{margin:0;height:100%}
     body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
-    .container{max-width:1200px;margin:0 auto;padding:0 16px}
-
-    /* Header (igual a tu index) */
-    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);
+    
+    /* Header mejorado */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter:blur(8px);
       background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
-      border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
-    .topbar{display:flex;align-items:center;gap:12px;height:60px}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:900}
-    .logo{width:32px;height:32px;border-radius:8px;background:#19c268;box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px}
-    .brand span{font-size:20px}
-    .actions{display:flex;align-items:center;gap:12px;margin-left:auto}
-    .icon-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17,57,35,.6);text-decoration:none}
-    .icon{width:20px;height:20px;stroke:#e2e8f0;stroke-width:2}
-    .cart-badge{position:absolute;top:-5px;right:-5px;background:#6d28d9;color:#fff;border-radius:999px;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
-
-    /* Página */
-    main{padding:22px 0 36px}
-    .head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:14px}
-    h1{margin:0;font-size:24px}
-    .sub{color:var(--muted);font-size:13px}
-    .sort{display:flex;align-items:center;gap:8px}
-    select{background:rgba(17,57,35,.6);color:var(--text);border:1px solid rgba(183,210,192,.25);border-radius:10px;padding:10px 12px}
-    select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
-
-    /* Cards */
-    .cards{display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr))}
-    @media (max-width:780px){.cards{grid-template-columns:1fr}}
-    .card{
-      background:linear-gradient(180deg, rgba(18,56,35,.65), rgba(10,38,23,.65));
-      border:1px solid rgba(183,210,192,.18);border-radius:16px;overflow:hidden;
-      display:grid;grid-template-columns:160px auto
+      border-bottom:1px solid rgba(183,210,192,.18);
+      padding: 8px 0;
     }
-    @media (max-width:520px){.card{grid-template-columns:1fr}}
-    .thumb{width:100%;height:100%;min-height:160px;object-fit:cover}
-    .content{padding:14px 16px;display:grid;gap:6px}
-    .title{margin:0;font-size:18px;font-weight:900}
-    .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800;color:#052e16;background:var(--accent)}
-    .price{display:flex;align-items:baseline;gap:8px}
-    .old{color:var(--muted);text-decoration:line-through}
-    .new{font-weight:900}
-    .btn{margin-top:8px;display:inline-flex;justify-content:center;align-items:center;padding:10px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.15);cursor:pointer;background:var(--cta);color:#fff;font-weight:800}
-    .btn:hover{filter:brightness(.95)}
-    footer{padding:26px 16px;color:var(--muted);text-align:center;border-top:1px solid rgba(183,210,192,.18);background:var(--panel);margin-top:24px}
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      height: 60px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand:hover {
+      transform: scale(1.05);
+    }
+    .logo{
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#19c268;
+      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .brand span{font-size:20px; color: var(--text);}
+    
+    /* Acciones - Iconos mejorados */
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-left: auto;
+    }
+    .icon-btn{
+      display:inline-grid;
+      place-items:center;
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(183,210,192,.25);
+      background:rgba(17, 57, 35, 0.6);
+      text-decoration:none;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .icon-btn:hover{
+      border-color:var(--accent);
+      background:rgba(34,197,94,.15);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34,197,94,.2);
+    }
+    .icon{
+      width:20px;
+      height:20px;
+      stroke:#e2e8f0;
+      stroke-width:2;
+    }
+    
+    /* Notificación en carrito */
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--cta);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
 
-    /* Toast simple */
-    .toasts{position:fixed;right:16px;bottom:16px;display:grid;gap:10px;z-index:50}
-    .toast{background:#052e16;border:1px solid rgba(183,210,192,.25);border-radius:12px;padding:10px 12px}
+    /* Contenido principal */
+    .main-content {
+      padding: 40px 16px;
+      min-height: calc(100vh - 140px);
+    }
+    
+    /* Encabezado */
+    .promo-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    
+    .promo-title {
+      font-size: 36px;
+      margin: 0 0 15px 0;
+      color: var(--text);
+    }
+    
+    .promo-subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    /* Grid de combos */
+    .combos-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    @media (min-width: 768px) {
+      .combos-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .combos-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .combo-card {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 16px;
+      padding: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .combo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,.4);
+      border-color: rgba(183,210,192,.4);
+    }
+    
+    .badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--cta);
+      color: var(--cta-text);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 12px;
+      z-index: 2;
+    }
+    
+    .badge.popular {
+      background: #f59e0b;
+      color: #451a03;
+    }
+    
+    .badge.special {
+      background: #ef4444;
+      color: white;
+    }
+    
+    .combo-image {
+      width: 100%;
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .combo-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+    }
+    
+    .combo-content {
+      padding: 25px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .combo-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    
+    .combo-description {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      flex-grow: 1;
+    }
+    
+    .combo-includes {
+      margin-bottom: 20px;
+    }
+    
+    .combo-includes h4 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    
+    .combo-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .combo-items li {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .combo-items li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: bold;
+    }
+    
+    .combo-pricing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    
+    .combo-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .combo-original-price {
+      font-size: 16px;
+      color: var(--muted);
+      text-decoration: line-through;
+      margin-right: 10px;
+    }
+    
+    .combo-discount {
+      background: #ef4444;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    
+    .combo-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn-add-combo {
+      background: var(--cta);
+      color: var(--cta-text);
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    
+    .btn-add-combo:hover {
+      filter: brightness(.9);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
+    }
+    
+    /* Sección de beneficios */
+    .benefits-section {
+      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
+      border: 1px solid rgba(183,210,192,.18);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 50px;
+    }
+    
+    .benefits-title {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: var(--text);
+    }
+    
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 30px;
+    }
+    
+    @media (min-width: 768px) {
+      .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .benefit {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .benefit-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      color: #052e16;
+      font-size: 24px;
+    }
+    
+    .benefit h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    
+    .benefit p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    footer{
+      padding:30px 16px 50px;
+      color:var(--muted);
+      text-align:center;
+      border-top:1px solid rgba(183,210,192,.18);
+      background:var(--panel);
+    }
+
+    /* Toast de notificación */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--cta);
+      color: var(--cta-text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
+  <!-- NAV MEJORADO -->
   <header>
     <div class="container topbar">
-      <div class="brand"><div class="logo">FE</div><span>Fit Express</span></div>
+      <a href="index.html" class="brand">
+        <div class="logo">FE</div>
+        <span>Fit Express</span>
+      </a>
 
-      <nav class="actions">
-        <a class="icon-btn" href="index.html" title="Inicio">
-          <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4V12H9v10H5a2 2 0 0 1-2-2v-9Z"/></svg>
+      <!-- ICONOS DE ACCIONES MEJORADOS -->
+      <nav class="actions" aria-label="Acciones">
+        <!-- Buscar -->
+        <a class="icon-btn" href="buscar.html" title="Buscar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.3-4.3"></path>
+          </svg>
         </a>
-        <a class="icon-btn" href="B09-Carrito.html" title="Carrito" style="position:relative">
-          <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M6 7h12l-1 12H7L6 7Z"/><path d="M9 7V6a3 3 0 0 1 6 0v1"/></svg>
-          <span class="cart-badge" id="cartCount"></span>
+        <!-- Perfil -->
+        <a class="icon-btn" href="B01-RegistroUsuario.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
+            <path d="M20 21a8 8 0 1 0-16 0"></path>
+          </svg>
+        </a>
+        <!-- Carrito con notificación -->
+        <a class="icon-btn" href="B09-Carrito.html" title="Carrito de compras">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
+            <path d="M6 7h12l-1 12H7L6 7Z"></path>
+            <path d="M9 7V6a3 3 0 0 1 6 0v1"></path>
+          </svg>
+          <span class="cart-badge" id="cartBadge">0</span>
         </a>
       </nav>
     </div>
   </header>
 
-  <main class="container">
-    <div class="head">
-      <div>
-        <h1>Promociones y combos</h1>
-        <div class="sub">Vigencia basada en tu zona horaria</div>
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="container">
+      <!-- Encabezado -->
+      <div class="promo-header">
+        <h1 class="promo-title">Promociones Combos</h1>
+        <p class="promo-subtitle">Ahorra más con nuestros combos especiales. Perfectos para tu rutina saludable</p>
       </div>
-      <div class="sort">
-        <label for="sort" class="sub">Ordenar por</label>
-        <select id="sort">
-          <option value="discount_desc">Mayor descuento</option>
-          <option value="price_asc">Precio más bajo</option>
-          <option value="name_asc">Nombre (A-Z)</option>
-        </select>
+
+      <!-- Grid de combos -->
+      <div class="combos-grid" id="combosGrid">
+        <!-- Los combos se generarán dinámicamente con JavaScript -->
       </div>
+
+      <!-- Sección de beneficios -->
+      <section class="benefits-section">
+        <h2 class="benefits-title">¿Por qué elegir nuestros combos?</h2>
+        <div class="benefits-grid">
+          <div class="benefit">
+            <div class="benefit-icon">💰</div>
+            <h3>Ahorro Garantizado</h3>
+            <p>Hasta 25% de descuento comparado con comprar los productos por separado</p>
+          </div>
+          <div class="benefit">
+            <div class="benefit-icon">⚡</div>
+            <h3>Comodidad Total</h3>
+            <p>Todos tus alimentos saludables en un solo pedido, listos para disfrutar</p>
+          </div>
+          <div class="benefit">
+            <div class="benefit-icon">🎯</div>
+            <h3>Nutrición Balanceada</h3>
+            <p>Combos diseñados por nutricionistas para cubrir tus necesidades diarias</p>
+          </div>
+        </div>
+      </section>
     </div>
+  </div>
 
-    <section id="cards" class="cards" aria-live="polite"></section>
-  </main>
-
-  <div id="toasts" class="toasts" aria-live="polite" aria-atomic="true"></div>
+  <!-- Toast de notificación -->
+  <div class="toast" id="toast"></div>
 
   <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
-    const CLP = v => v.toLocaleString('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0});
 
-    // --- Datos (usa tus imágenes) ---
-    const PRIORITY = { ALTA:3, MEDIA:2, BAJA:1 };
-    const products = [
-      { id:'combo-proteico', title:'Combo Proteico', img:'imagenes/combo-proteico.jpg', basePrice:7990,
-        promos:[{type:'PERCENT', value:15, priority:'ALTA', until: todayAt(23,59)}] },
-      { id:'snack-bebida', title:'Snack + Bebida Natural', img:'imagenes/snack-bebida.jpg', basePrice:3990,
-        promos:[{type:'BOGO', priority:'BAJA', until:addDays(new Date(),2)}] },
-      { id:'bowl-vegano-postre', title:'Bowl Vegano + Postre', img:'imagenes/bowl-vegano-postre.jpg', basePrice:8990,
-        promos:[{type:'PERCENT', value:10, priority:'MEDIA', until:addDays(new Date(),1)}] },
-      { id:'combo-familia', title:'Combo Familia', img:'imagenes/combo-familia.jpg', basePrice:19990,
-        promos:[{type:'PERCENT', value:12, priority:'ALTA', until:addDays(new Date(),5)},
-                {type:'PERCENT', value:8, priority:'MEDIA', until:addDays(new Date(),5)}] },
+    // Datos de combos
+    const combos = [
+      {
+        id: 1,
+        name: "Combo Energía Total",
+        description: "Perfecto para mantener tu energía durante todo el día. Incluye bowls balanceados y snacks proteicos.",
+        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        items: [
+          "2 Bowls proteicos de tu elección",
+          "2 Barras de proteína",
+          "1 Bebida energética natural",
+          "1 Mix de frutos secos"
+        ],
+        price: 18990,
+        originalPrice: 24990,
+        badge: "popular",
+        discount: "24%"
+      },
+      {
+        id: 2,
+        name: "Combo Proteína Max",
+        description: "Ideal para deportistas y quienes buscan aumentar masa muscular con alimentos naturales.",
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        items: [
+          "3 Bowls altos en proteína",
+          "3 Barras proteicas",
+          "1 Batido de proteína listo",
+          "1 Pack de snacks proteicos"
+        ],
+        price: 27990,
+        originalPrice: 35990,
+        badge: "special",
+        discount: "22%"
+      },
+      {
+        id: 3,
+        name: "Combo Vegano Power",
+        description: "Deliciosa selección 100% vegetal para una alimentación consciente y nutritiva.",
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        items: [
+          "2 Bowls veganos gourmet",
+          "2 Snacks vegetales crujientes",
+          "1 Dip de hummus artesanal",
+          "1 Bebida vegetal"
+        ],
+        price: 16990,
+        originalPrice: 21990,
+        badge: "",
+        discount: "23%"
+      },
+      {
+        id: 4,
+        name: "Combo Semanal Fit",
+        description: "Planifica tu semana con este combo completo para 5 días de alimentación saludable.",
+        image: "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        items: [
+          "5 Bowls variados (1 por día)",
+          "5 Snacks saludables",
+          "2 Bebidas funcionales",
+          "1 Guía de nutrición digital"
+        ],
+        price: 39990,
+        originalPrice: 52990,
+        badge: "popular",
+        discount: "25%"
+      },
+      {
+        id: 5,
+        name: "Combo Desayuno Express",
+        description: "Comienza tu día con energía. Opciones rápidas y nutritivas para las mañanas ocupadas.",
+        image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        items: [
+          "3 Bowls de avena y granola",
+          "3 Smoothies listos para beber",
+          "2 Muffins saludables",
+          "1 Café o té de especialidad"
+        ],
+        price: 14990,
+        originalPrice: 18990,
+        badge: "",
+        discount: "21%"
+      },
+      {
+        id: 6,
+        name: "Combo Pareja Saludable",
+        description: "Disfruten juntos de una alimentación balanceada. Perfecto para compartir objetivos fitness.",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        items: [
+          "4 Bowls (2 para cada uno)",
+          "4 Barras de proteína",
+          "2 Bebidas energéticas",
+          "2 Postres saludables"
+        ],
+        price: 22990,
+        originalPrice: 29990,
+        badge: "special",
+        discount: "23%"
+      }
     ];
 
-    // --- Fechas ---
-    function addDays(d,days){ const x=new Date(d); x.setDate(x.getDate()+days); return x; }
-    function todayAt(h=0,m=0){ const d=new Date(); d.setHours(h,m,0,0); return d; }
+    // Carrito de compras
+    let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
 
-    // --- Promos ---
-    function listActive(promos, now=new Date()){ return (promos||[]).filter(p=>!p.until || p.until>=now); }
-    function resolvePriority(promos){
-      if(!promos.length) return null;
-      return promos.slice().sort((a,b)=> PRIORITY[b.priority]-PRIORITY[a.priority])[0];
+    // Elementos DOM
+    const combosGrid = document.getElementById('combosGrid');
+    const cartBadge = document.getElementById('cartBadge');
+    const toast = document.getElementById('toast');
+
+    // Función para formatear precio
+    function formatPrice(price) {
+      return `$${price.toLocaleString()}`;
     }
-    function priceWithPromo(product){
-      const actives = listActive(product.promos);
-      const chosen = resolvePriority(actives);
-      if(!chosen) return { final:product.basePrice, label:null, type:null };
-      if(chosen.type==='PERCENT'){
-        const discount = Math.round(product.basePrice*(chosen.value/100));
-        return { final:product.basePrice-discount, label:`${chosen.value}% OFF`, type:'PERCENT' };
+
+    // Función para mostrar toast
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Función para actualizar badge del carrito
+    function updateCartBadge() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartBadge.textContent = totalItems;
+      localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+    }
+
+    // Función para agregar combo al carrito
+    function addComboToCart(comboId) {
+      const combo = combos.find(c => c.id === comboId);
+      if (combo) {
+        // Verificar si el combo ya está en el carrito
+        const existingItem = cart.find(item => item.id === comboId && item.type === 'combo');
+        
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({
+            id: combo.id,
+            name: combo.name,
+            price: combo.price,
+            quantity: 1,
+            image: combo.image,
+            type: 'combo'
+          });
+        }
+        
+        updateCartBadge();
+        showToast(`¡${combo.name} agregado al carrito!`);
       }
-      if(chosen.type==='BOGO'){ return { final:product.basePrice, label:'2x1', type:'BOGO' }; }
-      return { final:product.basePrice, label:null, type:null };
     }
 
-    // --- Carrito (localStorage) ---
-    const CART_KEY = 'fe_cart';
-    function readCart(){ try{return JSON.parse(localStorage.getItem(CART_KEY)||'[]');}catch{ return []; } }
-    function writeCart(items){ localStorage.setItem(CART_KEY, JSON.stringify(items)); updateCartBadge(); }
-    function addToCart(id){
-      const p = products.find(x=>x.id===id);
-      const pricing = priceWithPromo(p);
-      const items = readCart();
-      const idx = items.findIndex(i=> i.id===id && i.price===pricing.final);
-      if(idx>-1){ items[idx].qty += 1; } else {
-        items.push({ id, title:p.title, price:pricing.final, qty:1, img:p.img, promo:pricing.label||null });
-      }
-      writeCart(items);
-      toast(`Agregado: <b>${p.title}</b> · ${CLP(pricing.final)}${pricing.label?` <small>(${pricing.label})</small>`:''}`);
-    }
-    function updateCartBadge(){
-      const items = readCart();
-      const count = items.reduce((a,b)=>a+b.qty,0);
-      const badge = document.getElementById('cartCount');
-      if(badge) badge.textContent = count>0 ? count : '';
-    }
-
-    // --- UI ---
-    const cardsEl = document.getElementById('cards');
-    const sortEl = document.getElementById('sort');
-
-    function render(){
-      const items = products.map(p=>{
-        const pr = priceWithPromo(p);
-        const discountPct = pr.type==='PERCENT' ? parseInt(pr.label) : (pr.type==='BOGO'?100:0);
-        return {...p, pr, discountPct};
-      });
-
-      const sortVal = sortEl.value;
-      items.sort((a,b)=>{
-        if(sortVal==='discount_desc') return (b.discountPct||0)-(a.discountPct||0);
-        if(sortVal==='price_asc') return a.pr.final - b.pr.final;
-        if(sortVal==='name_asc') return a.title.localeCompare(b.title);
-        return 0;
-      });
-
-      cardsEl.innerHTML = items.map(p=>`
-        <article class="card">
-          <img class="thumb" src="${p.img}" alt="${p.title}">
-          <div class="content">
-            <h3 class="title">${p.title}</h3>
-            ${p.pr.label?`<span class="badge">${p.pr.label}</span>`:''}
-            <div class="price">
-              ${p.pr.type==='PERCENT' ? `<span class="old">${CLP(p.basePrice)}</span>` : ''}
-              <span class="new">${CLP(p.pr.final)}</span>
+    // Función para renderizar combos
+    function renderCombos() {
+      combosGrid.innerHTML = '';
+      
+      combos.forEach(combo => {
+        const comboCard = document.createElement('div');
+        comboCard.className = 'combo-card';
+        
+        let badgeHTML = '';
+        if (combo.badge === 'popular') {
+          badgeHTML = '<div class="badge popular">MÁS POPULAR</div>';
+        } else if (combo.badge === 'special') {
+          badgeHTML = '<div class="badge special">OFERTA ESPECIAL</div>';
+        }
+        
+        comboCard.innerHTML = `
+          ${badgeHTML}
+          <div class="combo-image" style="background-image: url('${combo.image}')"></div>
+          <div class="combo-content">
+            <h3 class="combo-name">${combo.name}</h3>
+            <p class="combo-description">${combo.description}</p>
+            
+            <div class="combo-includes">
+              <h4>Incluye:</h4>
+              <ul class="combo-items">
+                ${combo.items.map(item => `<li>${item}</li>`).join('')}
+              </ul>
             </div>
-            <button class="btn" onclick="addToCart('${p.id}')">Agregar</button>
+            
+            <div class="combo-pricing">
+              <div>
+                <span class="combo-original-price">${formatPrice(combo.originalPrice)}</span>
+                <span class="combo-price">${formatPrice(combo.price)}</span>
+              </div>
+              <div class="combo-discount">-${combo.discount}</div>
+            </div>
+            
+            <div class="combo-actions">
+              <button class="btn-add-combo" onclick="addComboToCart(${combo.id})">
+                Agregar al Carrito
+              </button>
+            </div>
           </div>
-        </article>
-      `).join('');
+        `;
+        
+        combosGrid.appendChild(comboCard);
+      });
     }
 
-    function toast(html){
-      const box = document.getElementById('toasts');
-      const t = document.createElement('div');
-      t.className = 'toast';
-      t.innerHTML = html;
-      box.appendChild(t);
-      setTimeout(()=> t.remove(), 2500);
+    // Función para volver al principio de la página
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
 
-    // init
-    render();
+    // Inicializar
+    renderCombos();
     updateCartBadge();
-    sortEl.addEventListener('change', render);
+
+    // Hacer que el logo FE vuelva al principio
+    document.querySelector('.brand').addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToTop();
+      // También redirige a la página principal después de un breve delay
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 500);
+    });
   </script>
 </body>
 </html>
