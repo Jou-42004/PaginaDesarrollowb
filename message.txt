@@ -1,0 +1,171 @@
+<mxGraphModel dx="1678" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="SeguimientoController" value="SeguimientoController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="230" y="110" width="280" height="150" as="geometry" />
+    </mxCell>
+    <mxCell id="SeguimientoController_Methods" value="+ obtenerHistorialNotificaciones(pedidoId: String): Response&lt;List&lt;NotificacionResponse&gt;&gt;&#xa;+ enviarNotificacion(pedidoId: String, tipo: String): Response&lt;Void&gt;&#xa;+ actualizarEstimacion(pedidoId: String, nuevaHora: String): Response&lt;Void&gt;&#xa;+ detectarRetrasos(): Response&lt;List&lt;PedidoRetrasadoResponse&gt;&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="SeguimientoController">
+      <mxGeometry y="30" width="280" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="UbicacionRequest" value="UbicacionRequest" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="50" y="305" width="280" height="210" as="geometry" />
+    </mxCell>
+    <mxCell id="UbicacionRequest_Fields" value="+ pedidoId: String&#xa;+ latitud: Double&#xa;+ longitud: Double&#xa;+ direccion: String&#xa;+ timestamp: Date&#xa;+ repartidorId: String&#xa;+ velocidad: Double" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="UbicacionRequest">
+      <mxGeometry y="30" width="280" height="180" as="geometry" />
+    </mxCell>
+    <mxCell id="EstadoPedidoResponse" value="EstadoPedidoResponse" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="430" y="585" width="280" height="270" as="geometry" />
+    </mxCell>
+    <mxCell id="EstadoPedidoResponse_Fields" value="+ pedidoId: String&#xa;+ estado: EstadoEntrega&#xa;+ ubicacionActual: UbicacionResponse&#xa;+ tiempoEstimado: Integer&#xa;+ repartidor: RepartidorResponse&#xa;+ historialUbicaciones: List&lt;UbicacionResponse&gt;&#xa;+ mensaje: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="EstadoPedidoResponse">
+      <mxGeometry y="30" width="280" height="240" as="geometry" />
+    </mxCell>
+    <mxCell id="UbicacionResponse" value="UbicacionResponse" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="430" y="950" width="280" height="180" as="geometry" />
+    </mxCell>
+    <mxCell id="UbicacionResponse_Fields" value="+ latitud: Double&#xa;+ longitud: Double&#xa;+ direccion: String&#xa;+ timestamp: Date&#xa;+ precision: Double&#xa;+ velocidad: Double" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="UbicacionResponse">
+      <mxGeometry y="30" width="280" height="150" as="geometry" />
+    </mxCell>
+    <mxCell id="RepartidorResponse" value="RepartidorResponse" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="90" y="950" width="280" height="150" as="geometry" />
+    </mxCell>
+    <mxCell id="RepartidorResponse_Fields" value="+ repartidorId: String&#xa;+ nombre: String&#xa;+ telefono: String&#xa;+ vehiculo: String&#xa;+ fotoUrl: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="RepartidorResponse">
+      <mxGeometry y="30" width="280" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="ResponseWrapper" value="Response&amp;lt;T&amp;gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="430" y="305" width="280" height="180" as="geometry" />
+    </mxCell>
+    <mxCell id="ResponseWrapper_Fields" value="+ success: Boolean&#xa;+ status: StatusCodeSeguimiento&#xa;+ message: String&#xa;+ data: T&#xa;+ timestamp: Date&#xa;+ errors: List&lt;ValidationError&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="ResponseWrapper">
+      <mxGeometry y="30" width="280" height="150" as="geometry" />
+    </mxCell>
+    <mxCell id="StatusCodeSeguimiento" value="StatusCodeSeguimiento" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="50" y="580" width="280" height="300" as="geometry" />
+    </mxCell>
+    <mxCell id="StatusCodeSeguimiento_Values" value="&lt;enumeration&gt;&#xa;+ UBICACION_ACTUALIZADA&#xa;+ PEDIDO_EN_CAMINO&#xa;+ PEDIDO_ENTREGADO&#xa;+ PEDIDO_RETRASADO&#xa;+ REPARTIDOR_ASIGNADO&#xa;+ ERROR_UBICACION&#xa;+ PEDIDO_NO_ENCONTRADO&#xa;+ NOTIFICACION_ENVIADA" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="StatusCodeSeguimiento">
+      <mxGeometry y="30" width="280" height="270" as="geometry" />
+    </mxCell>
+    <mxCell id="EstadoEntrega" value="EstadoEntrega" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="750" y="950" width="280" height="210" as="geometry" />
+    </mxCell>
+    <mxCell id="EstadoEntrega_Values" value="&lt;enumeration&gt;&#xa;+ PREPARACION&#xa;+ EN_CAMINO&#xa;+ CERCA_DESTINO&#xa;+ LLEGANDO&#xa;+ ENTREGADO&#xa;+ RETRASADO&#xa;+ CANCELADO" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="EstadoEntrega">
+      <mxGeometry y="30" width="280" height="180" as="geometry" />
+    </mxCell>
+    <mxCell id="ValidationError" value="ValidationError" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="1090" y="890" width="280" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="ValidationError_Fields" value="+ campo: String&#xa;+ mensaje: String&#xa;+ codigo: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="ValidationError">
+      <mxGeometry y="30" width="280" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="NotificacionResponse" value="NotificacionResponse" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="1080" y="585" width="280" height="180" as="geometry" />
+    </mxCell>
+    <mxCell id="NotificacionResponse_Fields" value="+ notificacionId: String&#xa;+ pedidoId: String&#xa;+ tipo: String&#xa;+ mensaje: String&#xa;+ timestamp: Date&#xa;+ leida: Boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="NotificacionResponse">
+      <mxGeometry y="30" width="280" height="150" as="geometry" />
+    </mxCell>
+    <mxCell id="PedidoRetrasadoResponse" value="PedidoRetrasadoResponse" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+      <mxGeometry x="750" y="610" width="280" height="150" as="geometry" />
+    </mxCell>
+    <mxCell id="PedidoRetrasadoResponse_Fields" value="+ pedidoId: String&#xa;+ tiempoRetraso: Integer&#xa;+ motivo: String&#xa;+ nuevaHoraEstimada: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="PedidoRetrasadoResponse">
+      <mxGeometry y="30" width="280" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="rel1" value="" style="endArrow=open;html=1;rounded=0;exitX=0.457;exitY=1.001;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="SeguimientoController_Methods" target="UbicacionRequest">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="380" y="160" as="sourcePoint" />
+        <mxPoint x="430" y="110" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel1_label" value="Usa" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel1">
+      <mxGeometry x="-0.2" relative="1" as="geometry">
+        <mxPoint x="20" y="-10" as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel2" value="" style="endArrow=open;html=1;rounded=0;exitX=0.497;exitY=1.034;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;exitPerimeter=0;" edge="1" parent="1" source="SeguimientoController_Methods" target="ResponseWrapper">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="380" y="160" as="sourcePoint" />
+        <mxPoint x="1150" y="190" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel2_label" value="Retorna" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel2">
+      <mxGeometry x="0.3" relative="1" as="geometry">
+        <mxPoint x="20" y="-10" as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel8" value="" style="endArrow=open;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="ResponseWrapper" target="NotificacionResponse">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="570" y="395" as="sourcePoint" />
+        <mxPoint x="890" y="395" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel8_label" value="Contiene (como List&lt;T&gt;)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel8">
+      <mxGeometry x="0.1" y="1" relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel9" value="" style="endArrow=open;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="ResponseWrapper" target="PedidoRetrasadoResponse">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="570" y="395" as="sourcePoint" />
+        <mxPoint x="890" y="575" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel9_label" value="Contiene (como List&lt;T&gt;)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel9">
+      <mxGeometry x="0.1" y="1" relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel3" value="" style="endArrow=open;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="EstadoPedidoResponse" target="UbicacionResponse">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="570" y="855" as="sourcePoint" />
+        <mxPoint x="570" y="950" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel3_label" value="Contiene" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel3">
+      <mxGeometry x="-0.1" y="1" relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel4" value="" style="endArrow=open;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="EstadoPedidoResponse" target="RepartidorResponse">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="570" y="855" as="sourcePoint" />
+        <mxPoint x="230" y="1025" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel4_label" value="Contiene" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel4">
+      <mxGeometry x="-0.1" y="1" relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel5" value="" style="endArrow=open;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ResponseWrapper" target="StatusCodeSeguimiento">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="570" y="395" as="sourcePoint" />
+        <mxPoint x="190" y="730" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel5_label" value="Contiene" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel5">
+      <mxGeometry x="-0.1" y="1" relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel6" value="" style="endArrow=open;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="ResponseWrapper" target="EstadoPedidoResponse">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="570" y="395" as="sourcePoint" />
+        <mxPoint x="570" y="725" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel6_label" value="Contiene (como T)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel6">
+      <mxGeometry x="0.1" y="1" relative="1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel7" value="" style="endArrow=open;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="EstadoPedidoResponse" target="EstadoEntrega">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="570" y="855" as="sourcePoint" />
+        <mxPoint x="890" y="1055" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="rel7_label" value="Usa" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" connectable="0" vertex="1" parent="rel7">
+      <mxGeometry x="0.2" relative="1" as="geometry">
+        <mxPoint x="10" y="10" as="offset" />
+      </mxGeometry>
+    </mxCell>
+  </root>
+</mxGraphModel>
