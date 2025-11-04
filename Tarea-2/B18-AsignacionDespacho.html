@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Asignación de Despacho — Fit Express</title>
   <meta name="description" content="Selecciona tu método de entrega">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root{
       --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
       --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
+      --primary-color: #4a6cf7; --secondary-color: #6c757d; --success-color: #28a745;
+      --warning-color: #ffc107; --danger-color: #dc3545; --light-color: #f8f9fa;
+      --dark-color: #343a40; --border-radius: 10px; --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     }
     *{box-sizing:border-box} html,body{margin:0;height:100%}
     body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
@@ -426,8 +430,301 @@
       background:var(--panel);
     }
     
+    /* Estilos para la confirmación de pago */
+    .payment-confirmation {
+      display: none;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    
+    .payment-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #3a5bd9 100%);
+      color: white;
+      padding: 25px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .payment-header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .payment-header p {
+      opacity: 0.9;
+      font-size: 16px;
+    }
+    
+    .payment-body {
+      padding: 30px;
+    }
+    
+    .order-info {
+      background-color: var(--light-color);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      margin-bottom: 25px;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .order-info p {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .order-info i {
+      margin-right: 10px;
+      width: 20px;
+      color: var(--primary-color);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    
+    .status-pending {
+      background-color: var(--warning-color);
+      color: var(--dark-color);
+    }
+    
+    .status-paid {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .section-title {
+      font-size: 20px;
+      margin: 25px 0 15px;
+      color: var(--dark-color);
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title i {
+      margin-right: 10px;
+      color: var(--primary-color);
+    }
+    
+    .products-section, .shipping-section {
+      margin-bottom: 25px;
+    }
+    
+    .product-list {
+      list-style: none;
+    }
+    
+    .product-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.2s;
+    }
+    
+    .product-item:hover {
+      background-color: #f9f9f9;
+    }
+    
+    .product-info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    
+    .product-image {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      margin-right: 20px;
+      background: linear-gradient(135deg, #4a6cf7 0%, #3a5bd9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+    }
+    
+    .product-details h3 {
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+    
+    .product-details p {
+      font-size: 14px;
+      color: var(--secondary-color);
+    }
+    
+    .product-price {
+      font-weight: 600;
+      color: var(--dark-color);
+      font-size: 17px;
+    }
+    
+    .shipping-details {
+      background-color: var(--light-color);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--success-color);
+    }
+    
+    .shipping-method {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .shipping-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--success-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      margin-right: 15px;
+    }
+    
+    .shipping-info h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    
+    .shipping-info p {
+      color: var(--secondary-color);
+    }
+    
+    .shipping-address {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed #ddd;
+    }
+    
+    .payment-summary {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 25px;
+      border-radius: var(--border-radius);
+      margin-top: 20px;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+    
+    .summary-total {
+      font-weight: 700;
+      font-size: 20px;
+      border-top: 2px solid #ddd;
+      padding-top: 15px;
+      margin-top: 10px;
+      color: var(--primary-color);
+    }
+    
+    .payment-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      padding: 14px 25px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #3a5bd9 100%);
+      color: white;
+      box-shadow: 0 4px 10px rgba(74, 108, 247, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(74, 108, 247, 0.4);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, #5a6268 100%);
+      color: white;
+      box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(108, 117, 125, 0.4);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger-color) 0%, #c82333 100%);
+      color: white;
+      box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+    }
+    
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
+    }
+    
+    .invoice-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .footer-note {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--secondary-color);
+      font-size: 14px;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
+      .payment-actions, .invoice-actions {
+        flex-direction: column;
+      }
+      
+      .product-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .product-price {
+        margin-top: 10px;
+        align-self: flex-end;
+      }
+      
+      .payment-body {
+        padding: 20px;
+      }
+      
       .progress-steps {
         flex-direction: column;
         gap: 20px;
@@ -457,110 +754,193 @@
   <!-- Contenido principal -->
   <div class="main-content">
     <div class="container">
-      <!-- Encabezado -->
-      <div class="delivery-header">
-        <h1 class="delivery-title">Método de Despacho</h1>
-        <p class="delivery-subtitle">Selecciona cómo quieres recibir tu pedido</p>
+      <!-- Sección de asignación de despacho -->
+      <div id="deliverySection">
+        <!-- Encabezado -->
+        <div class="delivery-header">
+          <h1 class="delivery-title">Método de Despacho</h1>
+          <p class="delivery-subtitle">Selecciona cómo quieres recibir tu pedido</p>
+          
+          <!-- Mostrar dirección guardada -->
+          <div class="address-display" id="addressDisplay" style="display: none;">
+            <div class="address-label">Dirección de entrega:</div>
+            <div class="address-value" id="addressValue"></div>
+          </div>
+        </div>
+
+        <!-- Progreso de compra -->
+        <div class="progress-steps">
+          <div class="progress-line"></div>
+          <div class="progress-step">
+            <div class="step-number completed">1</div>
+            <div class="step-label">Carrito</div>
+          </div>
+          <div class="progress-step">
+            <div class="step-number completed">2</div>
+            <div class="step-label">Dirección</div>
+          </div>
+          <div class="progress-step">
+            <div class="step-number active">3</div>
+            <div class="step-label active">Despacho</div>
+          </div>
+          <div class="progress-step">
+            <div class="step-number">4</div>
+            <div class="step-label">Pago</div>
+          </div>
+          <div class="progress-step">
+            <div class="step-number">5</div>
+            <div class="step-label">Confirmación</div>
+          </div>
+        </div>
+
+        <!-- Opciones de despacho -->
+        <div class="delivery-options">
+          <div class="delivery-option" data-type="delivery" data-price="1990">
+            <div class="option-header">
+              <h3 class="option-title">Delivery</h3>
+            </div>
+            <p class="option-description">Recibe tu pedido directamente en tu domicilio</p>
+            <ul class="option-details">
+              <li>Entrega directa a domicilio</li>
+              <li>Seguimiento en tiempo real</li>
+              <li>Contacto directo con repartidor</li>
+              <li>Pago contra entrega disponible</li>
+            </ul>
+            <div class="delivery-estimate" id="deliveryEstimate">
+              <div class="estimate-label">Tiempo estimado:</div>
+              <div class="estimate-value" id="deliveryTime">30-45 minutos</div>
+            </div>
+          </div>
+
+          <div class="delivery-option" data-type="pickup" data-price="0">
+            <div class="option-header">
+              <h3 class="option-title">Retiro en Local</h3>
+            </div>
+            <p class="option-description">Retira tu pedido en nuestro local principal</p>
+            <ul class="option-details">
+              <li>Sin costo de envío</li>
+              <li>Listo en 15-20 minutos</li>
+              <li>Estacionamiento gratuito</li>
+              <li>Horario: 8:00 - 22:00 hrs</li>
+            </ul>
+            <div class="delivery-estimate">
+              <div class="estimate-label">Dirección del local:</div>
+              <div class="estimate-value">Av. Principal 123, Santiago Centro</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumen del pedido -->
+        <div class="order-summary">
+          <h3 class="summary-title">Resumen de tu Pedido</h3>
+          <div class="summary-items" id="orderItems">
+            <!-- Los productos se cargarán dinámicamente -->
+          </div>
+          <div class="summary-totals">
+            <div class="total-row">
+              <span class="total-label">Subtotal:</span>
+              <span class="total-value" id="subtotal">$0</span>
+            </div>
+            <div class="total-row">
+              <span class="total-label">Descuento:</span>
+              <span class="total-value" id="discount">$0</span>
+            </div>
+            <div class="total-row">
+              <span class="total-label">Envío:</span>
+              <span class="total-value" id="shipping">$0</span>
+            </div>
+            <div class="total-row grand-total">
+              <span class="total-label">Total:</span>
+              <span class="total-value" id="total">$0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="action-buttons">
+          <a href="B11-DireccionEntrega.html" class="btn-back">← Volver Atrás</a>
+          <button class="btn-continue" id="continueBtn" disabled>Continuar al Pago</button>
+        </div>
+      </div>
+
+      <!-- Sección de confirmación de pago -->
+      <div class="payment-confirmation" id="paymentConfirmation">
+        <div class="payment-header">
+          <h1><i class="fas fa-check-circle"></i> Confirmación de Pago</h1>
+          <p>Estamos procesando tu pedido</p>
+        </div>
         
-        <!-- Mostrar dirección guardada -->
-        <div class="address-display" id="addressDisplay" style="display: none;">
-          <div class="address-label">Dirección de entrega:</div>
-          <div class="address-value" id="addressValue"></div>
-        </div>
-      </div>
-
-      <!-- Progreso de compra -->
-      <div class="progress-steps">
-        <div class="progress-line"></div>
-        <div class="progress-step">
-          <div class="step-number completed">1</div>
-          <div class="step-label">Carrito</div>
-        </div>
-        <div class="progress-step">
-          <div class="step-number completed">2</div>
-          <div class="step-label">Dirección</div>
-        </div>
-        <div class="progress-step">
-          <div class="step-number active">3</div>
-          <div class="step-label active">Despacho</div>
-        </div>
-        <div class="progress-step">
-          <div class="step-number">4</div>
-          <div class="step-label">Pago</div>
-        </div>
-        <div class="progress-step">
-          <div class="step-number">5</div>
-          <div class="step-label">Confirmación</div>
-        </div>
-      </div>
-
-      <!-- Opciones de despacho -->
-      <div class="delivery-options">
-        <div class="delivery-option" data-type="delivery" data-price="1990">
-          <div class="option-header">
-            <h3 class="option-title">Delivery</h3>
+        <div class="payment-body">
+          <div class="order-info">
+            <p><i class="fas fa-receipt"></i><strong>Pedido:</strong> #12345 - Total $10.775</p>
+            <p><i class="fas fa-credit-card"></i><strong>Proveedor:</strong> WebPay - PaymentId: pay_ABC123</p>
+            <p><i class="fas fa-info-circle"></i><strong>Estado actual:</strong> 
+              <span class="status-badge status-pending" id="paymentStatus">pendiente</span>
+              <span>(esperando confirmación del proveedor)</span>
+            </p>
           </div>
-          <p class="option-description">Recibe tu pedido directamente en tu domicilio</p>
-          <ul class="option-details">
-            <li>Entrega directa a domicilio</li>
-            <li>Seguimiento en tiempo real</li>
-            <li>Contacto directo con repartidor</li>
-            <li>Pago contra entrega disponible</li>
-          </ul>
-          <div class="delivery-estimate" id="deliveryEstimate">
-            <div class="estimate-label">Tiempo estimado:</div>
-            <div class="estimate-value" id="deliveryTime">30-45 minutos</div>
+          
+          <h2 class="section-title"><i class="fas fa-box-open"></i> Tus Productos</h2>
+          <div class="products-section">
+            <ul class="product-list" id="confirmationProducts">
+              <!-- Los productos se cargarán dinámicamente -->
+            </ul>
           </div>
+          
+          <h2 class="section-title"><i class="fas fa-shipping-fast"></i> Método de Despacho</h2>
+          <div class="shipping-section">
+            <div class="shipping-details">
+              <div class="shipping-method">
+                <div class="shipping-icon">
+                  <i class="fas fa-truck"></i>
+                </div>
+                <div class="shipping-info">
+                  <h3 id="confirmationShippingMethod">Envío Express a Domicilio</h3>
+                  <p id="confirmationShippingTime">Entrega estimada: 2-3 días hábiles</p>
+                </div>
+              </div>
+              <div class="shipping-address">
+                <p><strong>Dirección de envío:</strong></p>
+                <p id="confirmationAddress">Juan Pérez, Av. Principal 1234, Depto 5B, Santiago, Región Metropolitana</p>
+                <p id="confirmationPhone">Teléfono: +56 9 8765 4321</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="payment-summary">
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span id="confirmationSubtotal">$10.775</span>
+            </div>
+            <div class="summary-row">
+              <span>Envío:</span>
+              <span id="confirmationShipping">Gratis</span>
+            </div>
+            <div class="summary-row">
+              <span>Descuento:</span>
+              <span id="confirmationDiscount">$0</span>
+            </div>
+            <div class="summary-row summary-total">
+              <span>Total:</span>
+              <span id="confirmationTotal">$10.775</span>
+            </div>
+          </div>
+          
+          <div class="payment-actions" id="pendingActions">
+            <button class="btn btn-primary" id="checkStatusBtn"><i class="fas fa-sync-alt"></i> Consultar estado</button>
+            <button class="btn btn-secondary"><i class="fas fa-check-double"></i> Forzar confirmación</button>
+            <button class="btn btn-danger" id="cancelAttemptBtn"><i class="fas fa-times"></i> Cancelar intento</button>
+          </div>
+          
+          <div class="invoice-actions" id="paidActions" style="display: none;">
+            <button class="btn btn-primary" id="emitReceiptBtn"><i class="fas fa-file-invoice"></i> Emitir Boleta</button>
+            <button class="btn btn-secondary" id="emitInvoiceBtn"><i class="fas fa-file-contract"></i> Emitir Factura</button>
+          </div>
+          
+          <p class="footer-note">
+            <i class="fas fa-lock"></i> Tu información de pago está protegida con encriptación SSL
+          </p>
         </div>
-
-        <div class="delivery-option" data-type="pickup" data-price="0">
-          <div class="option-header">
-            <h3 class="option-title">Retiro en Local</h3>
-          </div>
-          <p class="option-description">Retira tu pedido en nuestro local principal</p>
-          <ul class="option-details">
-            <li>Sin costo de envío</li>
-            <li>Listo en 15-20 minutos</li>
-            <li>Estacionamiento gratuito</li>
-            <li>Horario: 8:00 - 22:00 hrs</li>
-          </ul>
-          <div class="delivery-estimate">
-            <div class="estimate-label">Dirección del local:</div>
-            <div class="estimate-value">Av. Principal 123, Santiago Centro</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resumen del pedido -->
-      <div class="order-summary">
-        <h3 class="summary-title">Resumen de tu Pedido</h3>
-        <div class="summary-items" id="orderItems">
-          <!-- Los productos se cargarán dinámicamente -->
-        </div>
-        <div class="summary-totals">
-          <div class="total-row">
-            <span class="total-label">Subtotal:</span>
-            <span class="total-value" id="subtotal">$0</span>
-          </div>
-          <div class="total-row">
-            <span class="total-label">Descuento:</span>
-            <span class="total-value" id="discount">$0</span>
-          </div>
-          <div class="total-row">
-            <span class="total-label">Envío:</span>
-            <span class="total-value" id="shipping">$0</span>
-          </div>
-          <div class="total-row grand-total">
-            <span class="total-label">Total:</span>
-            <span class="total-value" id="total">$0</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Botones de acción -->
-      <div class="action-buttons">
-        <a href="B11-DireccionEntrega.html" class="btn-back">← Volver Atrás</a>
-        <button class="btn-continue" id="continueBtn" disabled>Continuar al Pago</button>
       </div>
     </div>
   </div>
@@ -573,6 +953,7 @@
     // Variables globales
     let selectedDeliveryType = null;
     let shippingCost = 0;
+    let paymentStatus = 'pending'; // 'pending' o 'paid'
 
     // Cargar datos desde localStorage
     const cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
@@ -588,6 +969,26 @@
     const addressDisplay = document.getElementById('addressDisplay');
     const addressValue = document.getElementById('addressValue');
     const deliveryTime = document.getElementById('deliveryTime');
+    
+    // Elementos de confirmación de pago
+    const deliverySection = document.getElementById('deliverySection');
+    const paymentConfirmation = document.getElementById('paymentConfirmation');
+    const confirmationProducts = document.getElementById('confirmationProducts');
+    const confirmationSubtotal = document.getElementById('confirmationSubtotal');
+    const confirmationShipping = document.getElementById('confirmationShipping');
+    const confirmationDiscount = document.getElementById('confirmationDiscount');
+    const confirmationTotal = document.getElementById('confirmationTotal');
+    const confirmationShippingMethod = document.getElementById('confirmationShippingMethod');
+    const confirmationShippingTime = document.getElementById('confirmationShippingTime');
+    const confirmationAddress = document.getElementById('confirmationAddress');
+    const confirmationPhone = document.getElementById('confirmationPhone');
+    const paymentStatusElement = document.getElementById('paymentStatus');
+    const pendingActions = document.getElementById('pendingActions');
+    const paidActions = document.getElementById('paidActions');
+    const checkStatusBtn = document.getElementById('checkStatusBtn');
+    const cancelAttemptBtn = document.getElementById('cancelAttemptBtn');
+    const emitReceiptBtn = document.getElementById('emitReceiptBtn');
+    const emitInvoiceBtn = document.getElementById('emitInvoiceBtn');
 
     // Función para formatear precio
     function formatPrice(price) {
@@ -632,9 +1033,15 @@
       discountElement.textContent = formatPrice(discount);
       shippingElement.textContent = formatPrice(shippingCost);
       totalElement.textContent = formatPrice(total);
+      
+      // Actualizar también en la sección de confirmación
+      confirmationSubtotal.textContent = formatPrice(subtotal);
+      confirmationDiscount.textContent = formatPrice(discount);
+      confirmationShipping.textContent = shippingCost === 0 ? 'Gratis' : formatPrice(shippingCost);
+      confirmationTotal.textContent = formatPrice(total);
     }
 
-    // Función para renderizar productos
+    // Función para renderizar productos en el resumen
     function renderOrderItems() {
       if (cart.length === 0) {
         orderItems.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 20px;">No hay productos en el carrito</div>';
@@ -650,6 +1057,47 @@
           <div class="item-price">${formatPrice(item.price * item.quantity)}</div>
         </div>
       `).join('');
+    }
+
+    // Función para renderizar productos en la confirmación
+    function renderConfirmationProducts() {
+      if (cart.length === 0) {
+        confirmationProducts.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 20px;">No hay productos en el carrito</div>';
+        return;
+      }
+
+      confirmationProducts.innerHTML = cart.map(item => `
+        <li class="product-item">
+          <div class="product-info">
+            <div class="product-image"><i class="fas fa-${getProductIcon(item.name)}"></i></div>
+            <div class="product-details">
+              <h3>${item.name}</h3>
+              <p>Cantidad: ${item.quantity}</p>
+            </div>
+          </div>
+          <div class="product-price">${formatPrice(item.price * item.quantity)}</div>
+        </li>
+      `).join('');
+    }
+
+    // Función para obtener icono según el producto
+    function getProductIcon(productName) {
+      const icons = {
+        'laptop': 'laptop',
+        'mouse': 'mouse',
+        'auriculares': 'headphones',
+        'bowl': 'bowl-rice',
+        'proteína': 'dumbbell',
+        'snack': 'cookie'
+      };
+      
+      for (const [key, icon] of Object.entries(icons)) {
+        if (productName.toLowerCase().includes(key)) {
+          return icon;
+        }
+      }
+      
+      return 'box';
     }
 
     // Función para seleccionar método de despacho
@@ -674,6 +1122,22 @@
       selectedDeliveryType = option.dataset.type;
       shippingCost = parseInt(option.dataset.price);
       
+      // Actualizar información en la confirmación
+      if (selectedDeliveryType === 'delivery') {
+        confirmationShippingMethod.textContent = 'Envío Express a Domicilio';
+        confirmationShippingTime.textContent = `Entrega estimada: ${deliveryTime.textContent}`;
+        
+        if (deliveryAddress.address && deliveryAddress.comuna) {
+          confirmationAddress.textContent = `${deliveryAddress.name || 'Juan Pérez'}, ${deliveryAddress.address}, ${deliveryAddress.comuna}`;
+          confirmationPhone.textContent = `Teléfono: ${deliveryAddress.phone || '+56 9 8765 4321'}`;
+        }
+      } else {
+        confirmationShippingMethod.textContent = 'Retiro en Local';
+        confirmationShippingTime.textContent = 'Listo en 15-20 minutos';
+        confirmationAddress.textContent = 'Av. Principal 123, Santiago Centro';
+        confirmationPhone.textContent = 'Horario: 8:00 - 22:00 hrs';
+      }
+      
       // Habilitar botón de continuar
       continueBtn.disabled = false;
       
@@ -695,8 +1159,44 @@
 
       localStorage.setItem('deliveryInfo', JSON.stringify(deliveryInfo));
       
-      // Redirigir a página de pago
-      window.location.href = 'E03-PagoExterno.html';
+      // Renderizar productos en la confirmación
+      renderConfirmationProducts();
+      
+      // Mostrar confirmación de pago y ocultar selección de despacho
+      deliverySection.style.display = 'none';
+      paymentConfirmation.style.display = 'block';
+    }
+
+    // Función para consultar estado del pago
+    function checkPaymentStatus() {
+      // Simular cambio de estado a pagado
+      paymentStatus = 'paid';
+      paymentStatusElement.textContent = 'pagado';
+      paymentStatusElement.className = 'status-badge status-paid';
+      paymentStatusElement.nextSibling.textContent = '(pago confirmado)';
+      
+      // Mostrar opciones de emisión de boleta/factura
+      pendingActions.style.display = 'none';
+      paidActions.style.display = 'flex';
+    }
+
+    // Función para cancelar intento de pago
+    function cancelPaymentAttempt() {
+      // Volver a la sección de despacho
+      paymentConfirmation.style.display = 'none';
+      deliverySection.style.display = 'block';
+    }
+
+    // Función para emitir boleta
+    function emitReceipt() {
+      alert('Redirigiendo a emisión de boleta (B15-EmisionBoleta)');
+      // En una implementación real, redirigiría a B15-EmisionBoleta.html
+    }
+
+    // Función para emitir factura
+    function emitInvoice() {
+      alert('Redirigiendo a emisión de factura (B16-EmisionFactura)');
+      // En una implementación real, redirigiría a B16-EmisionFactura.html
     }
 
     // Event Listeners
@@ -705,6 +1205,10 @@
     });
 
     continueBtn.addEventListener('click', continueToPayment);
+    checkStatusBtn.addEventListener('click', checkPaymentStatus);
+    cancelAttemptBtn.addEventListener('click', cancelPaymentAttempt);
+    emitReceiptBtn.addEventListener('click', emitReceipt);
+    emitInvoiceBtn.addEventListener('click', emitInvoice);
 
     // Inicializar
     displaySavedAddress();
