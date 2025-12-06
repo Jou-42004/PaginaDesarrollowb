@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mi Cuenta - Fit Express</title>
+  <style>
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff; --error:#ef4444; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+    
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:blur(8px); background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65)); border-bottom:1px solid rgba(183,210,192,.18); padding: 8px 0; }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{ display:flex; align-items:center; justify-content:space-between; height: 60px; }
+    .logo{ font-weight:900; color:#fff; text-decoration:none; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .logo span{ background:#19c268; padding:4px 8px; border-radius:6px; font-size:14px; }
+    .icon-btn{ display:grid; place-items:center; width:40px; height:40px; border-radius:12px; border:1px solid rgba(183,210,192,.25); background:rgba(17, 57, 35, 0.6); text-decoration:none; color:white; }
+
+    .main-content { min-height: calc(100vh - 160px); display: flex; align-items: center; justify-content: center; padding: 40px 0; }
+    .card { background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85)); border: 1px solid rgba(183,210,192,.18); border-radius: 20px; padding: 40px 30px; width: 100%; max-width: 600px; box-shadow: 0 20px 40px rgba(0,0,0,.3); text-align: center; }
+    
+    /* Login */
+    input { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(11, 42, 24, 0.7); border: 1px solid rgba(183,210,192,.25); border-radius: 10px; color: var(--text); }
+    .btn { display: block; width: 100%; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; margin-top: 10px; transition:.2s; }
+    .btn-primary { background: var(--cta); color: white; }
+    .btn-primary:hover { filter: brightness(.9); }
+    .btn-secondary { background: transparent; border: 1px solid rgba(183,210,192,.25); color: var(--muted); margin-top:15px; }
+    
+    /* Perfil */
+    .avatar { width: 90px; height: 90px; background: var(--accent); color: #052e16; border-radius: 50%; font-size: 36px; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; }
+    .user-name { font-size: 24px; margin: 0 0 5px; color: var(--text); }
+    .user-email { color: var(--muted); margin: 5px 0 25px; font-size: 14px; }
+    
+    .menu-grid { display: grid; gap: 10px; margin-bottom: 20px; grid-template-columns: 1fr 1fr; }
+    .menu-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(183,210,192,.15); padding: 15px; border-radius: 12px; cursor: pointer; text-align: center; color: var(--text); transition:.2s; display:flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+    .menu-btn:hover { background: rgba(34,197,94,.1); border-color: var(--accent); }
+    
+    .btn-logout { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; width: 100%; margin-top: 20px; padding:10px; border-radius:8px; cursor:pointer; }
+    
+    /* Secciones Ocultas */
+    .hidden { display: none !important; }
+    .back-link { display: inline-block; margin-bottom: 15px; color: var(--muted); cursor: pointer; text-decoration: underline; font-size: 14px; float: left; }
+    .section-title { clear:both; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; text-align: left; font-size: 20px; }
+
+    /* Lista Pedidos */
+    .order-item { background: rgba(0,0,0,0.25); padding: 12px; border-radius: 8px; margin-bottom: 10px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+    .order-status { font-size: 11px; padding: 3px 8px; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
+    .st-Recibido { color: #4ade80; border: 1px solid #4ade80; }
+    .st-Pagado { color: #60a5fa; border: 1px solid #60a5fa; }
+    .st-Cancelado { color: #f87171; border: 1px solid #f87171; }
+    
+    .btn-gestion { background: transparent; border: 1px solid var(--muted); color: var(--text); padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; margin-left: 10px; }
+    .btn-gestion:hover { background: rgba(255,255,255,0.1); color: white; border-color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+      <a href="index.html" class="icon-btn">🏠</a>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="container" style="display:flex;justify-content:center;">
+      
+      <div id="viewLogin" class="card">
+        <h1>Iniciar Sesión</h1>
+        <p style="color:var(--muted);margin-bottom:20px">Accede para ver tus pedidos</p>
+        <form id="loginForm">
+          <input type="email" id="loginEmail" placeholder="Correo" required>
+          <input type="password" id="loginPass" placeholder="Contraseña" required>
+          <button type="submit" class="btn btn-primary" id="btnLogin">Entrar</button>
+        </form>
+        <a href="B01-RegistroUsuario.html" class="btn btn-secondary">Crear cuenta nueva</a>
+      </div>
+
+      <div id="viewProfile" class="card hidden">
+        <div class="avatar" id="pAvatar">U</div>
+        <h2 class="user-name" id="pName">...</h2>
+        <p class="user-email" id="pEmail">...</p>
+
+        <div class="menu-grid">
+          <button class="menu-btn" onclick="showSection('viewOrders')"><span>📦</span> Mis Pedidos</button>
+          <button class="menu-btn" onclick="window.location.href='B09-Carrito.html'"><span>🛒</span> Carrito</button>
+          <button class="menu-btn" onclick="showSection('viewEdit')"><span>✏️</span> Editar Datos</button>
+          <button class="menu-btn" onclick="window.location.href='B05-CatalogoMacros.html'"><span>🥗</span> Catálogo</button>
+        </div>
+
+        <button id="btnAdmin" class="btn btn-primary hidden" onclick="window.location.href='PanelAdmin.html'" style="margin-bottom:10px;background:#052e16;border:1px solid var(--accent)">Ir al Panel Admin</button>
+        <button onclick="logout()" class="btn btn-logout">Cerrar Sesión</button>
+      </div>
+
+      <div id="viewOrders" class="card hidden">
+        <span class="back-link" onclick="showSection('viewProfile')">← Volver</span>
+        <h2 class="section-title">Historial de Pedidos</h2>
+        <div id="ordersList" style="max-height:400px;overflow-y:auto;">
+          <p style="color:var(--muted)">Cargando...</p>
+        </div>
+      </div>
+      
+      <div id="viewEdit" class="card hidden">
+        <span class="back-link" onclick="showSection('viewProfile')">← Volver</span>
+        <h2 class="section-title">Editar Datos</h2>
+        <form id="editForm">
+            <input type="text" id="editName" placeholder="Nombre">
+            <input type="text" id="editAddress" placeholder="Dirección">
+            <input type="text" id="editCommune" placeholder="Comuna">
+            <input type="tel" id="editPhone" placeholder="Teléfono">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('access_token');
+        if (token) loadProfile(token);
+        else showSection('viewLogin');
+    });
+
+    // LOGIN
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btnLogin');
+        btn.textContent = "Entrando..."; btn.disabled = true;
+
+        const formData = new URLSearchParams();
+        formData.append('username', document.getElementById('loginEmail').value);
+        formData.append('password', document.getElementById('loginPass').value);
+
+        try {
+            const res = await fetch(`${API_URL}/auth/token`, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: formData });
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem('access_token', data.access_token);
+                alert("¡Bienvenido! Redirigiendo...");
+                window.location.href = "index.html";
+            } else {
+                alert("Credenciales incorrectas");
+            }
+        } catch (e) { alert("Error de conexión"); } 
+        finally { btn.textContent = "Entrar"; btn.disabled = false; }
+    });
+
+    // PERFIL
+    async function loadProfile(token) {
+        try {
+            const res = await fetch(`${API_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (res.ok) {
+                const user = await res.json();
+                document.getElementById('pName').textContent = user.nombre;
+                document.getElementById('pEmail').textContent = user.email;
+                document.getElementById('pAvatar').textContent = user.nombre.charAt(0).toUpperCase();
+                
+                if (user.rol === 'admin') {
+                    document.getElementById('btnAdmin').classList.remove('hidden');
+                }
+
+                document.getElementById('editName').value = user.nombre;
+                document.getElementById('editAddress').value = user.direccion || "";
+                document.getElementById('editCommune').value = user.comuna || "";
+                document.getElementById('editPhone').value = user.telefono || "";
+
+                showSection('viewProfile');
+                loadOrders(token);
+            } else logout();
+        } catch (e) { logout(); }
+    }
+
+    // PEDIDOS (REDIRECCIÓN A B12 CONFIGURADA)
+    async function loadOrders(token) {
+        try {
+            const res = await fetch(`${API_URL}/pedidos/mis_pedidos`, { headers: { 'Authorization': `Bearer ${token}` } });
+            
+            if (!res.ok) {
+                document.getElementById('ordersList').innerHTML = `<p style="color:#ef4444;padding:20px">Error al cargar historial.</p>`;
+                return;
+            }
+
+            const orders = await res.json();
+            const list = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                list.innerHTML = '<p style="color:var(--muted);padding:20px">No tienes pedidos aún.</p>';
+                return;
+            }
+
+            list.innerHTML = orders.map(o => {
+                const statusClass = `st-${o.estado.replace(" ", "")}`;
+                
+                // AQUÍ ESTÁ LA MAGIA: El botón manda a B12 con el ID
+                return `
+                <div class="order-item">
+                    <div>
+                        <div style="font-weight:bold">Pedido #${o.id}</div>
+                        <div style="font-size:12px;color:var(--muted)">${new Date(o.fecha_creacion).toLocaleDateString()}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="color:var(--accent);font-weight:bold">$${o.total.toLocaleString('es-CL')}</div>
+                        <span class="order-status ${statusClass}">${o.estado}</span>
+                        <button class="btn-gestion" onclick="window.location.href='B12-CancelacionPedido.html?id=${o.id}'">
+                            Ver Detalles / Cancelar
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+        } catch(e) { console.error(e); }
+    }
+    
+    // EDITAR
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('access_token');
+        const updates = {
+            nombre: document.getElementById('editName').value,
+            direccion: document.getElementById('editAddress').value,
+            comuna: document.getElementById('editCommune').value,
+            telefono: document.getElementById('editPhone').value
+        };
+        
+        await fetch(`${API_URL}/auth/perfil`, {
+            method: 'PUT', 
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(updates)
+        });
+        alert("Datos guardados");
+        loadProfile(token);
+    });
+
+    function showSection(id) {
+        ['viewLogin', 'viewProfile', 'viewEdit', 'viewOrders'].forEach(v => document.getElementById(v).classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function logout() {
+        localStorage.clear();
+        showSection('viewLogin');
+    }
+  </script>
+</body>
+</html>

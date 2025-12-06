@@ -44,4 +44,4 @@ app.include_router(gestor_admin.router)
 # --- Endpoint Raíz ---
 @app.get("/")
 async def root():
-    return {"message": "Bienvenido a la API de Fit Express."}
+    return {"message": "Bienvenido a la API de Fit Express. con el corazon roto pero volviendo al prime"}

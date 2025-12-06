@@ -501,17 +501,24 @@
       
       let countdownInterval;
       
-      // Form submission
-      form.addEventListener('submit', function(e) {
+      // Form submission - AHORA ES ASYNC
+      form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // Basic validation
+        // 1. Capturar valores
+        const name = document.getElementById('name').value;
+        const rut = document.getElementById('rut').value;
         const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
         const password = document.getElementById('password').value;
+        const address = document.getElementById('address').value;
+        const commune = document.getElementById('commune').value;
+        const region = document.getElementById('region').value;
         
+        // 2. Validaciones del Frontend (Tu código original)
         let isValid = true;
         
-        // Email validation (RFC-5322 simplified)
+        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
           document.getElementById('email').classList.add('error');
@@ -520,7 +527,7 @@
           document.getElementById('email').classList.remove('error');
         }
         
-        // Password validation (min 8 chars, uppercase, lowercase, number)
+        // Password validation
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
         if (!passwordRegex.test(password)) {
           document.getElementById('password').classList.add('error');
@@ -529,53 +536,93 @@
           document.getElementById('password').classList.remove('error');
         }
         
+        // 3. Si pasa la validación visual, enviamos al Backend
         if (isValid) {
-          // Show step 2
-          userEmail.textContent = email;
-          step1.classList.remove('active');
-          step2.classList.add('active');
           
-          // Start countdown for resend button
-          startCountdown(300); // 5 minutes in seconds
+          // Deshabilitar botón para evitar doble click
+          const submitBtn = form.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Registrando...";
+
+          // Objeto JSON igual al Schema UsuarioCreate de Python
+          const datosUsuario = {
+            nombre: name,
+            rut: rut,
+            email: email,     
+            password: password, 
+            telefono: phone,
+            direccion: address,
+            comuna: commune,
+            region: region
+          };
+
+          try {
+            // Llamada a la API
+            const response = await fetch('http://127.0.0.1:8000/auth/registro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datosUsuario)
+            });
+
+            if (response.ok) {
+                // --- ÉXITO: Pasamos al Paso 2 ---
+                console.log("Usuario registrado en BD");
+                
+                userEmail.textContent = email;
+                step1.classList.remove('active');
+                step2.classList.add('active');
+                
+                // Iniciar cuenta regresiva (Tu lógica original)
+                startCountdown(300); 
+            } else {
+                // --- ERROR DE API (Ej: Rut duplicado) ---
+                const errorData = await response.json();
+                alert("Error al registrar: " + (errorData.detail || "Datos inválidos"));
+            }
+
+          } catch (error) {
+            console.error("Error de conexión:", error);
+            alert("No se pudo conectar con el servidor. Revisa que uvicorn esté corriendo.");
+          } finally {
+            // Restaurar botón
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+          }
         }
       });
       
-      // Back to form from step 2
+      // --- El resto de tu lógica original de navegación se mantiene igual ---
+      
       backToForm.addEventListener('click', function() {
         step2.classList.remove('active');
         step1.classList.add('active');
         clearInterval(countdownInterval);
       });
       
-      // Back to form from step 4
       backToForm2.addEventListener('click', function() {
         step4.classList.remove('active');
         step1.classList.add('active');
       });
       
-      // Request new link from step 4
       requestNewLink.addEventListener('click', function() {
         step4.classList.remove('active');
         step2.classList.add('active');
-        startCountdown(300); // 5 minutes in seconds
+        startCountdown(300);
       });
       
-      // Resend button functionality
       resendBtn.addEventListener('click', function() {
         if (!resendBtn.disabled) {
-          // Reset countdown
-          startCountdown(300); // 5 minutes in seconds
-          
-          // In a real app, this would make an API call to resend the activation email
+          startCountdown(300);
           alert('Se ha enviado un nuevo enlace de activación a tu correo.');
         }
       });
       
-      // Countdown function
       function startCountdown(seconds) {
         resendBtn.disabled = true;
         let remaining = seconds;
-        
         updateCountdownDisplay(remaining);
         
         countdownInterval = setInterval(function() {
@@ -594,34 +641,6 @@
         const minutes = Math.floor(seconds / 60);
         const secs = seconds % 60;
         countdown.textContent = `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-      }
-      
-      // Demo functionality to simulate different scenarios
-      // In a real app, these would be handled by server responses
-      
-      // Simulate successful activation (for demo purposes)
-      setTimeout(function() {
-        // Uncomment the line below to automatically show step 3 after 3 seconds
-        // showStep(3);
-      }, 3000);
-      
-      // Simulate token expiration (for demo purposes)
-      setTimeout(function() {
-        // Uncomment the line below to automatically show step 4 after 6 seconds
-        // showStep(4);
-      }, 6000);
-      
-      // Function to show specific step (for demo purposes)
-      function showStep(stepNumber) {
-        step1.classList.remove('active');
-        step2.classList.remove('active');
-        step3.classList.remove('active');
-        step4.classList.remove('active');
-        
-        if (stepNumber === 1) step1.classList.add('active');
-        if (stepNumber === 2) step2.classList.add('active');
-        if (stepNumber === 3) step3.classList.add('active');
-        if (stepNumber === 4) step4.classList.add('active');
       }
     });
   </script>

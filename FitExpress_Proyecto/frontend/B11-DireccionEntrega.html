@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dirección de entrega — Fit Express</title>
+  <meta name="description" content="Ingresa tu dirección para calcular el envío.">
+  <style>
+    /* --- ESTILOS BASE --- */
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35); --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff; --err:#ef4444; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
+    .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .logo{font-weight:900;color:#fff;text-decoration:none;font-size:20px;display:flex;align-items:center;gap:10px}
+    .logo span{background:#19c268;padding:4px 8px;border-radius:6px;font-size:14px}
+    
+    .actions{display:flex;gap:16px}
+    .icon-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17,57,35,.6);text-decoration:none;color:white}
+
+    /* Layout */
+    .page{padding:40px 16px}
+    h1{font-size:32px;margin:0 0 10px}
+    .sub{color:var(--muted);margin:0 0 30px;font-size:18px}
+
+    .grid{display:grid;gap:30px;grid-template-columns:1fr 380px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+    .card{background:linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));border:1px solid rgba(183,210,192,.18);border-radius:20px;padding:30px}
+
+    /* Formulario */
+    .form-row{display:grid;gap:20px;grid-template-columns:1fr 1fr}
+    .field{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+    label{font-weight:700;font-size:14px;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px}
+    
+    input, select{width:100%;padding:14px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17,57,35,.6);color:var(--text);font-size:16px;outline:none}
+    input:focus, select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+    
+    /* Botones */
+    .cta{display:flex;align-items:center;justify-content:center;background:var(--cta);color:var(--cta-text);font-weight:bold;padding:16px;border-radius:12px;border:none;cursor:pointer;font-size:16px;width:100%;transition:.2s;text-decoration:none}
+    .cta:hover{filter:brightness(1.1);transform:translateY(-2px)}
+    .cta:disabled{background:#4b5563;color:#9ca3af;cursor:not-allowed;transform:none}
+    
+    .muted-btn{background:transparent;border:1px solid rgba(183,210,192,.35);color:var(--muted);margin-top:15px}
+    .muted-btn:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+
+    /* Resumen */
+    .summary-title{font-size:20px;margin:0 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px}
+    .line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed rgba(183,210,192,.2)}
+    .line:last-child{border-bottom:none}
+    .price{font-weight:900;font-size:18px;color:var(--accent)}
+    
+    .check-group{display:flex;align-items:center;gap:10px;margin:10px 0 20px;cursor:pointer}
+    .check-group input{width:18px;height:18px;accent-color:var(--accent)}
+
+    .error-msg{color:var(--err);font-size:13px;margin-top:5px;display:none}
+    .input-err{border-color:var(--err) !important}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+      <div class="actions">
+        <a href="B09-Carrito.html" class="icon-btn">🛒</a>
+        <a href="B02-InicioSesion.html" class="icon-btn">👤</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page container">
+    <h1>Dirección de entrega</h1>
+    <p class="sub">Confirma dónde quieres recibir tus bowls.</p>
+
+    <div class="grid">
+      <section class="card">
+        <form id="addressForm">
+          <div class="field">
+            <label for="calle">Dirección (Calle y Número)</label>
+            <input id="calle" type="text" placeholder="Ej: Av. Providencia 1234" required />
+            <span class="error-msg">Este campo es obligatorio</span>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="depto">Depto / Oficina (Opcional)</label>
+              <input id="depto" type="text" placeholder="Ej: 402B" />
+            </div>
+            <div class="field">
+              <label for="comuna">Comuna</label>
+              <select id="comuna" required onchange="calculateShipping()">
+                <option value="" hidden>Selecciona...</option>
+                <option value="Santiago">Santiago Centro</option>
+                <option value="Providencia">Providencia</option>
+                <option value="Ñuñoa">Ñuñoa</option>
+                <option value="San Miguel">San Miguel</option>
+                <option value="Macul">Macul</option>
+                <option value="Las Condes">Las Condes</option>
+                <option value="Vitacura">Vitacura</option>
+                <option value="La Reina">La Reina</option>
+                <option value="Lo Barnechea">Lo Barnechea</option>
+                <option value="Maipú">Maipú</option>
+                <option value="La Florida">La Florida</option>
+                <option value="Puente Alto">Puente Alto</option>
+                <option value="Estación Central">Estación Central</option>
+                <option value="Quilicura">Quilicura</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="telefono">Teléfono de contacto</label>
+            <input id="telefono" type="tel" placeholder="+56 9..." required />
+          </div>
+
+          <label class="check-group">
+            <input id="updateProfile" type="checkbox" checked />
+            <span>Actualizar esta dirección en mi perfil</span>
+          </label>
+
+          <button id="btnContinue" class="cta" type="submit">Continuar al Pago</button>
+          <a href="B09-Carrito.html" class="cta muted-btn">Volver al carrito</a>
+        </form>
+      </section>
+
+      <aside class="card">
+        <h3 class="summary-title">Resumen del Envío</h3>
+        <div class="line">
+          <span>Destino:</span>
+          <span id="sumComuna" style="font-weight:bold">...</span>
+        </div>
+        <div class="line">
+          <span>Tiempo estimado:</span>
+          <span id="sumTiempo">-- min</span>
+        </div>
+        <div class="line">
+          <span>Costo de envío:</span>
+          <span id="sumCosto" class="price">$0</span>
+        </div>
+        <div style="margin-top:20px;font-size:13px;color:var(--muted)">
+          * El costo se calcula automáticamente según la comuna seleccionada.
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+    
+    // Tarifas y tiempos por zona
+    const shippingRates = {
+        "Santiago": { price: 2000, time: "30-40 min" },
+        "Providencia": { price: 2200, time: "35-45 min" },
+        "Ñuñoa": { price: 2200, time: "35-45 min" },
+        "San Miguel": { price: 2500, time: "40-50 min" },
+        "Macul": { price: 2500, time: "40-50 min" },
+        
+        "Las Condes": { price: 2800, time: "45-55 min" },
+        "Vitacura": { price: 3000, time: "45-55 min" },
+        "La Reina": { price: 2800, time: "45-55 min" },
+        "Lo Barnechea": { price: 3500, time: "50-60 min" },
+        
+        "Estación Central": { price: 2500, time: "40-50 min" },
+        "Maipú": { price: 3500, time: "50-70 min" },
+        "La Florida": { price: 3200, time: "50-65 min" },
+        "Puente Alto": { price: 4000, time: "60-80 min" },
+        "Quilicura": { price: 3800, time: "50-70 min" }
+    };
+
+    const comunaSelect = document.getElementById('comuna');
+    const btnContinue = document.getElementById('btnContinue');
+
+    // 1. AL CARGAR: TRAER DATOS DEL USUARIO (PREDETERMINADOS)
+    document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            alert("Debes iniciar sesión");
+            window.location.href = 'B02-InicioSesion.html';
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API_URL}/auth/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(res.ok) {
+                const user = await res.json();
+                
+                // Rellenar formulario si existen datos
+                if(user.direccion) document.getElementById('calle').value = user.direccion;
+                if(user.telefono) document.getElementById('telefono').value = user.telefono;
+                
+                // Intentar seleccionar la comuna si coincide
+                if(user.comuna) {
+                    // Buscar si la comuna del usuario está en nuestra lista
+                    const options = Array.from(comunaSelect.options);
+                    const match = options.find(opt => opt.value === user.comuna);
+                    if(match) {
+                        comunaSelect.value = user.comuna;
+                        calculateShipping(); // Calcular precio inmediatamente
+                    }
+                }
+            }
+        } catch(e) { console.error(e); }
+    });
+
+    // 2. CALCULAR ENVÍO EN TIEMPO REAL
+    function calculateShipping() {
+        const comuna = comunaSelect.value;
+        const rate = shippingRates[comuna];
+
+        if (rate) {
+            document.getElementById('sumComuna').textContent = comuna;
+            document.getElementById('sumTiempo').textContent = rate.time;
+            document.getElementById('sumCosto').textContent = `$${rate.price.toLocaleString('es-CL')}`;
+            btnContinue.disabled = false;
+        } else {
+            // Reset si no hay selección
+            document.getElementById('sumComuna').textContent = "...";
+            document.getElementById('sumCosto').textContent = "$0";
+            btnContinue.disabled = true;
+        }
+    }
+
+    // 3. CONTINUAR (GUARDAR DATOS Y AVANZAR)
+    document.getElementById('addressForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const calle = document.getElementById('calle').value;
+        const depto = document.getElementById('depto').value;
+        const comuna = document.getElementById('comuna').value;
+        const telefono = document.getElementById('telefono').value;
+        const updateProfile = document.getElementById('updateProfile').checked;
+        const token = localStorage.getItem('access_token');
+
+        // Dirección completa para el repartidor
+        const direccionCompleta = depto ? `${calle}, Depto ${depto}` : calle;
+
+        // A. Guardar datos del envío localmente para el checkout (B18)
+        const datosEnvio = {
+            direccion: direccionCompleta,
+            comuna: comuna,
+            telefono: telefono,
+            costo_envio: shippingRates[comuna].price,
+            tiempo: shippingRates[comuna].time
+        };
+        localStorage.setItem('checkout_envio', JSON.stringify(datosEnvio));
+
+        // B. (Opcional) Actualizar perfil en Backend si el usuario quiso
+        if (updateProfile && token) {
+            btnContinue.textContent = "Guardando...";
+            try {
+                await fetch(`${API_URL}/auth/perfil`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({
+                        direccion: calle, // Guardamos la calle base en perfil
+                        comuna: comuna,
+                        telefono: telefono
+                    })
+                });
+            } catch(e) { console.error("Error actualizando perfil", e); }
+        }
+
+        // C. Ir al siguiente paso (Pago/Asignación)
+        // Nota: Según tu flujo original vas a B18, aunque B18 parece "Asignación Despacho", 
+        // ya estamos eligiendo el despacho aquí. Asumiré que B18 es confirmación o pago.
+        // Si B18 es redundante, podrías saltar a B20 (Pago). 
+        // Por ahora mantengo tu flujo:
+        window.location.href = 'B18-AsignacionDespacho.html';
+    });
+  </script>
+</body>
+</html>

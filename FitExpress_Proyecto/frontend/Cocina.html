@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Cocina KDS — Fit Express</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{ --bg:#111; --card:#222; --text:#eee; --accent:#22c55e; --warn:#f59e0b; }
+    body{ margin:0; padding:20px; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); }
+
+    /* Header */
+    .header{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:20px; margin-bottom:20px; }
+    .btn-back{ background:#333; color:#fff; text-decoration:none; padding:10px 20px; border-radius:8px; font-weight:bold; }
+    .status-indicator{ font-size:14px; color:var(--accent); display:flex; align-items:center; gap:5px; }
+    .dot{ width:10px; height:10px; background:var(--accent); border-radius:50%; box-shadow:0 0 8px var(--accent); animation: pulse 2s infinite; }
+
+    /* Grid de Tickets */
+    .ticket-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:20px; }
+    
+    /* Ticket Individual */
+    .ticket{ background:var(--card); border:2px solid #444; border-radius:10px; padding:20px; display:flex; flex-direction:column; transition:0.3s; }
+    
+    /* Estados Visuales */
+    .ticket.new { border-color:var(--accent); box-shadow:0 0 15px rgba(34,197,94,0.1); }
+    .ticket.prep { border-color:var(--warn); background:#2a2005; }
+
+    .t-head{ display:flex; justify-content:space-between; font-weight:bold; font-size:20px; margin-bottom:15px; border-bottom:1px dashed #555; padding-bottom:10px; }
+    .t-time{ font-size:14px; color:#aaa; font-weight:normal; }
+    
+    .t-body{ flex:1; margin-bottom:20px; font-size:16px; line-height:1.5; }
+    .item-row{ display:flex; gap:10px; margin-bottom:8px; border-bottom:1px solid #333; padding-bottom:5px; }
+    .qty{ font-weight:bold; color:var(--accent); min-width:30px; }
+
+    .t-footer{ display:flex; gap:10px; }
+    .btn{ flex:1; padding:12px; border:none; border-radius:6px; cursor:pointer; font-weight:bold; font-size:16px; transition:0.2s; }
+    .btn:hover { transform: scale(1.02); }
+    .btn-start{ background:var(--warn); color:#000; }
+    .btn-ready{ background:var(--accent); color:#fff; }
+    
+    @keyframes pulse { 0%{opacity:1} 50%{opacity:0.5} 100%{opacity:1} }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>👨‍🍳 Cola de Preparación</h1>
+      <div class="status-indicator"><div class="dot"></div> En Vivo (Auto-actualiza cada 10s)</div>
+    </div>
+    <a href="PanelAdmin.html" class="btn-back">Volver al Panel</a>
+  </div>
+
+  <div id="grid" class="ticket-grid">
+    <p style="color:#777">Cargando pedidos...</p>
+  </div>
+
+  <script>
+    const API = "http://127.0.0.1:8000";
+    const token = localStorage.getItem('access_token');
+
+    if(!token) window.location.href = 'B02-InicioSesion.html';
+
+    async function loadQueue() {
+      try {
+        const res = await fetch(`${API}/admin/pedidos/activos`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if(res.status === 403) {
+            alert("No tienes permiso de Cocina");
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const pedidos = await res.json();
+        renderTickets(pedidos);
+      } catch(e) { console.error("Error conexión", e); }
+    }
+
+    function renderTickets(pedidos) {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+
+      if(pedidos.length === 0) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;font-size:20px;color:#555">✅ Todo listo. No hay pedidos pendientes.</p>';
+        return;
+      }
+
+      pedidos.forEach(p => {
+        // Estado visual
+        // 'Pagado' o 'Recibido' = Nuevo para cocina
+        const isNew = p.estado === 'Recibido' || p.estado === 'Pagado';
+        const estadoClass = isNew ? 'new' : 'prep';
+        const estadoTexto = isNew ? 'NUEVO' : 'PREPARANDO';
+
+        // Lista de items
+        let itemsHTML = 'No hay items';
+        if(p.items && p.items.length > 0) {
+             itemsHTML = p.items.map(i => `
+                <div class="item-row">
+                    <span class="qty">${i.cantidad}</span>
+                    <span>${i.nombre_producto}</span>
+                </div>
+             `).join('');
+        }
+
+        const card = document.createElement('div');
+        card.className = `ticket ${estadoClass}`;
+        
+        // Botón de acción
+        let actionBtn = '';
+        if(isNew) {
+            actionBtn = `<button class="btn btn-start" onclick="updateStatus(${p.id}, 'En preparacion')">🔥 Empezar</button>`;
+        } else {
+            actionBtn = `<button class="btn btn-ready" onclick="updateStatus(${p.id}, 'Listo')">✅ Terminado</button>`;
+        }
+
+        card.innerHTML = `
+          <div class="t-head">
+            <span>#${p.id} <small>${estadoTexto}</small></span>
+            <span class="t-time">${new Date(p.fecha_creacion).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+          </div>
+          <div class="t-body">
+            ${itemsHTML}
+            <div style="margin-top:15px;font-size:13px;color:#aaa">
+               ${p.repartidor ? '🛵 Delivery' : '🏪 Retiro en tienda'}
+            </div>
+          </div>
+          <div class="t-footer">
+            ${actionBtn}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function updateStatus(id, status) {
+      await fetch(`${API}/admin/pedidos/${id}/estado?estado=${status}`, {
+        method: 'PUT', headers: { 'Authorization': `Bearer ${token}` }
+      });
+      loadQueue(); // Recargar inmediatamente
+    }
+
+    // Auto-refresco (Polling)
+    setInterval(loadQueue, 10000);
+    loadQueue();
+  </script>
+</body>
+</html>

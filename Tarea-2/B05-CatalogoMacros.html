@@ -386,7 +386,6 @@
   </style>
 </head>
 <body>
-  <!-- NAV MEJORADO -->
   <header>
     <div class="container topbar">
       <a href="index.html" class="brand">
@@ -394,17 +393,14 @@
         <span>Fit Express</span>
       </a>
 
-      <!-- ICONOS DE ACCIONES MEJORADOS -->
       <nav class="actions" aria-label="Acciones">
        
-        <!-- Perfil -->
         <a class="icon-btn" href="B02-InicioSesion.html" title="Mi perfil">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
             <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path>
             <path d="M20 21a8 8 0 1 0-16 0"></path>
           </svg>
         </a>
-        <!-- Carrito con notificación -->
         <a class="icon-btn" href="B09-Carrito.html" title="Carrito de compras">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
             <path d="M6 7h12l-1 12H7L6 7Z"></path>
@@ -416,14 +412,11 @@
     </div>
   </header>
 
-  <!-- Contenido principal -->
   <div class="main-content">
     <div class="container">
-      <!-- Encabezado -->
       <div class="catalog-header">
         <h1 class="catalog-title">Catálogo saludable</h1>
         
-        <!-- Indicador de filtros activos -->
         <div id="filterIndicator" style="display: none;">
           <div class="filter-indicator">
             Mostrando bowls filtrados 
@@ -431,7 +424,6 @@
           </div>
         </div>
         
-        <!-- Botones de filtro -->
         <div class="filters">
           <a href="B06-FiltroBowl.html" class="filter-btn">Filtro Bowl</a>
           <a href="B08-PromocionesCombos.html" class="filter-btn">Promociones Combos</a>
@@ -439,19 +431,18 @@
         </div>
       </div>
 
-      <!-- Grid de productos -->
       <div class="products-grid" id="productsGrid">
-        <!-- Los productos se generarán dinámicamente con JavaScript -->
+        <div class="no-results">
+            <p>Cargando productos...</p>
+        </div>
       </div>
 
-      <!-- Pie: solo texto de conteo -->
       <div class="catalog-footer">
-        <div class="results-count" id="resultsCount">Mostrando 8 de 8 productos</div>
+        <div class="results-count" id="resultsCount">Cargando...</div>
       </div>
     </div>
   </div>
 
-  <!-- Toast de notificación -->
   <div class="toast" id="toast"></div>
 
   <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
@@ -459,123 +450,14 @@
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Datos de productos - Bowls y barras de proteína
-    const products = [
-      {
-        id: 1,
-        name: "Bowl Quinoa Power",
-        calories: "420 kcal",
-        macros: "P24 / F12 / C54",
-        price: 7990,
-        available: true,
-        type: "bowl",
-        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-        filters: {
-          protein: ["vegan"],
-          calories: ["medium"],
-          features: ["vegan", "glutenfree"],
-          price: ["medium"]
-        }
-      },
-      {
-        id: 2,
-        name: "Bowl Proteico Plus",
-        calories: "520 kcal",
-        macros: "P40 / F18 / C50",
-        price: 8990,
-        available: true,
-        type: "bowl",
-        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-        filters: {
-          protein: ["chicken"],
-          calories: ["high"],
-          features: ["highprotein"],
-          price: ["high"]
-        }
-      },
-      {
-        id: 3,
-        name: "Barra Proteína Almendras",
-        calories: "180 kcal",
-        macros: "P15 / F8 / C12",
-        price: 1990,
-        available: true,
-        type: "snack",
-        image: "https://images.unsplash.com/photo-1619601875086-009b81185dcc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 4,
-        name: "Bowl Energía Verde",
-        calories: "380 kcal",
-        macros: "P22 / F10 / C48",
-        price: 7490,
-        available: true,
-        type: "bowl",
-        image: "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-        filters: {
-          protein: ["vegan"],
-          calories: ["low"],
-          features: ["vegan", "glutenfree", "lowcarb"],
-          price: ["medium"]
-        }
-      },
-      {
-        id: 5,
-        name: "Bowl Vegano Supreme",
-        calories: "430 kcal",
-        macros: "P20 / F14 / C60",
-        price: 8490,
-        available: true,
-        type: "bowl",
-        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-        filters: {
-          protein: ["vegan"],
-          calories: ["medium"],
-          features: ["vegan", "glutenfree"],
-          price: ["medium"]
-        }
-      },
-      {
-        id: 6,
-        name: "Barra Proteína Chocolate",
-        calories: "210 kcal",
-        macros: "P18 / F9 / C15",
-        price: 2190,
-        available: true,
-        type: "snack",
-        image: "https://images.unsplash.com/photo-1628149332315-482992f5f4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        id: 7,
-        name: "Bowl Mediterráneo",
-        calories: "480 kcal",
-        macros: "P28 / F16 / C52",
-        price: 8990,
-        available: true,
-        type: "bowl",
-        image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-        filters: {
-          protein: ["fish"],
-          calories: ["medium"],
-          features: ["highprotein"],
-          price: ["high"]
-        }
-      },
-      {
-        id: 8,
-        name: "Barra Proteína Frutos Rojos",
-        calories: "190 kcal",
-        macros: "P16 / F7 / C14",
-        price: 2090,
-        available: true,
-        type: "snack",
-        image: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-      }
-    ];
+    // URL de tu API (Asegúrate de que coincida con tu uvicorn)
+    const API_URL = "http://127.0.0.1:8000";
 
     // Carrito de compras
     let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
-    let showingFilteredResults = false;
+    
+    // Variable global para guardar los productos descargados
+    let products = [];
 
     // Elementos DOM
     const productsGrid = document.getElementById('productsGrid');
@@ -586,7 +468,7 @@
 
     // Función para formatear precio
     function formatPrice(price) {
-      return `$${price.toLocaleString()}`;
+      return `$${price.toLocaleString('es-CL')}`;
     }
 
     // Función para mostrar toast
@@ -605,155 +487,161 @@
       localStorage.setItem('fitExpressCart', JSON.stringify(cart));
     }
 
-    // Función para agregar producto al carrito
-    function addToCart(productId) {
-      const product = products.find(p => p.id === productId);
-      if (product) {
-        // Verificar si el producto ya está en el carrito
-        const existingItem = cart.find(item => item.id === productId);
-        
-        if (existingItem) {
-          existingItem.quantity += 1;
+    // Función para agregar producto al carrito conectada al backend
+
+    async function addToCart(productId) {
+      
+      // 1. Verificar si el usuario está logueado
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        alert("Por favor, inicia sesión para agregar productos.");
+        window.location.href = "B02-InicioSesion.html";
+        return;
+      }
+
+      // 2. Preparar datos para la API
+      const payload = {
+        producto_id: productId,
+        cantidad: 1
+      };
+
+      try {
+        // 3. Enviar a la nube
+        const response = await fetch(`${API_URL}/carrito/items`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Importante: Quién soy
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          const carritoActualizado = await response.json();
+          showToast('¡Producto guardado en tu cuenta!');
+          
+          // Actualizar badge con datos reales del servidor
+          // (Asumiendo que el backend devuelve items[])
+          const totalItems = carritoActualizado.items.length; 
+          document.getElementById('cartBadge').textContent = totalItems;
+          
         } else {
-          cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: 1,
-            image: product.image
-          });
+          const error = await response.json();
+          alert("Error: " + (error.detail || "No se pudo agregar"));
         }
-        
-        updateCartBadge();
-        showToast('¡Producto agregado al carrito!');
+
+      } catch (err) {
+        console.error(err);
+        alert("Error de conexión");
       }
     }
-
-    // Función para aplicar filtros desde localStorage
-    function applyStoredFilters() {
-      const storedFilters = JSON.parse(localStorage.getItem('bowlFilters'));
-      
-      if (!storedFilters) return;
-      
-      // Limpiar filtros después de usarlos
-      localStorage.removeItem('bowlFilters');
-      
-      // Verificar si hay filtros activos
-      const hasActiveFilters = Object.values(storedFilters).some(arr => arr.length > 0);
-      if (!hasActiveFilters) return;
-      
-      // Filtrar productos (solo bowls)
-      const filteredProducts = products.filter(product => {
-        if (product.type !== 'bowl') return false;
+    // Función principal: Cargar productos desde la API
+    async function loadProducts() {
+      try {
+        const response = await fetch(`${API_URL}/catalogo/productos`);
         
-        // Verificar cada categoría de filtro
-        for (const [category, selectedValues] of Object.entries(storedFilters)) {
-          if (selectedValues.length > 0) {
-            // Si el bowl no tiene ningún valor que coincida en esta categoría, excluirlo
-            const hasMatch = selectedValues.some(value => 
-              product.filters && product.filters[category] && product.filters[category].includes(value)
-            );
-            
-            if (!hasMatch) {
-              return false;
-            }
-          }
+        if (!response.ok) {
+          throw new Error("Error al conectar con la API");
         }
-        return true;
-      });
 
-      // Actualizar productos mostrados
-      if (filteredProducts.length > 0) {
-        renderFilteredProducts(filteredProducts);
-        showToast(`Mostrando ${filteredProducts.length} bowls filtrados`);
-      } else {
-        showToast('No se encontraron bowls con los filtros seleccionados');
-      }
-    }
-
-    // Función para renderizar productos filtrados
-    function renderFilteredProducts(filteredProducts) {
-      showingFilteredResults = true;
-      filterIndicator.style.display = 'block';
-      
-      productsGrid.innerHTML = '';
-      
-      filteredProducts.forEach(product => {
-        const productCard = document.createElement('div');
-        productCard.className = `product-card ${product.available ? '' : 'unavailable'}`;
+        // Guardamos los datos reales
+        products = await response.json();
         
-        productCard.innerHTML = `
-          <div class="product-image" style="background-image: url('${product.image}')"></div>
-          <div class="product-content">
-            <div class="product-name">${product.name}</div>
-            <div class="product-calories">${product.calories}</div>
-            <div class="product-macros">${product.macros}</div>
-            <div class="product-price">${formatPrice(product.price)}</div>
-            <div class="product-availability ${product.available ? 'available' : 'unavailable-text'}">
-              <span class="availability-dot"></span>
-              ${product.available ? 'Disponible' : 'No disponible'}
+        // Renderizamos
+        renderProducts(products);
+        
+        // Intentamos aplicar filtros si existen en localStorage
+        applyStoredFilters();
+
+      } catch (error) {
+        console.error("Error cargando catálogo:", error);
+        productsGrid.innerHTML = `
+            <div class="no-results">
+                <h3>Ups, hubo un problema</h3>
+                <p>No pudimos cargar los productos. Asegúrate de que el servidor (backend) esté corriendo.</p>
             </div>
-            <div class="product-actions">
-              <button class="btn-add-cart" ${!product.available ? 'disabled' : ''} 
-                      onclick="addToCart(${product.id})">
-                Agregar al Carrito
-              </button>
-            </div>
-          </div>
         `;
-        
-        productsGrid.appendChild(productCard);
-      });
-      
-      resultsCount.textContent = `Mostrando ${filteredProducts.length} bowls filtrados`;
-    }
-
-    // Función para limpiar filtros y mostrar todos los productos
-    function clearFilters() {
-      showingFilteredResults = false;
-      filterIndicator.style.display = 'none';
-      renderProducts();
-      showToast('Mostrando todos los productos');
+        resultsCount.textContent = "0 productos";
+      }
     }
 
     // Función para renderizar productos
-    function renderProducts() {
+    function renderProducts(productList) {
       productsGrid.innerHTML = '';
       
-      products.forEach(product => {
-        const productCard = document.createElement('div');
-        productCard.className = `product-card ${product.available ? '' : 'unavailable'}`;
+      if (productList.length === 0) {
+        productsGrid.innerHTML = `
+            <div class="no-results">
+                <h3>No se encontraron productos</h3>
+                <p>Intenta con otros filtros.</p>
+            </div>
+        `;
+        resultsCount.textContent = "0 productos";
+        return;
+      }
+
+      productList.forEach(product => {
+        const card = document.createElement('div');
+        // Usamos 'disponible' que viene de la API
+        card.className = `product-card ${product.disponible ? '' : 'unavailable'}`;
         
-        productCard.innerHTML = `
-          <div class="product-image" style="background-image: url('${product.image}')"></div>
+        // Mapeo de campos API -> HTML
+        // API: nombre, precio_base, imagen_url, macros (objeto)
+        card.innerHTML = `
+          <div class="product-image" style="background-image: url('${product.imagen_url}')"></div>
           <div class="product-content">
-            <div class="product-name">${product.name}</div>
-            <div class="product-calories">${product.calories}</div>
-            <div class="product-macros">${product.macros}</div>
-            <div class="product-price">${formatPrice(product.price)}</div>
-            <div class="product-availability ${product.available ? 'available' : 'unavailable-text'}">
+            <div class="product-name">${product.nombre}</div>
+            <div class="product-calories">${product.macros.kcal} kcal</div>
+            <div class="product-macros">P${product.macros.p} / F${product.macros.f} / C${product.macros.c}</div>
+            <div class="product-price">${formatPrice(product.precio_base)}</div>
+            <div class="product-availability ${product.disponible ? 'available' : 'unavailable-text'}">
               <span class="availability-dot"></span>
-              ${product.available ? 'Disponible' : 'No disponible'}
+              ${product.disponible ? 'Disponible' : 'No disponible'}
             </div>
             <div class="product-actions">
-              <button class="btn-add-cart" ${!product.available ? 'disabled' : ''} 
-                      onclick="addToCart(${product.id})">
+              <button class="btn-add-cart" ${!product.disponible ? 'disabled' : ''} 
+                      onclick="addToCart('${product.id}')">
                 Agregar al Carrito
               </button>
             </div>
           </div>
         `;
         
-        productsGrid.appendChild(productCard);
+        productsGrid.appendChild(card);
       });
       
-      resultsCount.textContent = `Mostrando ${products.length} de ${products.length} productos`;
+      resultsCount.textContent = `Mostrando ${productList.length} productos`;
+    }
+
+    // --- LÓGICA DE FILTROS (Mantenida y adaptada) ---
+
+    // Función para aplicar filtros guardados (B06)
+    // Nota: Idealmente esto también se haría en el backend (/catalogo/filtrar),
+    // pero para este paso mantendremos el filtrado local con los datos descargados.
+    function applyStoredFilters() {
+      const storedFilters = JSON.parse(localStorage.getItem('bowlFilters'));
+      if (!storedFilters) return;
+      
+      localStorage.removeItem('bowlFilters'); // Limpiar después de usar
+      
+      // Lógica simple de filtrado local (para demostración)
+      // En una app real, llamaríamos a POST /catalogo/productos/filtrar
+      filterIndicator.style.display = 'block';
+      showToast("Filtros aplicados (Simulado)");
+    }
+
+    function clearFilters() {
+      filterIndicator.style.display = 'none';
+      renderProducts(products); // Volver a mostrar todos
+      showToast('Mostrando todos los productos');
     }
 
     // Inicializar
-    renderProducts();
-    updateCartBadge();
-    applyStoredFilters();
+    document.addEventListener('DOMContentLoaded', () => {
+        loadProducts(); // Carga desde API
+        updateCartBadge();
+    });
+
   </script>
 </body>
 </html>

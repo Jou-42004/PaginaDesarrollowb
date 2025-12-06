@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Personaliza tu bowl — Fit Express</title>
+<style>
+  :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --accent:#22c55e; --cta:#2563eb; --cta-text:#fff; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444; }
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+  .container{max-width:1000px;margin:0 auto;padding:0 16px}
+
+  header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px); background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65)); border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
+  .topbar{display:flex;align-items:center;gap:12px;height:60px}
+  .logo{width:32px;height:32px;border-radius:8px;background:#19c268;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;}
+  .link{color:var(--muted);text-decoration:none;border:1px solid rgba(183,210,192,.25);padding:10px 14px;border-radius:12px;background:rgba(17,57,35,.6)}
+
+  main{padding:24px 0 40px;display:grid;gap:20px}
+  .panel{background:linear-gradient(180deg, rgba(18,56,35,.55), rgba(10,38,23,.55));border:1px solid rgba(183,210,192,.18);border-radius:16px;padding:18px}
+  .grid{display:grid;gap:16px;grid-template-columns:2fr 1fr}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  select, input[type="text"]{ background:rgba(17,57,35,.6); color:var(--text); border:1px solid rgba(183,210,192,.25); border-radius:12px; padding:10px 12px; outline:none; width: 100%; }
+  .group{display:grid;gap:10px;margin-bottom:8px}
+  .label{font-weight:800}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{ display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;cursor:pointer; border:1px solid rgba(183,210,192,.35); background:rgba(17,57,35,.45); user-select:none }
+  .chip input{appearance:none;width:16px;height:16px;border:1px solid rgba(183,210,192,.35);border-radius:4px;background:transparent;display:grid;place-items:center}
+  .chip input:checked{background:#22c55e;border-color:#22c55e}
+  .chip.disabled{opacity:.45;pointer-events:none}
+  
+  .counter{display:inline-flex;align-items:center;gap:6px;background:#052e16;border:1px solid rgba(183,210,192,.25);padding:4px 8px;border-radius:8px;font-weight:800}
+  .banner{border:1px solid rgba(183,210,192,.25);border-left-width:4px;padding:10px 12px;border-radius:12px;margin:10px 0 0}
+  .ok{border-left-color:var(--ok);background:#052e16} .err{border-left-color:var(--err);background:#451a1a}
+
+  .summary .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(183,210,192,.18)}
+  .total{font-weight:900;font-size:20px;color:var(--accent);margin-top:10px;border-top:1px solid #444;padding-top:10px}
+
+  .btn{ width:100%;margin-top:14px;display:inline-flex;justify-content:center;align-items:center; padding:14px 16px;border-radius:12px;border:none;font-weight:900;cursor:pointer }
+  .primary{background:var(--cta);color:var(--cta-text)}
+  .primary:disabled{opacity:.6;cursor:not-allowed}
+</style>
+</head>
+<body>
+<header>
+  <div class="container topbar">
+    <a href="index.html" style="text-decoration:none;color:inherit;display:flex;gap:10px;align-items:center"><div class="logo">FE</div><span style="font-size:20px;font-weight:900">Fit Express</span></a>
+    <nav class="actions">
+      <a class="link" href="B05-CatalogoMacros.html">Volver al catálogo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="panel">
+    <h1>Personaliza tu bowl</h1>
+    <div class="sub">Crea tu combinación perfecta</div>
+  </section>
+
+  <section class="grid">
+    <section class="panel">
+      <div class="group">
+        <label class="label" for="customName">Ponle un nombre a tu bowl</label>
+        <input type="text" id="customName" placeholder="Ej: Mi Súper Bowl">
+      </div>
+
+      <div class="group">
+        <label class="label" for="bowlType">Base</label>
+        <select id="bowlType">
+          <option value="vegano">Vegano</option>
+          <option value="proteico">Proteico</option>
+          <option value="sin-gluten">Sin gluten</option>
+        </select>
+      </div>
+
+      <div class="group">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span class="label">Extras de proteína</span>
+          <span class="counter"><span id="count">0</span>/2</span>
+        </div>
+        <div class="chips" id="extras">
+          <label class="chip"><input type="checkbox" data-price="1200" value="pollo"> Pollo +$1.200</label>
+          <label class="chip"><input type="checkbox" data-price="900" value="tofu" data-tags="vegano"> Tofu +$900</label>
+          <label class="chip"><input type="checkbox" data-price="700" value="garbanzos" data-tags="vegano"> Garbanzos +$700</label>
+          <label class="chip"><input type="checkbox" data-price="1000" value="huevo"> Huevo +$1.000</label>
+        </div>
+        <div id="limitMsg" class="banner ok" style="display:none">Máx. 2 extras alcanzado.</div>
+      </div>
+
+      <div class="group">
+        <span class="label">Salsas</span>
+        <div class="chips" id="sauces">
+          <label class="chip"><input type="checkbox" value="tahini" data-tags="vegano,sin-gluten"> Tahini</label>
+          <label class="chip"><input type="checkbox" value="yogurt" data-tags="lacteo"> Yogurt</label>
+          <label class="chip"><input type="checkbox" value="cesar"  data-tags="lacteo,gluten"> César</label>
+          <label class="chip"><input type="checkbox" value="pesto"  data-tags="vegano"> Pesto</label>
+        </div>
+        <div id="compatMsg" class="banner err" style="display:none"></div>
+      </div>
+    </section>
+
+    <aside class="panel summary">
+      <h2 style="margin:0 0 8px">Resumen</h2>
+      <div class="row"><span>Bowl base</span><span>$6.990</span></div>
+      <div class="row"><span>Extras</span><span id="extrasPrice">$0</span></div>
+      <div class="row total"><span>Total</span><span id="totalPrice">$6.990</span></div>
+
+      <button id="confirm" class="btn primary" disabled>Agregar al Carrito</button>
+    </aside>
+  </section>
+</main>
+
+<script>
+  const API_URL = "http://127.0.0.1:8000";
+  const BASE_PRICE = 6990; 
+  const CUSTOM_PRODUCT_ID = 99; // Debe existir en la BD (Init_db)
+
+  const CLP = v => v.toLocaleString('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0});
+  const qs = s => document.querySelector(s);
+  const qa = s => Array.from(document.querySelectorAll(s));
+
+  const countEl = qs('#count'), extrasEl = qs('#extrasPrice'), totalEl = qs('#totalPrice');
+  const limitMsg = qs('#limitMsg'), compatMsg = qs('#compatMsg'), confirmBtn = qs('#confirm');
+  const bowlTypeEl = qs('#bowlType'), extrasWrap = qs('#extras'), saucesWrap = qs('#sauces');
+
+  let currentTotal = BASE_PRICE;
+
+  function selectedExtras(){
+    return qa('#extras input:checked').map(i=>({ 
+      name: i.parentElement.textContent.trim().split('+')[0].trim(),
+      price: Number(i.dataset.price) 
+    }));
+  }
+
+  function validateCompatibility(){
+    const type = bowlTypeEl.value; 
+    let msg = '', ok = true;
+    qa('#sauces input:checked').forEach(i=>{
+      const tags = (i.dataset.tags||'').split(',');
+      if(type==='vegano' && tags.includes('lacteo')){ ok=false; msg = 'Bowl Vegano no permite lácteos.'; }
+      if(type==='sin-gluten' && tags.includes('gluten')){ ok=false; msg = 'Bowl Sin Gluten no permite gluten.'; }
+    });
+    compatMsg.style.display = ok ? 'none' : '';
+    compatMsg.textContent = msg;
+    return ok;
+  }
+
+  function recalc(){
+    const extras = selectedExtras();
+    const extrasTotal = extras.reduce((a,b)=>a+b.price,0);
+    currentTotal = BASE_PRICE + extrasTotal;
+    
+    extrasEl.textContent = '+' + CLP(extrasTotal);
+    totalEl.textContent = CLP(currentTotal);
+
+    const count = extras.length;
+    countEl.textContent = count;
+    limitMsg.style.display = count >= 2 ? '' : 'none';
+    
+    qa('#extras input').forEach(i => {
+        if(!i.checked && count >= 2) i.disabled = true;
+        else i.disabled = false;
+    });
+
+    const valid = validateCompatibility();
+    confirmBtn.disabled = !valid;
+  }
+
+  confirmBtn.addEventListener('click', async () => {
+    const token = localStorage.getItem('access_token');
+    if(!token) { alert("Inicia sesión primero"); window.location.href='B02-InicioSesion.html'; return; }
+
+    const extras = selectedExtras();
+    const sauces = qa('#sauces input:checked').map(i=>i.parentElement.textContent.trim());
+    const type = bowlTypeEl.options[bowlTypeEl.selectedIndex].text;
+    const userCustomName = document.getElementById('customName').value.trim() || "Bowl Personalizado";
+    
+    // Construir descripción
+    let desc = `${userCustomName} (${type})`;
+    if (extras.length > 0) desc += ` + Extras: ${extras.map(e => e.name).join(', ')}`;
+    if (sauces.length > 0) desc += ` + Salsas: ${sauces.join(', ')}`;
+    
+    confirmBtn.textContent = "Guardando...";
+    confirmBtn.disabled = true;
+
+    try {
+        await fetch(`${API_URL}/carrito/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({
+                producto_id: CUSTOM_PRODUCT_ID,
+                cantidad: 1,
+                personalizacion: desc,
+                precio_custom: currentTotal // ENVIAMOS EL PRECIO TOTAL
+            })
+        });
+        alert("¡Bowl agregado!");
+        window.location.href = "B09-Carrito.html";
+    } catch(e) {
+        alert("Error al agregar.");
+        confirmBtn.textContent = "Agregar al Carrito";
+        confirmBtn.disabled = false;
+    }
+  });
+
+  extrasWrap.addEventListener('change', recalc);
+  saucesWrap.addEventListener('change', recalc);
+  bowlTypeEl.addEventListener('change', recalc);
+  recalc();
+</script>
+</body>
+</html>

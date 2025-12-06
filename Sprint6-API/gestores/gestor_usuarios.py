@@ -1,75 +1,111 @@
-# En: gestores/gestor_usuarios.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from modelos import schemas
-from typing import List
+from sqlmodel import Session, select
+from passlib.context import CryptContext
+from modelos import schemas, models
+from database import get_session
 
-# --- Dependencias de Seguridad (simuladas por ahora) ---
-async def get_usuario_actual():
-    print("Obteniendo usuario actual (simulación)")
-    return schemas.Usuario(
-        id="user-uuid-123",
-        nombre="Usuario de Prueba",
-        rut="12.345.678-9",
-        email="test@test.com",
-        estado=schemas.EstadoUsuario.ACTIVO
-    )
-# --------------------------------------------------------
+# Configuración de hashing de contraseñas
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# !!!!! ESTA ES LA LÍNEA QUE FALTA O NO SE GUARDÓ !!!!!
 router = APIRouter(
-    prefix="/auth", # Prefijo para autenticación
+    prefix="/auth",
     tags=["Usuarios y Autenticación"]
 )
 
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+# Dependencia para obtener usuario actual (usada por otros gestores)
+async def get_usuario_actual(token: str = Depends(schemas.Token), db: Session = Depends(get_session)):
+    # NOTA: Aquí simplificamos. En producción, decodificarías el JWT.
+    # Para este sprint, buscaremos un usuario "por defecto" o simularemos validación.
+    # Si usas login real, el token debería ser el ID o email encriptado.
+    
+    # MODO SIMPLE: Si el token es un email válido en la BD, lo dejamos pasar
+    # (Esto es solo para desarrollo, NO PRODUCCIÓN)
+    user = db.exec(select(models.Usuario).where(models.Usuario.correo == token)).first()
+    if not user:
+        # Fallback para pruebas con usuario test
+        user = db.exec(select(models.Usuario).where(models.Usuario.correo == "test@test.com")).first()
+        if not user:
+             raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Credenciales inválidas",
+            )
+    return user
+
 # --- Endpoint para B01: Registro de Usuario ---
 @router.post("/registro", response_model=schemas.Usuario)
-async def registrar_usuario(usuario_data: schemas.UsuarioCreate):
-    print(f"Registrando al usuario: {usuario_data.email}")
-    nuevo_usuario = schemas.Usuario(
-        id="user-uuid-456",
+async def registrar_usuario(
+    usuario_data: schemas.UsuarioCreate,
+    db: Session = Depends(get_session)
+):
+    # 1. Validar duplicados
+    existing_user = db.exec(select(models.Usuario).where(models.Usuario.correo == usuario_data.email)).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado")
+
+    # 2. Crear modelo de BD
+    nuevo_usuario = models.Usuario(
         nombre=usuario_data.nombre,
         rut=usuario_data.rut,
-        email=usuario_data.email,
+        correo=usuario_data.email,
         telefono=usuario_data.telefono,
-        estado=schemas.EstadoUsuario.PENDIENTE
+        contrasena_hash=get_password_hash(usuario_data.password),
+        estado=models.EstadoUsuarioEnum.ACTIVO # Lo activamos directo por simplicidad
     )
+    
+    # 3. Guardar
+    db.add(nuevo_usuario)
+    db.commit()
+    db.refresh(nuevo_usuario)
+    
+    # Crear carrito vacío para el usuario
+    nuevo_carrito = models.Carrito(usuario_id=nuevo_usuario.id, total=0)
+    db.add(nuevo_carrito)
+    db.commit()
+
     return nuevo_usuario
 
 # --- Endpoint para B02: Inicio de Sesión ---
 @router.post("/token", response_model=schemas.Token)
-async def login_para_token(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_para_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_session)
+):
     email = form_data.username
     password = form_data.password
 
-    print(f"Intento de login para: {email}")
+    # Buscar usuario
+    user = db.exec(select(models.Usuario).where(models.Usuario.correo == email)).first()
 
-    if email == "test@test.com" and password == "123":
-        usuario_simulado = await get_usuario_actual()
-        access_token = "simulated-jwt-token-for-" + email
+    if not user or not verify_password(password, user.contrasena_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Credenciales inválidas",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-        return {
-            "access_token": access_token, 
-            "token_type": "bearer",
-            "usuario": usuario_simulado
-        }
+    # En un sistema real, aquí creas un JWT.
+    # Para mantenerlo simple ahora, usaremos el email como token
+    access_token = user.correo 
 
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Credenciales inválidas",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "usuario": user
+    }
 
-# --- Endpoint para B03: Cambio de Contraseña ---
-@router.post("/cambiar-password")
-async def cambiar_password(
-    data: schemas.CambioPassword,
-    usuario_actual: schemas.Usuario = Depends(get_usuario_actual)
-):
-    print(f"Usuario {usuario_actual.email} cambiando contraseña.")
-    return {"mensaje": "Contraseña actualizada correctamente."}
-
-# Endpoint para obtener el perfil del usuario (protegido)
 @router.get("/me", response_model=schemas.Usuario)
-async def read_users_me(usuario_actual: schemas.Usuario = Depends(get_usuario_actual)):
-    return usuario_actual
+async def read_users_me(
+    token: str = Depends(schemas.Token), # Esto fuerza autenticación
+    db: Session = Depends(get_session)
+):
+    # Lógica simplificada: buscar usuario por el token (que es el email)
+    # Ojo: En producción usarías Depends(get_usuario_actual) directamente
+    user = db.exec(select(models.Usuario).where(models.Usuario.correo == token.access_token)).first()
+    return user

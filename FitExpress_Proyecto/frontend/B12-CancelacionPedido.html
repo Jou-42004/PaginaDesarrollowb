@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Detalle del Pedido — Fit Express</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /* --- ESTILOS --- */
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --accent:#22c55e; --cta:#6d28d9; --danger:#ef4444; --warn:#f59e0b; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+    
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:blur(8px); background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65)); border-bottom:1px solid rgba(183,210,192,.18); padding: 8px 0; }
+    .container{max-width:800px;margin:0 auto;padding:0 16px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .logo{font-weight:900;color:#fff;text-decoration:none;font-size:20px;display:flex;align-items:center;gap:10px}
+    .logo span{background:#19c268;padding:4px 8px;border-radius:6px;font-size:14px}
+    .icon-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17, 57, 35, 0.6);text-decoration:none;color:white}
+
+    .main-content { padding: 40px 16px; min-height: calc(100vh - 140px); }
+    .order-card { background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85)); border: 1px solid rgba(183,210,192,.18); border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+    
+    .order-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px; }
+    .order-title { font-size: 24px; margin: 0; color: var(--text); }
+    
+    .status-box { text-align: center; padding: 25px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 30px; border: 2px solid transparent; }
+    .status-value { font-size: 28px; font-weight: bold; text-transform: uppercase; }
+    
+    .st-ok { border-color: var(--accent); color: var(--accent); background: rgba(34,197,94,0.1); } 
+    .st-warn { border-color: var(--warn); color: var(--warn); background: rgba(245,158,11,0.1); }
+    .st-err { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.1); }
+
+    .products-list { margin-bottom: 30px; }
+    .product-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+    .prod-name { font-weight: 500; }
+    .prod-qty { color: var(--accent); margin-right: 10px; font-weight: bold; }
+
+    .total-row { display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); color: var(--accent); }
+
+    .actions { margin-top: 30px; display: grid; gap: 15px; }
+    .btn { padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; transition: .2s; }
+    .btn-cancel { background: var(--danger); color: white; }
+    .btn-cancel:hover { filter: brightness(1.1); }
+    .btn-cancel:disabled { background: #333; color: #777; cursor: not-allowed; opacity: 1; }
+    .btn-back { background: transparent; border: 1px solid rgba(183,210,192,.3); color: var(--muted); }
+
+    .refund-warning { background: rgba(245, 158, 11, 0.2); border-left: 4px solid var(--warn); padding: 15px; margin-bottom: 20px; font-size: 14px; color: #fcd34d; display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+      <a href="B02-InicioSesion.html" class="icon-btn">👤</a>
+    </div>
+  </header>
+
+  <div class="main-content container">
+    <div id="loading" style="text-align:center;padding:40px">Cargando...</div>
+
+    <div id="orderContent" class="order-card" style="display:none">
+      
+      <div class="order-header">
+        <div>
+            <h1 class="order-title">Pedido #<span id="orderId">...</span></h1>
+            <div style="color:var(--muted);font-size:14px" id="orderDate">...</div>
+        </div>
+      </div>
+
+      <div id="statusBox" class="status-box">
+        <div style="font-size:14px;color:var(--muted);margin-bottom:5px">ESTADO ACTUAL</div>
+        <div class="status-value" id="statusText">...</div>
+      </div>
+
+      <div id="refundWarning" class="refund-warning">
+        ⚠️ <strong>Atención:</strong> Este pedido ya está PAGADO. Si cancelas ahora, la anulación es inmediata pero el reembolso debe ser gestionado manualmente por soporte.
+      </div>
+
+      <h3>Detalle de Productos</h3>
+      <div class="products-list" id="productsList"></div>
+
+      <div class="total-row">
+        <span>Total</span>
+        <span id="orderTotal">$0</span>
+      </div>
+
+      <div class="actions">
+        <button id="btnCancel" class="btn btn-cancel" onclick="cancelOrder()" disabled>No se puede cancelar</button>
+        <button class="btn btn-back" onclick="window.location.href='B02-InicioSesion.html'">Volver a Mis Pedidos</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id');
+    const token = localStorage.getItem('access_token');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if(!token) { window.location.href = 'B02-InicioSesion.html'; return; }
+        if(!orderId) { alert("Pedido no especificado"); window.location.href = 'B02-InicioSesion.html'; return; }
+        loadOrder();
+    });
+
+    async function loadOrder() {
+        try {
+            const res = await fetch(`${API_URL}/pedidos/${orderId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if(!res.ok) throw new Error("Error al cargar");
+            const pedido = await res.json();
+            renderUI(pedido);
+        } catch(e) {
+            document.getElementById('loading').innerHTML = `<p style="color:#ef4444">No se pudo cargar la información.</p>`;
+        }
+    }
+
+    function renderUI(pedido) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('orderContent').style.display = 'block';
+
+        document.getElementById('orderId').textContent = pedido.id;
+        document.getElementById('orderDate').textContent = new Date(pedido.fecha_creacion).toLocaleString();
+        document.getElementById('orderTotal').textContent = `$${pedido.total.toLocaleString('es-CL')}`;
+        document.getElementById('statusText').textContent = pedido.estado;
+
+        document.getElementById('productsList').innerHTML = pedido.items.map(i => `
+            <div class="product-row">
+                <div><span class="prod-qty">${i.cantidad}x</span> <span class="prod-name">${i.nombre_producto}</span></div>
+                <span style="font-weight:bold">$${(i.precio_unitario * i.cantidad).toLocaleString('es-CL')}</span>
+            </div>
+        `).join('');
+
+        const statusBox = document.getElementById('statusBox');
+        const btnCancel = document.getElementById('btnCancel');
+        const warning = document.getElementById('refundWarning');
+
+        // LÓGICA DE ESTADO Y CANCELACIÓN
+        if (pedido.estado === 'Cancelado') {
+            statusBox.className = 'status-box st-err';
+            btnCancel.textContent = "Pedido Anulado";
+            btnCancel.disabled = true;
+            warning.style.display = 'none';
+        } 
+        else if (['Recibido', 'Aprobado', 'Pendiente', 'Pagado'].includes(pedido.estado)) {
+            statusBox.className = 'status-box st-ok';
+            btnCancel.disabled = false;
+            
+            if (pedido.estado === 'Pagado') {
+                btnCancel.textContent = "Anular Compra (Sin Reembolso Auto)";
+                warning.style.display = 'block';
+            } else {
+                btnCancel.textContent = "Cancelar Pedido";
+                warning.style.display = 'none';
+            }
+        } 
+        else {
+            statusBox.className = 'status-box st-warn';
+            btnCancel.textContent = `En proceso (${pedido.estado}) - No Cancelable`;
+            btnCancel.disabled = true;
+            warning.style.display = 'none';
+        }
+    }
+
+    async function cancelOrder() {
+        const isPaid = document.getElementById('statusText').textContent === 'Pagado';
+        const msg = isPaid ? 
+            "¡CONFIRMACIÓN! El pedido está PAGADO. El reembolso no es automático. ¿Anular?" : 
+            "¿Seguro que deseas cancelar?";
+
+        if(!confirm(msg)) return;
+        
+        const btn = document.getElementById('btnCancel');
+        btn.textContent = "Procesando..."; btn.disabled = true;
+
+        try {
+            const res = await fetch(`${API_URL}/pedidos/${orderId}/cancelar`, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}` } });
+            if(res.ok) {
+                alert("Pedido cancelado.");
+                loadOrder();
+            } else {
+                const err = await res.json();
+                alert("Error: " + err.detail);
+                btn.disabled = false;
+            }
+        } catch(e) { alert("Error de conexión"); btn.disabled = false; }
+    }
+  </script>
+</body>
+</html>

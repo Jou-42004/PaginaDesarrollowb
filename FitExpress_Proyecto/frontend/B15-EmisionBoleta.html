@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boleta - Pedido #12345</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body { 
+            background-color: #f5f7fa; 
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .receipt-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #2c3e50;
+        }
+        .details { 
+            margin-bottom: 20px; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        th { 
+            background-color: #f2f2f2; 
+        }
+        .total { 
+            font-weight: bold; 
+            font-size: 1.2em; 
+        }
+        .footer { 
+            margin-top: 40px; 
+            text-align: center; 
+            color: #666; 
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        <div class="header">
+            <h1>BOLETA ELECTRÓNICA</h1>
+            <p>N° B-12345</p>
+            <p>Fecha: 15 de Noviembre, 2023</p>
+        </div>
+        
+        <div class="details">
+            <p><strong>Cliente:</strong> Ama Example</p>
+            <p><strong>Email:</strong> ama@example.com</p>
+            <p><strong>Dirección de envío:</strong> Av. Siempre Viva 123, Springfield</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Bouti Prolacio</td>
+                    <td>1</td>
+                    <td>$9.990</td>
+                    <td>$9.990</td>
+                </tr>
+                <tr>
+                    <td>Envío estándar</td>
+                    <td>1</td>
+                    <td>$785</td>
+                    <td>$785</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                    <td class="total">$10.775</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div class="footer">
+            <p>¡Gracias por su compra!</p>
+            <p>Para consultas, contacte a: servicio@tienda.cl</p>
+            <p>Boleta generada electrónicamente - No requiere firma ni timbre</p>
+        </div>
+        
+        <div class="actions">
+            <button onclick="window.print()">Imprimir Boleta</button>
+            <button onclick="window.location.href='index.html'">Volver al Inicio</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Promociones Combos — Fit Express</title>
+  <meta name="description" content="Combos especiales y promociones exclusivas">
+  <style>
+    /* --- ESTILOS BASE --- */
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35); --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+    
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:blur(8px); background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65)); border-bottom:1px solid rgba(183,210,192,.18); padding: 8px 0; }
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{ display:flex; align-items:center; justify-content:space-between; height: 60px; }
+    .logo{ font-weight:900; color:#fff; text-decoration:none; font-size:20px; display:flex; align-items:center; gap:10px; }
+    .logo span{ background:#19c268; padding:4px 8px; border-radius:6px; font-size:14px; }
+    
+    /* Iconos */
+    .actions{display:flex;align-items:center;gap:16px;margin-left: auto;}
+    .icon-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17, 57, 35, 0.6);text-decoration:none;position: relative;}
+    .icon-btn:hover{border-color:var(--accent);background:rgba(34,197,94,.15);transform: translateY(-1px);}
+    .icon{width:20px;height:20px;stroke:#e2e8f0;stroke-width:2;}
+    .cart-badge { position: absolute; top: -5px; right: -5px; background: var(--cta); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+    /* Layout */
+    .main-content { padding: 40px 16px; min-height: calc(100vh - 140px); }
+    .promo-header { text-align: center; margin-bottom: 50px; }
+    .promo-title { font-size: 36px; margin: 0 0 15px 0; color: var(--text); }
+    .promo-subtitle { color: var(--muted); font-size: 18px; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+    
+    /* Grid Combos */
+    .combos-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 30px; margin-bottom: 50px; }
+    @media (min-width: 768px) { .combos-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .combos-grid { grid-template-columns: repeat(3, 1fr); } }
+    
+    .combo-card { background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85)); border: 1px solid rgba(183,210,192,.18); border-radius: 16px; padding: 0; overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; position: relative; }
+    .combo-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,.4); border-color: rgba(183,210,192,.4); }
+    
+    /* ESTADO NO DISPONIBLE (Nuevo) */
+    .combo-card.unavailable { filter: grayscale(100%); opacity: 0.7; pointer-events: none; }
+    .unavailable-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: #ef4444; border: 2px solid #ef4444; padding: 10px 20px; font-weight: bold; font-size: 24px; z-index: 10; border-radius: 10px; transform: translate(-50%, -50%) rotate(-15deg); }
+
+    .combo-image { width: 100%; height: 200px; background-size: cover; background-position: center; position: relative; }
+    .combo-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+    .combo-name { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+    
+    .combo-includes { margin-bottom: 20px; flex-grow: 1; }
+    .combo-includes h4 { font-size: 14px; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .combo-items { list-style: none; padding: 0; margin: 0; }
+    .combo-items li { font-size: 13px; color: var(--text); margin-bottom: 6px; display: flex; align-items: start; gap: 8px; }
+    .combo-items li::before { content: '✓'; color: var(--accent); font-weight: bold; }
+    
+    .combo-pricing { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; margin-top: auto; }
+    .combo-price { font-size: 24px; font-weight: 700; color: var(--accent); }
+    
+    .btn-add-combo { background: var(--cta); color: var(--cta-text); border: none; border-radius: 10px; padding: 14px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s ease; width: 100%; }
+    .btn-add-combo:hover { filter: brightness(.9); transform: translateY(-2px); }
+    .btn-add-combo:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; transform: none; }
+
+    /* Beneficios */
+    .benefits-section { background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85)); border: 1px solid rgba(183,210,192,.18); border-radius: 16px; padding: 40px; margin-bottom: 50px; }
+    .benefits-title { text-align: center; font-size: 28px; margin-bottom: 30px; color: var(--text); }
+    .benefits-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 30px; }
+    @media (min-width: 768px) { .benefits-grid { grid-template-columns: repeat(3, 1fr); } }
+    .benefit { text-align: center; padding: 20px; }
+    .benefit-icon { width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; color: #052e16; font-size: 24px; }
+    
+    footer{ padding:30px 16px 50px; color:var(--muted); text-align:center; border-top:1px solid rgba(183,210,192,.18); background:var(--panel); }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--cta); color: var(--cta-text); padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 1000; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+      <nav class="actions">
+        <a class="icon-btn" href="B02-InicioSesion.html" title="Mi perfil">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z"></path><path d="M20 21a8 8 0 1 0-16 0"></path></svg>
+        </a>
+        <a class="icon-btn" href="B09-Carrito.html" title="Carrito">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 7h12l-1 12H7L6 7Z"></path><path d="M9 7V6a3 3 0 0 1 6 0v1"></path></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="container">
+      <div class="promo-header">
+        <h1 class="promo-title">Promociones Combos</h1>
+        <p class="promo-subtitle">Ahorra más con nuestros combos especiales. Diseñados por expertos.</p>
+      </div>
+
+      <div class="combos-grid" id="combosGrid">
+        <p style="text-align:center;width:100%;grid-column:1/-1;color:var(--muted)">Cargando promociones...</p>
+      </div>
+
+      <section class="benefits-section">
+        <h2 class="benefits-title">¿Por qué elegir nuestros combos?</h2>
+        <div class="benefits-grid">
+          <div class="benefit">
+            <div class="benefit-icon">💰</div>
+            <h3>Ahorro Garantizado</h3>
+            <p>Hasta 25% de descuento comparado con comprar por separado</p>
+          </div>
+          <div class="benefit">
+            <div class="benefit-icon">⚡</div>
+            <h3>Comodidad Total</h3>
+            <p>Todo tu plan de alimentación en un solo clic</p>
+          </div>
+          <div class="benefit">
+            <div class="benefit-icon">🎯</div>
+            <h3>Nutrición Balanceada</h3>
+            <p>Combinaciones pensadas para maximizar tu energía</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <footer>© <span id="y"></span> Fit Express</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const API_URL = "http://127.0.0.1:8000";
+    
+    // Elementos DOM
+    const combosGrid = document.getElementById('combosGrid');
+    const cartBadge = document.getElementById('cartBadge');
+    const toast = document.getElementById('toast');
+
+    // 1. CARGAR COMBOS DESDE LA BD
+    async function fetchCombos() {
+      try {
+        const response = await fetch(`${API_URL}/catalogo/productos`);
+        const allProducts = await response.json();
+        
+        // Filtramos solo los que son tipo 'combo'
+        const combos = allProducts.filter(p => p.tipo === 'combo');
+        
+        renderCombos(combos);
+      } catch (error) {
+        console.error(error);
+        combosGrid.innerHTML = '<p class="error-msg">Error cargando promociones. Intenta más tarde.</p>';
+      }
+    }
+
+    // 2. RENDERIZAR COMBOS (Con lógica de disponibilidad)
+    function renderCombos(combos) {
+      if (combos.length === 0) {
+        combosGrid.innerHTML = '<p class="error-msg">No hay combos disponibles por ahora.</p>';
+        return;
+      }
+
+      combosGrid.innerHTML = '';
+      
+      combos.forEach(combo => {
+        // Formatear precio
+        const precio = `$${combo.precio_base.toLocaleString('es-CL')}`;
+        
+        // Parsear descripción para crear lista (Separamos por comas)
+        // Ejemplo DB: "2 Bowls, 2 Bebidas, Postre"
+        const itemsList = (combo.descripcion || "").split(',')
+          .map(item => `<li>${item.trim()}</li>`)
+          .join('');
+
+        // Estado de disponibilidad
+        const isAvailable = combo.disponible; // Campo booleano de la BD
+        const cardClass = isAvailable ? 'combo-card' : 'combo-card unavailable';
+        const btnState = isAvailable ? '' : 'disabled';
+        const btnText = isAvailable ? 'Agregar al Carrito' : 'No Disponible';
+        const badgeHTML = !isAvailable ? '<div class="unavailable-badge">AGOTADO</div>' : '';
+
+        const html = `
+          <div class="${cardClass}">
+            ${badgeHTML}
+            <div class="combo-image" style="background-image: url('${combo.imagen_url || 'img/combo-default.jpg'}')"></div>
+            <div class="combo-content">
+              <h3 class="combo-name">${combo.nombre}</h3>
+              
+              <div class="combo-includes">
+                <h4>Incluye:</h4>
+                <ul class="combo-items">
+                  ${itemsList}
+                </ul>
+              </div>
+              
+              <div class="combo-pricing">
+                <span class="combo-price">${precio}</span>
+              </div>
+              
+              <div class="combo-actions">
+                <button class="btn-add-combo" 
+                        onclick="addComboToCart(${combo.id}, '${combo.nombre}')" 
+                        ${btnState}>
+                  ${btnText}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        combosGrid.innerHTML += html;
+      });
+    }
+
+    // 3. AGREGAR AL CARRITO (Conectado a Backend)
+    async function addComboToCart(id, name) {
+      const token = localStorage.getItem('access_token');
+      
+      // Si está logueado -> BD
+      if (token) {
+        try {
+          const res = await fetch(`${API_URL}/carrito/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ producto_id: id, cantidad: 1 })
+          });
+          
+          if(res.ok) {
+            showToast(`¡${name} agregado!`);
+            updateCartBadge();
+          } else if (res.status === 401) {
+            alert("Sesión expirada");
+            window.location.href = 'B02-InicioSesion.html';
+          }
+        } catch(e) { showToast("Error de conexión"); }
+      } 
+      // Si no -> LocalStorage
+      else {
+        let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+        const existing = cart.find(i => i.id === id);
+        if(existing) existing.quantity++;
+        else cart.push({ id: id, name: name, quantity: 1, price: 0 }); // Precio referencial
+        
+        localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+        updateCartBadge();
+        showToast("Agregado (Temporal)");
+      }
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    async function updateCartBadge() {
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        try {
+          const res = await fetch(`${API_URL}/carrito/`, { headers: { 'Authorization': `Bearer ${token}` }});
+          if(res.ok) {
+            const data = await res.json();
+            cartBadge.textContent = data.items.reduce((acc, i) => acc + i.cantidad, 0);
+          }
+        } catch(e){}
+      } else {
+        const cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+        cartBadge.textContent = cart.reduce((acc, i) => acc + i.quantity, 0);
+      }
+    }
+
+    // Iniciar
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchCombos();
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>

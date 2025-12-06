@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fit Express — Bowls proteicos y snacks saludables</title>
+  <meta name="description" content="Comida rápida saludable: bowls proteicos y snacks listos en minutos.">
+  <style>
+    /* --- ESTILOS VISUALES --- */
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35); --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,-apple-system,sans-serif;background:#0b1f14;color:var(--text)}
+    
+    header{position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);background:linear-gradient(180deg, rgba(11,42,24,.95), rgba(11,42,24,.8));border-bottom:1px solid rgba(183,210,192,.1);padding:10px 0}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:50px}
+    .logo{font-weight:900;color:#fff;text-decoration:none;font-size:20px;display:flex;align-items:center;gap:10px}
+    .logo span{background:#19c268;padding:4px 8px;border-radius:6px;font-size:14px;color:#000}
+    .icon-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);text-decoration:none;color:white;position:relative;transition:.2s}
+    .icon-btn:hover{background:rgba(255,255,255,0.1);border-color:var(--accent)}
+    .cart-badge{position:absolute;top:-5px;right:-5px;background:var(--cta);color:white;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;border:2px solid #0b1f14}
+
+    /* HERO SECTION */
+    .hero-wrap{
+      background: radial-gradient(circle at 70% 50%, rgba(34,197,94,0.15), transparent 60%), #0b1f14;
+      padding: 60px 0 80px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .hero{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+    @media(max-width:900px){.hero{grid-template-columns:1fr;text-align:center}.hero-image{order:-1}}
+    
+    .pill{display:inline-block;background:rgba(34,197,94,0.2);color:var(--accent);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:15px;border:1px solid rgba(34,197,94,0.3)}
+    h1{font-size:clamp(40px,5vw,60px);line-height:1.1;margin:0 0 20px;background:linear-gradient(to right, #fff, #b7e4cf);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .lead{font-size:18px;color:var(--muted);line-height:1.6;margin-bottom:30px;max-width:500px}
+    .cta{display:inline-block;background:var(--cta);color:white;text-decoration:none;padding:15px 30px;border-radius:12px;font-weight:bold;font-size:16px;transition:.2s;box-shadow:0 10px 20px rgba(109,40,217,0.3)}
+    .cta:hover{transform:translateY(-2px);box-shadow:0 15px 25px rgba(109,40,217,0.4)}
+
+    .hero-image img{width:100%;max-width:500px;border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,0.4);transform:rotate(-3deg);transition:.3s}
+    .hero-image:hover img{transform:rotate(0deg) scale(1.02)}
+
+    /* SECCIÓN RAZONES (Confianza) */
+    .reasons { padding: 60px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); }
+    .reason-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; margin-top: 40px; }
+    .reason {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px; padding: 30px 20px; text-align: center; transition: .3s;
+    }
+    .reason:hover { transform: translateY(-5px); border-color: var(--accent); background: rgba(255,255,255,0.05); }
+    .ico {
+      width: 60px; height: 60px; margin: 0 auto 20px;
+      background: rgba(255,255,255,0.05); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .reason h3 { font-size: 18px; margin-bottom: 10px; color: var(--text); font-weight: bold; }
+    .reason p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+    /* CARRUSEL */
+    .bowls-section{padding:80px 0}
+    .section-header{text-align:center;margin-bottom:50px}
+    .section-header h2{font-size:32px;margin:0 0 10px}
+    
+    .carousel-wrapper{position:relative;padding:0 20px}
+    .carousel-track-container{overflow:hidden;margin:0 -20px;padding:20px}
+    .carousel-track{display:flex;gap:20px;transition:transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)}
+    
+    .bowl-card{
+      min-width:280px; max-width:280px;
+      background:#16241d;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:16px;
+      overflow:hidden;
+      display:flex; flex-direction:column;
+      transition:.3s;
+    }
+    .bowl-card:hover{transform:translateY(-8px);box-shadow:0 15px 30px rgba(0,0,0,0.3);border-color:var(--accent)}
+    
+    .bowl-img{height:180px;background-size:cover;background-position:center;position:relative}
+    .bowl-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent)}
+    .bowl-tag{position:absolute;bottom:10px;left:10px;background:var(--accent);color:black;font-size:10px;font-weight:bold;padding:4px 8px;border-radius:4px;text-transform:uppercase}
+
+    .bowl-info{padding:20px;display:flex;flex-direction:column;flex:1}
+    .bowl-title{font-size:18px;font-weight:bold;margin:0 0 5px;color:#fff}
+    .bowl-meta{font-size:12px;color:var(--muted);margin-bottom:15px;display:flex;gap:10px}
+    .bowl-price{font-size:20px;font-weight:bold;color:var(--accent);margin-top:auto;display:flex;justify-content:space-between;align-items:center}
+    
+    .btn-add{
+      background:rgba(255,255,255,0.1); border:none; color:white;
+      width:32px; height:32px; border-radius:8px; cursor:pointer;
+      font-size:18px; display:flex; align-items:center; justify-content:center;
+      transition:.2s;
+    }
+    .btn-add:hover{background:var(--cta);transform:scale(1.1)}
+    .btn-add:active{transform:scale(0.95)}
+
+    /* Controles */
+    .controls{display:flex;justify-content:center;gap:15px;margin-top:30px}
+    .ctrl-btn{background:transparent;border:1px solid rgba(255,255,255,0.2);color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;transition:.2s}
+    .ctrl-btn:hover{background:var(--accent);color:black;border-color:var(--accent)}
+
+    footer{text-align:center;padding:40px;color:var(--muted);border-top:1px solid rgba(255,255,255,0.05);margin-top:60px}
+    
+    .toast{position:fixed;bottom:30px;right:30px;background:var(--cta);color:white;padding:12px 24px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.5);transform:translateY(100px);opacity:0;transition:.3s;z-index:1000;font-weight:bold}
+    .toast.show{transform:translateY(0);opacity:1}
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+      <nav class="actions" style="display:flex;gap:10px">
+        <a href="B02-InicioSesion.html" class="icon-btn" title="Mi Cuenta">👤</a>
+        <a href="B09-Carrito.html" class="icon-btn" title="Carrito">
+          🛒 <span class="cart-badge" id="cartBadge">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero-wrap">
+    <div class="container hero">
+      <div class="hero-text">
+        <span class="pill">⚡ Comida rápida, pero sana</span>
+        <h1>El combustible que tu cuerpo pide</h1>
+        <p class="lead">Bowls proteicos diseñados por nutricionistas. Ingredientes frescos, macros perfectos y listos en minutos.</p>
+        <a class="cta" href="B05-CatalogoMacros.html">Ver Menú Completo</a>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" alt="Bowl Proteico">
+      </div>
+    </div>
+  </section>
+
+  <section class="reasons">
+    <div class="container">
+      <div class="section-header">
+        <h2>¿Por qué elegirnos?</h2>
+        <p style="color:var(--muted)">Calidad y frescura en cada bocado.</p>
+      </div>
+      <div class="reason-grid">
+        <article class="reason">
+          <div class="ico">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3>Rápidos</h3>
+          <p>Listos en minutos para tu ritmo de vida.</p>
+        </article>
+        <article class="reason">
+          <div class="ico">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+          </div>
+          <h3>Frescos</h3>
+          <p>Ingredientes seleccionados cada día.</p>
+        </article>
+        <article class="reason">
+          <div class="ico">
+             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>Nutritivos</h3>
+          <p>Macros balanceados por expertos.</p>
+        </article>
+        <article class="reason">
+          <div class="ico">
+             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Seguros</h3>
+          <p>Preparación con los más altos estándares.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="bowls-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Favoritos de la Semana</h2>
+        <p style="color:var(--muted)">Lo más pedido por nuestra comunidad fit.</p>
+      </div>
+
+      <div class="carousel-wrapper">
+        <div class="carousel-track-container">
+          <div class="carousel-track" id="carouselTrack">
+            <p style="color:var(--muted);width:100%;text-align:center">Cargando productos...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn" onclick="moveSlide(-1)">‹</button>
+        <button class="ctrl-btn" onclick="moveSlide(1)">›</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast">✅ Agregado al carrito</div>
+  <footer>© 2025 Fit Express — Eat Clean, Train Hard.</footer>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+    let products = [];
+    let currentIndex = 0;
+
+    // 1. CARGAR DATOS
+    async function init() {
+      await loadProducts();
+      updateBadge();
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${API_URL}/catalogo/productos`);
+        if(!res.ok) throw new Error("Error API");
+        
+        const all = await res.json();
+        // Filtramos solo bowls y tomamos los primeros 6
+        products = all.filter(p => p.tipo === 'bowl').slice(0, 6);
+        renderCarousel();
+      } catch(e) {
+        document.getElementById('carouselTrack').innerHTML = '<p style="text-align:center;color:#ef4444">Error al conectar con el servidor</p>';
+      }
+    }
+
+    function renderCarousel() {
+      const track = document.getElementById('carouselTrack');
+      track.innerHTML = '';
+
+      products.forEach(p => {
+        const precio = `$${p.precio_base.toLocaleString('es-CL')}`;
+        const kcal = p.macros ? `${p.macros.kcal} kcal` : 'Light';
+        // Imagen por defecto si falla la URL
+        const img = p.imagen_url && p.imagen_url.length > 10 ? p.imagen_url : 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=500&q=60';
+
+        const html = `
+          <div class="bowl-card">
+            <div class="bowl-img" style="background-image: url('${img}')">
+              <span class="bowl-tag">${kcal}</span>
+            </div>
+            <div class="bowl-info">
+              <div class="bowl-title">${p.nombre}</div>
+              <div class="bowl-meta">Proteína ${p.macros ? p.macros.p : 0}g • Carbs ${p.macros ? p.macros.c : 0}g</div>
+              <div class="bowl-price">
+                ${precio}
+                <button class="btn-add" onclick="addToCart(${p.id}, '${p.nombre}')" title="Agregar">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+        track.innerHTML += html;
+      });
+      updatePos();
+    }
+
+    // 2. CARRUSEL LÓGICA
+    function moveSlide(dir) {
+      const track = document.getElementById('carouselTrack');
+      const cardWidth = 300; // 280px card + 20px gap
+      const maxScroll = (products.length * cardWidth) - track.parentElement.clientWidth;
+      
+      // Calculamos nueva posición
+      let newPos = (currentIndex * cardWidth) + (dir * cardWidth);
+      
+      // Límites
+      if (dir === 1 && newPos > maxScroll) newPos = 0; // Loop al inicio
+      if (dir === -1 && newPos < 0) newPos = 0;
+
+      currentIndex = newPos / cardWidth;
+      track.style.transform = `translateX(-${newPos}px)`;
+    }
+    
+    function updatePos() {
+       document.getElementById('carouselTrack').style.transform = `translateX(0px)`;
+    }
+
+    // 3. CARRITO
+    async function addToCart(id, name) {
+      const token = localStorage.getItem('access_token');
+      
+      if(token) {
+        try {
+          await fetch(`${API_URL}/carrito/items`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+            body: JSON.stringify({ producto_id: id, cantidad: 1 })
+          });
+          showToast(`✅ ${name} agregado`);
+          updateBadge();
+        } catch(e) { showToast("Error de conexión"); }
+      } else {
+        let cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+        const exist = cart.find(i => i.id === id);
+        if(exist) exist.quantity++; else cart.push({ id, quantity: 1 });
+        localStorage.setItem('fitExpressCart', JSON.stringify(cart));
+        showToast(`✅ ${name} agregado (Local)`);
+        updateBadge();
+      }
+    }
+
+    async function updateBadge() {
+      const token = localStorage.getItem('access_token');
+      const badge = document.getElementById('cartBadge');
+      let count = 0;
+
+      if(token) {
+        try {
+          const res = await fetch(`${API_URL}/carrito/`, { headers: {'Authorization': `Bearer ${token}`} });
+          if(res.ok) {
+            const data = await res.json();
+            count = data.items.reduce((s, i) => s + i.cantidad, 0);
+          }
+        } catch(e){}
+      } else {
+        const cart = JSON.parse(localStorage.getItem('fitExpressCart')) || [];
+        count = cart.reduce((s, i) => s + i.quantity, 0);
+      }
+      badge.textContent = count;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    init();
+  </script>
+</body>
+</html>

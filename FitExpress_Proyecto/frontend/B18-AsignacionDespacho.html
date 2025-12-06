@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asignación de Despacho — Fit Express</title>
+  <style>
+    /* Estilos Base */
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+    
+    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
+    .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .logo{font-weight:900;color:#fff;text-decoration:none;font-size:20px;display:flex;align-items:center;gap:10px}
+    .logo span{background:#19c268;padding:4px 8px;border-radius:6px;font-size:14px}
+    .icon-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17, 57, 35, 0.6);text-decoration:none;color:white}
+
+    .main-content { padding: 40px 16px; min-height: calc(100vh - 140px); }
+    h1 { font-size: 32px; text-align: center; margin-bottom: 10px; }
+    .subtitle { text-align: center; color: var(--muted); margin-bottom: 40px; }
+
+    /* Opciones Despacho */
+    .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto 40px; }
+    .option-card { background: rgba(255,255,255,0.05); border: 2px solid rgba(183,210,192,.18); border-radius: 16px; padding: 25px; cursor: pointer; transition: .2s; position: relative; }
+    .option-card:hover { border-color: var(--accent); background: rgba(34,197,94,.1); }
+    .option-card.selected { border-color: var(--cta); background: rgba(109,40,217,.15); }
+    
+    .badge-sel { position: absolute; top: -10px; right: 20px; background: var(--cta); padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; display: none; }
+    .option-card.selected .badge-sel { display: block; }
+
+    .opt-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; color: var(--text); }
+    .opt-price { font-size: 18px; font-weight: bold; color: var(--accent); float: right; }
+    
+    /* Resumen */
+    .summary-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 20px; max-width: 600px; margin: 0 auto 30px; }
+    .row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .total { font-weight: bold; font-size: 20px; color: var(--accent); border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px; margin-top: 10px; }
+
+    /* Botones */
+    .actions { display: flex; justify-content: center; gap: 15px; max-width: 600px; margin: 0 auto; }
+    .btn { padding: 16px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; font-size: 16px; transition: .2s; flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .btn-primary { background: var(--cta); color: white; }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; background: #4b5563; }
+    .btn-sec { background: transparent; border: 1px solid rgba(183,210,192,.3); color: var(--text); }
+    .btn-sec:hover { background: rgba(255,255,255,0.05); }
+    
+    footer{ padding:30px 16px; color:var(--muted); text-align:center; margin-top:40px; border-top:1px solid rgba(255,255,255,0.1); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+      <div style="display:flex;gap:15px">
+        <a href="B09-Carrito.html" class="icon-btn">🛒</a>
+        <a href="B02-InicioSesion.html" class="icon-btn">👤</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content container">
+    <h1>Método de Despacho</h1>
+    <p class="subtitle">Elige cómo quieres recibir tu pedido</p>
+
+    <div class="options-grid">
+      <div class="option-card" id="card-delivery">
+        <span class="badge-sel">Seleccionado</span>
+        <span class="opt-price" id="deliveryPriceDisplay">$...</span>
+        <div class="opt-title">Envío a Domicilio</div>
+        <p style="color:var(--muted);font-size:14px;margin:0">
+          Recibe en tu dirección guardada.<br>
+          Tiempo estimado: 30-45 min.
+        </p>
+        <div id="addressPreview" style="margin-top:15px;font-size:13px;color:#fff;background:rgba(255,255,255,0.1);padding:8px;border-radius:8px">
+          Cargando dirección...
+        </div>
+      </div>
+
+      <div class="option-card" id="card-retiro" onclick="selectOption('retiro', 0)">
+        <span class="badge-sel">Seleccionado</span>
+        <span class="opt-price">Gratis</span>
+        <div class="opt-title">Retiro en Tienda</div>
+        <p style="color:var(--muted);font-size:14px;margin:0">
+          Av. Principal 123, Santiago.<br>
+          Listo en 15-20 minutos.
+        </p>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <div class="row"><span>Subtotal Productos</span><span id="subtotal">$0</span></div>
+      <div class="row"><span>Costo Envío</span><span id="shipping">$0</span></div>
+      <div class="row total"><span>Total a Pagar</span><span id="total">$0</span></div>
+    </div>
+
+    <div class="actions">
+      <a href="B11-DireccionEntrega.html" class="btn btn-sec">Atrás</a>
+      <button id="btnContinue" class="btn btn-primary" onclick="createOrder()" disabled>Continuar al Pago</button>
+    </div>
+  </main>
+
+  <footer>© <span id="y"></span> Fit Express</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const API_URL = "http://127.0.0.1:8000";
+    
+    let selectedType = null;
+    let shippingCost = 0;
+    let cartSubtotal = 0;  // Variable vital
+    let savedAddress = "Sin dirección";
+    let deliveryCostFromB11 = 2000; 
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('access_token');
+        if(!token) { window.location.href = 'B02-InicioSesion.html'; return; }
+
+        // 1. CARGAR DATOS DE DIRECCIÓN (B11)
+        const localData = JSON.parse(localStorage.getItem('checkout_envio'));
+        if (localData) {
+            savedAddress = `${localData.direccion}, ${localData.comuna}`;
+            document.getElementById('addressPreview').textContent = "📍 " + savedAddress;
+            
+            // Recuperar el costo calculado
+            deliveryCostFromB11 = localData.costo_envio || 2000;
+            document.getElementById('deliveryPriceDisplay').textContent = `$${deliveryCostFromB11.toLocaleString('es-CL')}`;
+            
+            // Configurar click del botón delivery con el precio correcto
+            document.getElementById('card-delivery').onclick = function() {
+                selectOption('delivery', deliveryCostFromB11);
+            };
+
+            // Pre-seleccionar
+            selectOption('delivery', deliveryCostFromB11);
+        } else {
+            document.getElementById('addressPreview').textContent = "⚠️ Sin dirección previa.";
+        }
+
+        // 2. CARGAR SUBTOTAL DEL CARRITO DESDE LA API
+        try {
+            const res = await fetch(`${API_URL}/carrito/`, { headers: {'Authorization': `Bearer ${token}`} });
+            const data = await res.json();
+            
+            // Actualizamos la variable global y la UI
+            cartSubtotal = data.total;
+            document.getElementById('subtotal').textContent = `$${cartSubtotal.toLocaleString('es-CL')}`;
+            
+            updateSummary(); // Recalcular totales ahora que tenemos el subtotal
+            
+            // Si el subtotal es 0, avisar al usuario
+            if(cartSubtotal === 0) {
+                alert("Tu carrito está vacío en la base de datos. Por favor agrega productos.");
+                window.location.href = "B05-CatalogoMacros.html";
+            }
+
+        } catch(e) { console.error("Error cargando carrito", e); }
+    });
+
+    function updateSummary() {
+        const total = cartSubtotal + shippingCost;
+        document.getElementById('shipping').textContent = `$${shippingCost.toLocaleString('es-CL')}`;
+        document.getElementById('total').textContent = `$${total.toLocaleString('es-CL')}`;
+        
+        if (selectedType) {
+            const btn = document.getElementById('btnContinue');
+            btn.disabled = false;
+            btn.textContent = `Pagar $${total.toLocaleString('es-CL')}`;
+        }
+    }
+
+    window.selectOption = (type, cost) => {
+        selectedType = type;
+        shippingCost = cost;
+
+        document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+        if(type === 'delivery') document.getElementById('card-delivery').classList.add('selected');
+        else document.getElementById('card-retiro').classList.add('selected');
+
+        updateSummary();
+    };
+
+    window.createOrder = async () => {
+        const token = localStorage.getItem('access_token');
+        const btn = document.getElementById('btnContinue');
+        btn.textContent = "Procesando..."; btn.disabled = true;
+
+        try {
+            const orderData = {
+                direccion_envio: selectedType === 'delivery' ? savedAddress : "Retiro en Tienda",
+                metodo_pago: "webpay",
+                tipo_entrega: selectedType 
+            };
+
+            const res = await fetch(`${API_URL}/pedidos/crear`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(orderData)
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                localStorage.setItem('lastOrderId', data.pedido_id);
+                window.location.href = `B20-ConfirmacionPago.html?id=${data.pedido_id}`;
+            } else {
+                alert("Error: " + data.detail);
+                btn.disabled = false;
+            }
+        } catch (e) {
+            alert("Error de conexión");
+            btn.disabled = false;
+        }
+    };
+  </script>
+</body>
+</html>

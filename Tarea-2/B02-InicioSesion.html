@@ -3,310 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Iniciar Sesión - Fit Express</title>
-  <meta name="description" content="Inicia sesión en Fit Express para disfrutar de bowls proteicos y snacks saludables">
+  <title>Mi Perfil - Fit Express</title>
   <style>
-    :root{
-      --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35);
-      --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff;
-      --error:#ef4444; --success:#10b981; --warning:#f59e0b;
-      --hero-overlay: radial-gradient(900px 700px at 110% -10%, rgba(34,197,94,.30) 0%, rgba(34,197,94,0) 60%);
-    }
-    *{box-sizing:border-box} html,body{margin:0;height:100%}
-    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}
-    
-    /* Header */
-    header{
-      position:sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter:blur(8px);
-      background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));
-      border-bottom:1px solid rgba(183,210,192,.18);
-      padding: 8px 0;
-    }
-    .container{max-width:1200px;margin:0 auto;padding:0 16px}
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      height: 60px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:900;
-      flex-shrink: 0;
-    }
-    .logo{
-      width:32px;
-      height:32px;
-      border-radius:8px;
-      background:#19c268;
-      box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 14px;
-    }
-    .brand span{font-size:20px; color: var(--text);}
-    
-    /* Acciones */
-    .actions{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      margin-left: auto;
-    }
-    .icon-btn{
-      display:inline-grid;
-      place-items:center;
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      border:1px solid rgba(183,210,192,.25);
-      background:rgba(17, 57, 35, 0.6);
-      text-decoration:none;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-    .icon-btn:hover{
-      border-color:var(--accent);
-      background:rgba(34,197,94,.15);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(34,197,94,.2);
-    }
-    .icon{
-      width:20px;
-      height:20px;
-      stroke:#e2e8f0;
-      stroke-width:2;
-    }
-    
-    /* Main Content */
-    .main-content {
-      min-height: calc(100vh - 160px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 0;
-    }
-    
-    .login-card {
-      background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85));
-      border: 1px solid rgba(183,210,192,.18);
-      border-radius: 20px;
-      padding: 40px 30px;
-      width: 100%;
-      max-width: 450px;
-      box-shadow: 0 20px 40px rgba(0,0,0,.3);
-    }
-    
-    .login-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .login-header h1 {
-      font-size: 28px;
-      margin: 0 0 10px;
-      color: var(--text);
-    }
-    
-    .login-header p {
-      color: var(--muted);
-      margin: 0;
-      font-size: 16px;
-    }
-    
-    /* Alert Styles */
-    .alert {
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      display: none;
-    }
-    
-    .alert-success {
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid var(--success);
-      color: var(--success);
-    }
-    
-    .alert-error {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid var(--error);
-      color: var(--error);
-    }
-    
-    .alert-warning {
-      background: rgba(245, 158, 11, 0.2);
-      border: 1px solid var(--warning);
-      color: var(--warning);
-    }
-    
-    /* Form Styles */
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 12px 16px;
-      background: rgba(11, 42, 24, 0.7);
-      border: 1px solid rgba(183,210,192,.25);
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 16px;
-      transition: all 0.2s ease;
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--ring);
-    }
-    
-    .form-control.error {
-      border-color: var(--error);
-    }
-    
-    .error-message {
-      color: var(--error);
-      font-size: 14px;
-      margin-top: 5px;
-      display: none;
-    }
-    
-    .form-control.error + .error-message {
-      display: block;
-    }
-    
-    /* Button Styles */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 24px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      width: 100%;
-    }
-    
-    .btn-primary {
-      background: var(--cta);
-      color: var(--cta-text);
-    }
-    
-    .btn-primary:hover {
-      filter: brightness(.9);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
-    }
-    
-    .btn-secondary {
-      background: rgba(183,210,192,.1);
-      color: var(--text);
-      border: 1px solid rgba(183,210,192,.25);
-    }
-    
-    .btn-secondary:hover {
-      background: rgba(183,210,192,.2);
-      transform: translateY(-1px);
-    }
-    
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-    
-    /* Checkbox Styles */
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .checkbox-group input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-    }
-    
-    .checkbox-group label {
-      margin: 0;
-      font-weight: normal;
-    }
-    
-    /* Login Options */
-    .login-options {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .forgot-password {
-      color: var(--accent);
-      text-decoration: none;
-      font-size: 14px;
-    }
-    
-    .forgot-password:hover {
-      text-decoration: underline;
-    }
-    
-    /* Session Info */
-    .session-info {
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(183,210,192,.1);
-    }
-    
-    footer{
-      padding:30px 16px 50px;
-      color:var(--muted);
-      text-align:center;
-      border-top:1px solid rgba(183,210,192,.18);
-      background:var(--panel);
-    }
-    
-    /* Responsive */
-    @media (max-width: 576px) {
-      .login-card {
-        padding: 30px 20px;
-      }
-      
-      .login-options {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-      }
-    }
+    /* --- ESTILOS EXISTENTES --- */
+    :root{--text:#ecfdf5;--muted:#b7e4cf;--panel:#0e2a1a;--ring:rgba(34,197,94,.35);--accent:#22c55e;--cta:#6d28d9;--cta-text:#f9f5ff;--error:#ef4444;--success:#10b981;--warning:#f59e0b;--hero-overlay:radial-gradient(900px 700px at 110% -10%,rgba(34,197,94,.30) 0%,rgba(34,197,94,0) 60%)}*{box-sizing:border-box}html,body{margin:0;height:100%}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:#0b1f14;color:var(--text)}header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);background:linear-gradient(180deg,rgba(11,42,24,.9),rgba(11,42,24,.65));border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}.container{max-width:1200px;margin:0 auto;padding:0 16px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:60px}.brand{display:flex;align-items:center;gap:12px;font-weight:900;flex-shrink:0;text-decoration:none;color:inherit}.logo{width:32px;height:32px;border-radius:8px;background:#19c268;box-shadow:0 0 18px #19c268 inset,0 0 18px #19c268;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:14px}.brand span{font-size:20px;color:var(--text)}.actions{display:flex;align-items:center;gap:16px;margin-left:auto}.icon-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17,57,35,.6);text-decoration:none;transition:all .2s ease;position:relative}.icon-btn:hover{border-color:var(--accent);background:rgba(34,197,94,.15);transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,197,94,.2)}.icon{width:20px;height:20px;stroke:#e2e8f0;stroke-width:2}.main-content{min-height:calc(100vh - 160px);display:flex;align-items:center;justify-content:center;padding:40px 0}.login-card{background:linear-gradient(180deg,rgba(18,56,35,.85),rgba(10,38,23,.85));border:1px solid rgba(183,210,192,.18);border-radius:20px;padding:40px 30px;width:100%;max-width:450px;box-shadow:0 20px 40px rgba(0,0,0,.3)}.login-header{text-align:center;margin-bottom:30px}.login-header h1{font-size:28px;margin:0 0 10px;color:var(--text)}.login-header p{color:var(--muted);margin:0;font-size:16px}.alert{padding:12px 16px;border-radius:10px;margin-bottom:20px;display:none}.alert-success{background:rgba(16,185,129,.2);border:1px solid var(--success);color:var(--success)}.alert-error{background:rgba(239,68,68,.2);border:1px solid var(--error);color:var(--error)}.form-group{margin-bottom:20px}label{display:block;margin-bottom:8px;font-weight:600;color:var(--text)}.form-control{width:100%;padding:12px 16px;background:rgba(11,42,24,.7);border:1px solid rgba(183,210,192,.25);border-radius:10px;color:var(--text);font-size:16px;transition:all .2s ease}.form-control:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:12px;font-weight:700;font-size:16px;text-decoration:none;border:none;cursor:pointer;transition:all .2s ease;width:100%}.btn-primary{background:var(--cta);color:var(--cta-text)}.btn-primary:hover{filter:brightness(.9);transform:translateY(-2px);box-shadow:0 8px 20px rgba(109,40,217,.3)}.btn-secondary{background:rgba(183,210,192,.1);color:var(--text);border:1px solid rgba(183,210,192,.25)}.btn-secondary:hover{background:rgba(183,210,192,.2);transform:translateY(-1px)}.checkbox-group{display:flex;align-items:center;gap:8px}.login-options{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.forgot-password{color:var(--accent);text-decoration:none;font-size:14px}.session-info{text-align:center;color:var(--muted);font-size:14px;margin-top:20px;padding-top:20px;border-top:1px solid rgba(183,210,192,.1)}footer{padding:30px 16px 50px;color:var(--muted);text-align:center;border-top:1px solid rgba(183,210,192,.18);background:var(--panel)}@media (max-width:576px){.login-card{padding:30px 20px}.login-options{flex-direction:column;gap:15px;align-items:flex-start}}
+
+    /* --- ESTILOS NUEVOS PARA PERFIL --- */
+    .profile-info { text-align: center; margin-bottom: 20px; }
+    .avatar-circle { width: 80px; height: 80px; background: var(--accent); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #052e16; font-weight: bold; }
+    .user-name { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+    .user-email { color: var(--muted); margin-bottom: 20px; }
+    .profile-menu { display: grid; gap: 10px; text-align: left; margin-bottom: 20px; }
+    .menu-item { padding: 12px; background: rgba(17, 57, 35, 0.4); border-radius: 8px; border: 1px solid rgba(183, 210, 192, 0.1); color: var(--text); text-decoration: none; display: flex; justify-content: space-between; }
+    .menu-item:hover { background: rgba(34, 197, 94, 0.1); border-color: var(--accent); }
+    .btn-logout { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.3); }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="container topbar">
       <div class="brand">
@@ -315,288 +29,217 @@
           <span>Fit Express</span>
         </a>
       </div>
-
-      <nav class="actions" aria-label="Acciones">
-        <a class="icon-btn" href="index.html" title="Inicio">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-        </a>
-        
+      <nav class="actions">
+        <a class="icon-btn" href="index.html"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
   <div class="main-content">
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
+      <div class="row justify-content-center" style="display: flex; justify-content: center;">
+        <div class="col-12" style="width: 100%; max-width: 450px;">
           <div class="login-card">
-            <div class="login-header">
-              <h1>Iniciar Sesión</h1>
-              <p>Accede a tu cuenta para gestionar tus pedidos y favoritos</p>
-            </div>
             
-            <!-- Alert Messages -->
-            <div id="successAlert" class="alert alert-success">
-              Acceso concedido. Redirigiendo...
-            </div>
-            
-            <div id="errorAlert" class="alert alert-error">
-              Credenciales inválidas
-            </div>
-            
-            <div id="blockedAlert" class="alert alert-warning">
-              Cuenta temporalmente bloqueada (5 intentos / 15 min)
-            </div>
-            
-            <form id="loginForm">
-              <div class="row justify-content-start">
-                <div class="col-12">
-                  <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" placeholder="ana@example.com" required>
-                    <div class="error-message">Por favor ingresa un correo válido</div>
-                  </div>
-                </div>
+            <div id="loginView">
+              <div class="login-header">
+                <h1>Iniciar Sesión</h1>
+                <p>Accede a tu cuenta para gestionar tus pedidos</p>
               </div>
               
-              <div class="row justify-content-start">
-                <div class="col-12">
-                  <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" class="form-control" placeholder="**********" required>
-                    <div class="error-message">Por favor ingresa tu contraseña</div>
-                  </div>
-                </div>
-              </div>
+              <div id="errorAlert" class="alert alert-error"></div>
+              <div id="successAlert" class="alert alert-success">¡Acceso concedido!</div>
               
-              <div class="row justify-content-between">
-                <div class="col-6">
+              <form id="loginForm">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" class="form-control" placeholder="ana@example.com" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Contraseña</label>
+                  <input type="password" id="password" class="form-control" placeholder="**********" required>
+                </div>
+                <div class="login-options">
                   <div class="checkbox-group">
                     <input type="checkbox" id="remember">
                     <label for="remember">Recordarme</label>
                   </div>
+                  <a href="B03-CambioContraseña.html" class="forgot-password">¿Olvidaste tu contraseña?</a>
                 </div>
-                <div class="col-6 text-end">
-                  <a href="B03-CambioContraseña.html"lass="forgot-password">¿Olvidaste tu contraseña?</a>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary" id="loginBtn">Iniciar sesión</button>
                 </div>
-              </div>
+              </form>
               
-              <div class="row justify-content-start">
-                <div class="col-12">
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
-                  </div>
-                </div>
-              </div>
-            </form>
-            
-            <div class="row justify-content-start">
-              <div class="col-12">
-                <div class="session-info">
-                  Sesión expira a los 30 min de inactividad — Logout manual disponible
-                </div>
+              <div style="text-align: center; margin-top: 20px;">
+                <a href="B01-RegistroUsuario.html" class="btn btn-secondary">¿No tienes cuenta? Regístrate</a>
               </div>
             </div>
-            
-            <div class="row justify-content-start">
-              <div class="col-12">
-                <div style="text-align: center; margin-top: 20px;">
-                  <a href="B01-RegistroUsuario.html" class="btn btn-secondary">¿No tienes cuenta? Regístrate</a>
-                </div>
+
+            <div id="profileView" style="display: none;">
+              <div class="profile-info">
+                <div class="avatar-circle" id="userInitial">U</div>
+                <h2 class="user-name" id="userName">Cargando...</h2>
+                <p class="user-email" id="userEmailDisplay">...</p>
               </div>
+
+              <div class="profile-menu">
+                <a href="B09-Carrito.html" class="menu-item">
+                  <span>🛒 Mi Carrito</span> <span>→</span>
+                </a>
+                <a href="#" class="menu-item"> <span>📦 Mis Pedidos</span> <span>→</span>
+                </a>
+                <a href="B03-CambioContraseña.html" class="menu-item">
+                  <span>🔒 Seguridad</span> <span>→</span>
+                </a>
+              </div>
+
+              <button id="logoutBtn" class="btn btn-logout">Cerrar Sesión</button>
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <footer>© <span id="y"></span> Fit Express — Bowls proteicos y snacks saludables</footer>
+  <footer>© <span id="y"></span> Fit Express</footer>
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
+    const API_URL = "http://127.0.0.1:8000"; // Asegúrate que coincida con uvicorn
+
+    // Elementos DOM
+    const loginView = document.getElementById('loginView');
+    const profileView = document.getElementById('profileView');
+    const loginForm = document.getElementById('loginForm');
+    const logoutBtn = document.getElementById('logoutBtn');
     
-    // Login functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('loginForm');
-      const successAlert = document.getElementById('successAlert');
+    // --- 1. AL CARGAR LA PÁGINA: VERIFICAR SESIÓN ---
+    document.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('access_token');
+
+      if (token) {
+        // Hay token, verifiquemos si es válido pidiendo los datos del usuario
+        try {
+          const response = await fetch(`${API_URL}/auth/me`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+
+          if (response.ok) {
+            const userData = await response.json();
+            showProfile(userData);
+          } else {
+            // Token inválido o expirado
+            console.warn("Token inválido, cerrando sesión local.");
+            logout();
+          }
+        } catch (error) {
+          console.error("Error conectando con API:", error);
+          // Si no hay conexión, podríamos dejarlo logueado visualmente o forzar logout
+        }
+      } else {
+        // No hay token, mostrar login (ya es el default)
+        // Revisar si hay "Recordarme"
+        checkRememberMe();
+      }
+    });
+
+    // Función para mostrar la vista de perfil
+    function showProfile(user) {
+      loginView.style.display = 'none';
+      profileView.style.display = 'block';
+      
+      document.getElementById('userName').textContent = user.nombre;
+      document.getElementById('userEmailDisplay').textContent = user.email; // Ojo: API debe devolver 'email'
+      document.getElementById('userInitial').textContent = user.nombre.charAt(0).toUpperCase();
+    }
+
+    // --- 2. LÓGICA DE LOGIN ---
+    loginForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('loginBtn');
       const errorAlert = document.getElementById('errorAlert');
-      const blockedAlert = document.getElementById('blockedAlert');
       
-      // Track login attempts
-      let loginAttempts = parseInt(localStorage.getItem('loginAttempts') || '0');
-      let lastAttemptTime = parseInt(localStorage.getItem('lastAttemptTime') || '0');
-      let isBlocked = localStorage.getItem('isBlocked') === 'true';
-      
-      // Check if user is still blocked
-      if (isBlocked) {
-        const currentTime = Date.now();
-        const blockTime = parseInt(localStorage.getItem('blockTime') || '0');
-        const blockDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
-        
-        if (currentTime - blockTime < blockDuration) {
-          showBlockedAlert();
-        } else {
-          // Block expired
-          resetLoginAttempts();
-        }
-      }
-      
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Hide all alerts
-        hideAllAlerts();
-        
-        // Check if account is blocked
-        if (isBlocked) {
-          showBlockedAlert();
-          return;
-        }
-        
-        // Basic validation
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        let isValid = true;
-        
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          document.getElementById('email').classList.add('error');
-          isValid = false;
-        } else {
-          document.getElementById('email').classList.remove('error');
-        }
-        
-        // Password validation
-        if (password.length < 1) {
-          document.getElementById('password').classList.add('error');
-          isValid = false;
-        } else {
-          document.getElementById('password').classList.remove('error');
-        }
-        
-        if (isValid) {
-          // Simulate login process
-          const submitBtn = form.querySelector('button[type="submit"]');
-          const originalText = submitBtn.textContent;
-          submitBtn.textContent = 'Iniciando sesión...';
-          submitBtn.disabled = true;
+      btn.disabled = true;
+      btn.textContent = 'Autenticando...';
+      errorAlert.style.display = 'none';
+
+      const formData = new FormData();
+      formData.append("username", document.getElementById('email').value);
+      formData.append("password", document.getElementById('password').value);
+
+      try {
+        const response = await fetch(`${API_URL}/auth/token`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const data = await response.json();
           
-          // Simulate API call delay
-          setTimeout(function() {
-            // Demo scenarios - in real app this would be server response
-            const scenarios = ['success', 'error', 'blocked'];
-            const randomScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
-            
-            switch(randomScenario) {
-              case 'success':
-                handleSuccessfulLogin();
-                break;
-              case 'error':
-                handleFailedLogin();
-                break;
-              case 'blocked':
-                handleBlockedAccount();
-                break;
-            }
-            
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-          }, 1500);
-        }
-      });
-      
-      function handleSuccessfulLogin() {
-        // Reset login attempts on successful login
-        resetLoginAttempts();
-        
-        // Show success message
-        successAlert.style.display = 'block';
-        
-        // Store remember me preference
-        const rememberMe = document.getElementById('remember').checked;
-        if (rememberMe) {
-          localStorage.setItem('rememberMe', 'true');
-          localStorage.setItem('userEmail', document.getElementById('email').value);
+          // Guardar Token
+          localStorage.setItem('access_token', data.access_token);
+          
+          // Guardar preferencia "Recordarme"
+          if (document.getElementById('remember').checked) {
+            localStorage.setItem('rememberMe', 'true');
+            localStorage.setItem('savedEmail', document.getElementById('email').value);
+          } else {
+            localStorage.removeItem('rememberMe');
+            localStorage.removeItem('savedEmail');
+          }
+
+          // Mostrar el perfil directamente con los datos que ya devolvió el login
+          // (Nota: Tu endpoint /token en gestor_usuarios devuelve { access_token, token_type, usuario: {...} })
+          showProfile(data.usuario);
+
         } else {
-          localStorage.removeItem('rememberMe');
-          localStorage.removeItem('userEmail');
+          const err = await response.json();
+          errorAlert.textContent = err.detail || 'Credenciales incorrectas';
+          errorAlert.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Iniciar sesión';
         }
-        
-        // Store session start time (30 minutes)
-        const sessionStart = Date.now();
-        localStorage.setItem('sessionStart', sessionStart.toString());
-        
-        // Redirect after delay
-        setTimeout(function() {
-          window.location.href = 'perfil.html';
-        }, 2000);
-      }
-      
-      function handleFailedLogin() {
-        // Increment login attempts
-        loginAttempts++;
-        lastAttemptTime = Date.now();
-        
-        localStorage.setItem('loginAttempts', loginAttempts.toString());
-        localStorage.setItem('lastAttemptTime', lastAttemptTime.toString());
-        
-        // Check if should block account
-        if (loginAttempts >= 5) {
-          handleBlockedAccount();
-          return;
-        }
-        
-        // Show error message (neutral message as per requirements)
+      } catch (error) {
+        errorAlert.textContent = 'Error de conexión con el servidor';
         errorAlert.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Iniciar sesión';
       }
+    });
+
+    // --- 3. LÓGICA DE LOGOUT ---
+    logoutBtn.addEventListener('click', logout);
+
+    function logout() {
+      localStorage.removeItem('access_token');
+      // Opcional: no borrar savedEmail si quieres recordar el usuario
+      loginView.style.display = 'block';
+      profileView.style.display = 'none';
       
-      function handleBlockedAccount() {
-        // Block the account
-        isBlocked = true;
-        const blockTime = Date.now();
-        
-        localStorage.setItem('isBlocked', 'true');
-        localStorage.setItem('blockTime', blockTime.toString());
-        localStorage.setItem('loginAttempts', '5');
-        
-        showBlockedAlert();
+      // Limpiar inputs
+      if (localStorage.getItem('rememberMe') !== 'true') {
+          document.getElementById('email').value = '';
       }
+      document.getElementById('password').value = '';
       
-      function showBlockedAlert() {
-        blockedAlert.style.display = 'block';
-        isBlocked = true;
-      }
-      
-      function resetLoginAttempts() {
-        loginAttempts = 0;
-        isBlocked = false;
-        localStorage.setItem('loginAttempts', '0');
-        localStorage.setItem('isBlocked', 'false');
-        localStorage.removeItem('blockTime');
-      }
-      
-      function hideAllAlerts() {
-        successAlert.style.display = 'none';
-        errorAlert.style.display = 'none';
-        blockedAlert.style.display = 'none';
-      }
-      
-      // Pre-fill email if remember me was checked
+      // Restaurar botón
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = false;
+      btn.textContent = 'Iniciar sesión';
+    }
+
+    function checkRememberMe() {
       if (localStorage.getItem('rememberMe') === 'true') {
-        const savedEmail = localStorage.getItem('userEmail');
-        if (savedEmail) {
-          document.getElementById('email').value = savedEmail;
+        const saved = localStorage.getItem('savedEmail');
+        if (saved) {
+          document.getElementById('email').value = saved;
           document.getElementById('remember').checked = true;
         }
       }
-    });
+    }
   </script>
 </body>
 </html>

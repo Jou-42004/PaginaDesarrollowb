@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tu carrito — Fit Express</title>
+  <style>
+    /* Estilos Base */
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --ring:rgba(34,197,94,.35); --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .logo{font-weight:900;color:#fff;text-decoration:none;font-size:20px;display:flex;align-items:center;gap:10px}
+    .logo span{background:#19c268;padding:4px 8px;border-radius:6px;font-size:14px}
+    .icon-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid rgba(183,210,192,.25);background:rgba(17, 57, 35, 0.6);text-decoration:none;color:white}
+    .cart-badge { position: absolute; top: -5px; right: -5px; background: var(--cta); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+    .main-content { padding: 40px 16px; min-height: calc(100vh - 140px); }
+    .cart-header { text-align: center; margin-bottom: 40px; }
+    .empty-cart { text-align: center; padding: 60px 20px; color: var(--muted); }
+    
+    .cart-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85)); border: 1px solid rgba(183,210,192,.18); border-radius: 12px; overflow: hidden; }
+    .cart-table th { background: rgba(17, 57, 35, 0.8); padding: 16px 12px; text-align: left; color: var(--text); }
+    .cart-table td { padding: 16px 12px; border-bottom: 1px solid rgba(183,210,192,.1); }
+    .product-info { display: flex; align-items: center; gap: 12px; }
+    .product-image { width: 60px; height: 60px; border-radius: 8px; background-size: cover; background-position: center; flex-shrink: 0; }
+    .remove-btn { background: none; border: none; color: #ef4444; cursor: pointer; }
+    
+    .cart-summary { background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85)); border: 1px solid rgba(183,210,192,.18); border-radius: 12px; padding: 24px; margin-bottom: 30px; }
+    .summary-row { display: flex; justify-content: space-between; padding: 6px 0; }
+    .total-row { border-top: 1px solid rgba(183,210,192,.18); margin-top: 8px; padding-top: 16px; font-weight: 700; font-size: 18px; color: var(--accent); }
+    
+    .action-buttons { display: flex; gap: 15px; margin-bottom: 30px; }
+    .btn-back { background: rgba(17, 57, 35, 0.6); color: var(--text); border: 1px solid rgba(183,210,192,.25); padding: 16px; border-radius: 12px; text-decoration: none; text-align: center; flex: 1; }
+    .checkout-btn { background: var(--cta); color: var(--cta-text); border: none; padding: 16px; border-radius: 12px; flex: 2; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
+    .clear-cart-btn { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid #ef4444; padding: 16px; border-radius: 12px; flex: 1; cursor: pointer; }
+
+    footer{ padding:30px; color:var(--muted); text-align:center; border-top:1px solid rgba(183,210,192,.18); margin-top: 40px; }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--cta); color: white; padding: 12px; border-radius: 8px; display: none; }
+    .toast.show { display: block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+      <nav class="actions" style="display:flex;gap:15px">
+        <a href="B02-InicioSesion.html" class="icon-btn">👤</a>
+        <a href="B09-Carrito.html" class="icon-btn">🛒 <span class="cart-badge" id="cartBadge">0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="main-content container">
+    <div class="cart-header">
+      <h1 style="font-size:32px;margin-bottom:10px">Tu carrito</h1>
+    </div>
+
+    <div class="empty-cart" id="emptyCart" style="display: none;">
+      <div style="font-size:64px;margin-bottom:20px">🛒</div>
+      <h2>Tu carrito está vacío</h2>
+      <a href="B05-CatalogoMacros.html" class="checkout-btn" style="display:inline-block;width:auto;margin-top:20px">Explorar Catálogo</a>
+    </div>
+
+    <div id="cartContent" style="display: none;">
+      <table class="cart-table">
+        <thead>
+          <tr><th>Producto</th><th>Precio</th><th>Cant.</th><th>Total</th><th></th></tr>
+        </thead>
+        <tbody id="cartItems"></tbody>
+      </table>
+
+      <div class="cart-summary">
+        <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
+        <div class="summary-row total-row"><span>Total</span><span id="total">$0</span></div>
+      </div>
+
+      <div class="action-buttons">
+        <a href="B05-CatalogoMacros.html" class="btn-back">Seguir Comprando</a>
+        <button class="clear-cart-btn" id="clearCartBtn">Vaciar</button>
+        <a href="B11-DireccionEntrega.html" class="checkout-btn">Continuar al Pago</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <footer>© <span id="y"></span> Fit Express</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const API_URL = "http://127.0.0.1:8000";
+    
+    const cartItemsContainer = document.getElementById('cartItems');
+    const emptyCartDiv = document.getElementById('emptyCart');
+    const cartContentDiv = document.getElementById('cartContent');
+    const subtotalEl = document.getElementById('subtotal');
+    const totalEl = document.getElementById('total');
+    const cartBadge = document.getElementById('cartBadge');
+    const toast = document.getElementById('toast');
+
+    function formatPrice(price) { return `$${price.toLocaleString('es-CL')}`; }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    async function loadCart() {
+        const token = localStorage.getItem('access_token');
+        if (!token) { renderEmpty(); return; }
+
+        try {
+            const response = await fetch(`${API_URL}/carrito/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                renderCartTable(data.items, data.total);
+            } else if (response.status === 401) {
+                window.location.href = 'B02-InicioSesion.html';
+            }
+        } catch (error) { console.error(error); }
+    }
+
+    function renderCartTable(items, totalBackend) {
+        const totalQty = items.reduce((sum, i) => sum + i.cantidad, 0);
+        cartBadge.textContent = totalQty;
+
+        if (items.length === 0) { renderEmpty(); return; }
+
+        emptyCartDiv.style.display = 'none';
+        cartContentDiv.style.display = 'block';
+        cartItemsContainer.innerHTML = '';
+
+        items.forEach(item => {
+            const precioUnitario = item.precio_unitario;
+            const totalLinea = precioUnitario * item.cantidad;
+            const imagen = item.producto.imagen_url || 'img/default.jpg';
+            
+            // --- AQUÍ MOSTRAMOS EL NOMBRE PERSONALIZADO ---
+            // Si hay personalización, la usamos. Si no, usamos el nombre base.
+            let nombreDisplay = item.personalizacion ? item.personalizacion : item.producto.nombre;
+
+            cartItemsContainer.innerHTML += `
+            <tr>
+              <td>
+                <div class="product-info">
+                  <div class="product-image" style="background-image: url('${imagen}')"></div>
+                  <div><div style="font-weight:bold">${nombreDisplay}</div></div>
+                </div>
+              </td>
+              <td>${formatPrice(precioUnitario)}</td>
+              <td>${item.cantidad}</td>
+              <td>${formatPrice(totalLinea)}</td>
+              <td>
+                <button class="remove-btn" onclick="deleteItem(${item.id})">🗑️</button>
+              </td>
+            </tr>`;
+        });
+
+        subtotalEl.textContent = formatPrice(totalBackend);
+        totalEl.textContent = formatPrice(totalBackend);
+    }
+
+    function renderEmpty() {
+        emptyCartDiv.style.display = 'block';
+        cartContentDiv.style.display = 'none';
+        cartBadge.textContent = 0;
+    }
+
+    async function deleteItem(itemId) {
+        const token = localStorage.getItem('access_token');
+        if(!confirm("¿Eliminar este producto?")) return;
+        try {
+            const res = await fetch(`${API_URL}/carrito/items/${itemId}`, {
+                method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(res.ok) { showToast("Eliminado"); loadCart(); }
+        } catch(e) { console.error(e); }
+    }
+    
+    document.getElementById('clearCartBtn').addEventListener('click', async () => {
+        const token = localStorage.getItem('access_token');
+        if(!confirm("¿Vaciar carrito?")) return;
+        try {
+            const res = await fetch(`${API_URL}/carrito/`, {
+                method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if(res.ok) { showToast("Carrito vaciado"); loadCart(); }
+        } catch(e) { console.error(e); }
+    });
+
+    document.addEventListener('DOMContentLoaded', loadCart);
+  </script>
+</body>
+</html>

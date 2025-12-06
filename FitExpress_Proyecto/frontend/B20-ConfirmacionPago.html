@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Confirmación de Pago — Fit Express</title>
+  <style>
+    :root{ --text:#ecfdf5; --muted:#b7e4cf; --panel:#0e2a1a; --accent:#22c55e; --cta:#6d28d9; --cta-text:#f9f5ff; --success:#10b981; --warning:#f59e0b; --danger:#ef4444; }
+    *{box-sizing:border-box} html,body{margin:0;height:100%}
+    body{font-family:system-ui,sans-serif;background:#0b1f14;color:var(--text)}
+    
+    header{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);background:linear-gradient(180deg, rgba(11,42,24,.9), rgba(11,42,24,.65));border-bottom:1px solid rgba(183,210,192,.18);padding:8px 0}
+    .container{max-width:900px;margin:0 auto;padding:0 16px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .logo{font-weight:900;color:#fff;text-decoration:none;font-size:20px;display:flex;align-items:center;gap:10px}
+    .logo span{background:#19c268;padding:4px 8px;border-radius:6px;font-size:14px}
+
+    .main-content { padding: 40px 16px; min-height: calc(100vh - 160px); display: flex; align-items: center; justify-content: center; }
+    
+    .payment-card { background: linear-gradient(180deg, rgba(18,56,35,.85), rgba(10,38,23,.85)); border: 1px solid rgba(183,210,192,.18); border-radius: 16px; overflow: hidden; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+    .payment-header { background: linear-gradient(135deg, var(--cta) 0%, #3a5bd9 100%); color: white; padding: 30px; text-align: center; }
+    .payment-body { padding: 30px; }
+    
+    .order-info { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid var(--accent); }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; text-transform: uppercase; }
+    .status-recibido { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+    .status-pagado { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
+    .status-cancelado { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+    h2 { font-size: 18px; margin: 25px 0 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; color: var(--accent); }
+    .product-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+    
+    .actions-group { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+    .btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: .2s; min-width: 140px; }
+    .btn-primary { background: var(--cta); color: white; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: white; }
+    .btn-sec { background: transparent; border: 1px solid rgba(183,210,192,.3); color: var(--text); }
+    
+    .hidden { display: none !important; }
+    footer{ padding:30px 16px; color:var(--muted); text-align:center; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a href="index.html" class="logo"><span>FE</span> Fit Express</a>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="container">
+      <div class="payment-card">
+        <div class="payment-header">
+          <h1 id="headerTitle">Confirmación de Pago</h1>
+          <p id="headerSub">Estamos procesando tu pedido</p>
+        </div>
+        
+        <div class="payment-body">
+          <div class="order-info">
+            <p><strong>Pedido:</strong> #<span id="orderId">...</span></p>
+            <p><strong>Estado:</strong> <span class="status-badge status-recibido" id="statusBadge">Cargando...</span></p>
+          </div>
+          
+          <h2>Tus Productos</h2>
+          <div id="productList">
+            <p style="color:var(--muted)">Cargando productos...</p>
+          </div>
+          
+          <h2>Despacho</h2>
+          <div class="product-item">
+            <span id="shippingMethod">Envío</span>
+            <span id="shippingAddress" style="font-size:14px;color:var(--muted);text-align:right;max-width:50%">...</span>
+          </div>
+          
+          <div class="product-item" style="margin-top:20px;border-top:1px solid rgba(255,255,255,0.2);border-bottom:none">
+            <span style="font-size:20px;font-weight:bold;color:var(--accent)">Total a Pagar:</span>
+            <span id="summaryTotal" style="font-size:20px;font-weight:bold;color:var(--accent)">...</span>
+          </div>
+          
+          <div id="pendingActions" class="actions-group">
+            <button class="btn btn-primary" onclick="payOrder()">Pagar con WebPay</button>
+            <button class="btn btn-danger" onclick="cancelOrder()">Cancelar Pedido</button>
+          </div>
+          
+          <div id="paidActions" class="actions-group hidden">
+            <button class="btn btn-primary" onclick="goToDocument('boleta')">Emitir Boleta</button>
+            <button class="btn btn-sec" onclick="goToDocument('factura')">Emitir Factura</button>
+            <button class="btn btn-sec" onclick="window.location.href='B02-InicioSesion.html'">Ir a Mis Pedidos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>© <span id="y"></span> Fit Express</footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const API_URL = "http://127.0.0.1:8000";
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id') || localStorage.getItem('lastOrderId');
+    const token = localStorage.getItem('access_token');
+
+    // 1. CARGAR DATOS
+    document.addEventListener('DOMContentLoaded', async () => {
+        if(!token || !orderId) {
+            alert("No hay pedido activo.");
+            window.location.href = 'index.html';
+            return;
+        }
+        await loadOrderData();
+    });
+
+    async function loadOrderData() {
+        try {
+            const res = await fetch(`${API_URL}/pedidos/${orderId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if(!res.ok) throw new Error("Error API");
+            const pedido = await res.json();
+            renderUI(pedido);
+        } catch(e) {
+            document.querySelector('.payment-body').innerHTML = `<p style="color:red;text-align:center">Error al cargar pedido #${orderId}</p>`;
+        }
+    }
+
+    function renderUI(pedido) {
+        document.getElementById('orderId').textContent = pedido.id;
+        document.getElementById('summaryTotal').textContent = `$${pedido.total.toLocaleString('es-CL')}`;
+        document.getElementById('shippingAddress').textContent = pedido.direccion_envio || "Retiro";
+
+        // Renderizar Items REALES
+        const list = document.getElementById('productList');
+        if (pedido.items && pedido.items.length > 0) {
+            list.innerHTML = pedido.items.map(item => `
+                <div class="product-item">
+                    <span>${item.cantidad}x ${item.nombre_producto}</span>
+                    <span style="font-weight:bold">$${(item.precio_unitario * item.cantidad).toLocaleString('es-CL')}</span>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = "<p>No hay productos</p>";
+        }
+
+        // Estado
+        const badge = document.getElementById('statusBadge');
+        badge.textContent = pedido.estado;
+        badge.className = `status-badge status-${pedido.estado.toLowerCase()}`;
+
+        // Mostrar botones correctos
+        if (pedido.estado === 'Pagado') {
+            document.getElementById('headerTitle').innerHTML = '¡Pago Exitoso! ✅';
+            document.getElementById('headerSub').textContent = "Tu pedido está confirmado.";
+            document.getElementById('pendingActions').classList.add('hidden');
+            document.getElementById('paidActions').classList.remove('hidden');
+        } else if (pedido.estado === 'Cancelado') {
+            document.getElementById('headerTitle').textContent = "Pedido Cancelado ❌";
+            document.getElementById('pendingActions').classList.add('hidden');
+            document.getElementById('paidActions').classList.add('hidden');
+        } else {
+            document.getElementById('pendingActions').classList.remove('hidden');
+            document.getElementById('paidActions').classList.add('hidden');
+        }
+    }
+
+    // 2. PAGAR
+    async function payOrder() {
+        const btn = document.querySelector('.btn-primary');
+        btn.textContent = "Procesando..."; btn.disabled = true;
+        
+        setTimeout(async () => {
+            try {
+                const res = await fetch(`${API_URL}/pedidos/${orderId}/pagar`, { method: 'PUT', headers: {'Authorization': `Bearer ${token}`} });
+                if(res.ok) {
+                    alert("Pago Aprobado");
+                    loadOrderData(); // Recargar para ver cambios
+                }
+            } catch(e) { alert("Error pago"); }
+        }, 1500);
+    }
+
+    // 3. CANCELAR
+    async function cancelOrder() {
+        if(!confirm("¿Cancelar pedido?")) return;
+        try {
+            const res = await fetch(`${API_URL}/pedidos/${orderId}/cancelar`, { method: 'PUT', headers: {'Authorization': `Bearer ${token}`} });
+            if(res.ok) { alert("Cancelado"); loadOrderData(); }
+        } catch(e) {}
+    }
+
+    function goToDocument(tipo) {
+        const page = tipo === 'boleta' ? 'B15-EmisionBoleta.html' : 'B16-EmisionFactura.html';
+        window.location.href = `${page}?id=${orderId}`;
+    }
+  </script>
+</body>
+</html>

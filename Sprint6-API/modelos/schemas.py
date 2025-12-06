@@ -1,31 +1,26 @@
-# En: modelos/schemas.py
-from pydantic import BaseModel, EmailStr
-from typing import List, Optional, Any
+from pydantic import BaseModel, EmailStr, UUID4
+from typing import List, Optional
 from enum import Enum
+from datetime import datetime
 
-# --- Enums (Basado en tus diagramas) ---
+# --- Enums ---
 class EstadoUsuario(str, Enum):
     ACTIVO = "Activo"
     PENDIENTE = "Pendiente"
+
+class EstadoPedido(str, Enum):
+    PENDIENTE = "Pendiente"
+    PAGADO = "Pagado"
+    CANCELADO = "Cancelado"
 
 class PrioridadPromo(str, Enum):
     ALTA = "ALTA"
     MEDIA = "MEDIA"
     BAJA = "BAJA"
 
-class EstadoPedido(str, Enum):
-    PENDIENTE = "Pendiente"
-    PAGADO = "Pagado"
-    FALLIDO = "Fallido"
-    EN_PREPARACION = "En preparación"
-    EN_RUTA = "En ruta"
-    ENTREGADO = "Entregado"
-    CANCELADO = "Cancelado"
-
-# --- B01/B02/B03: Modelos de Usuario ---
-
+# --- 1. USUARIOS ---
 class Usuario(BaseModel):
-    id: str # uuid
+    id: UUID4
     nombre: str
     rut: str
     email: EmailStr
@@ -40,14 +35,10 @@ class UsuarioCreate(BaseModel):
     rut: str
     email: EmailStr
     password: str
-    direccion: str # Del B01, luego se usa en B11
+    telefono: str
+    direccion: str 
     comuna: str
     region: str
-    telefono: str
-
-class UsuarioLogin(BaseModel):
-    email: EmailStr
-    password: str
 
 class CambioPassword(BaseModel):
     contrasena_actual: str
@@ -57,40 +48,47 @@ class CambioPassword(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
-    usuario: Usuario # Devolvemos los datos del usuario al loguear
+    usuario: Usuario
 
-# --- B05/B06: Modelos de Producto y Filtro ---
-
+# --- 2. PRODUCTOS (Debe ir ANTES del carrito) ---
 class Macros(BaseModel):
     kcal: int
-    p: int # Proteínas
-    f: int # Grasas (Fat)
-    c: int # Carbos
+    p: int
+    f: int
+    c: int
+    
+    class Config:
+        from_attributes = True
 
-class Producto(BaseModel):
-    id: str # uuid
+class ProductoCreate(BaseModel):
+    nombre: str
+    precio: int
+    disponible: bool = True
+    imagen_url: str
+    kcal: int
+    p: int
+    f: int
+    c: int
+
+class Producto(BaseModel): 
+    id: UUID4
     nombre: str
     macros: Macros
     disponible: bool
-    precio_base: float
+    precio: int
     imagen_url: str
 
-class Filtro(BaseModel):
-    tipos: Optional[List[str]] = None # Vegano, Proteico, Sin gluten
-    query: Optional[str] = None
-    page: int = 1
-    size: int = 8
+    class Config:
+        from_attributes = True
 
-# --- B08: Modelos de Promociones ---
+# --- 3. CARRITO ---
 
-class Promocion(BaseModel):
-    id: str # uuid
-    nombre: str
-    prioridad: PrioridadPromo
-    descuento_porc: int
+# Input para agregar
+class ItemCarritoCreate(BaseModel):
+    producto_id: str
+    cantidad: int = 1
 
-# --- B10/B09: Modelos de Pedido y Carrito ---
-
+# Modelos base de Bowl
 class Extra(BaseModel):
     nombre: str
     precio: int
@@ -99,72 +97,87 @@ class Extra(BaseModel):
 class TipoBowl(BaseModel):
     nombre: str
     esVegano: bool
-    permiteLacteos: bool
     maxProteinas: int
 
 class BowlPersonalizado(BaseModel):
     tipo_bowl: TipoBowl
     extras: List[Extra]
-    salsas: List[str]
 
+# Item de respuesta (Con datos del producto incrustados)
 class ItemCarrito(BaseModel):
-    producto_id: Optional[str] = None # ID del producto (si es B05)
-    bowl_personalizado: Optional[BowlPersonalizado] = None # Si es (B10)
+    id: UUID4
+    producto_id: Optional[UUID4]
+    bowl_personalizado_id: Optional[UUID4]
     cantidad: int
     precio_unitario: int
+    
+    # IMPORTANTE: Esto permite ver el nombre y la foto en el JSON
+    producto: Optional[Producto] = None
+    bowl_personalizado: Optional[BowlPersonalizado] = None
 
-class Carrito(BaseModel):
-    id: str # uuid
-    usuario_id: str
+    class Config:
+        from_attributes = True
+
+# Carrito completo de respuesta (Renombrado a CarritoView)
+class CarritoView(BaseModel):
+    id: UUID4
+    usuario_id: UUID4
     items: List[ItemCarrito]
-    subtotal: int
-    descuentos: int
     total: int
 
-# --- B11: Modelos de Dirección y Envío ---
+    class Config:
+        from_attributes = True
+
+# --- 4. OTROS ---
+class Filtro(BaseModel):
+    tipos: Optional[List[str]] = None
+    query: Optional[str] = None
+    page: int = 1
+    size: int = 8
+
+class Promocion(BaseModel):
+    id: UUID4
+    nombre: str
+    prioridad: PrioridadPromo
+    descuento_porc: int
 
 class Direccion(BaseModel):
     calle: str
     numero: str
-    depto: Optional[str] = None
     comuna: str
+    depto: Optional[str] = None
     referencia: Optional[str] = None
 
 class CotizacionEnvio(BaseModel):
     costo: int
     tiempo_estimado_min: int
     tiempo_estimado_max: int
-    es_valido: bool # Cobertura
-
-# --- B12: Modelos de Cancelación ---
+    es_valido: bool
 
 class Pedido(BaseModel):
-    id: str
+    id: UUID4
     estado: EstadoPedido
     total: int
-    metodo_pago: str
     
 class ResultadoCancelacion(BaseModel):
     exito: bool
     mensaje: str
-    pedido: Pedido # El pedido actualizado
+    pedido: Pedido
 
-# --- B15/B16: Modelos de Facturación (Billing) ---
-
-class DatosFacturacionBase(BaseModel):
+class DatosBoleta(BaseModel):
     rut: str
     email: EmailStr
-
-class DatosBoleta(DatosFacturacionBase):
-    razon_social: str # Nombre
+    razon_social: str
 
 class ResultadoBoleta(BaseModel):
     exito: bool
-    folio: Optional[str] = None
-    pdf_url: Optional[str] = None
-    error: Optional[str] = None
+    folio: Optional[str]
+    pdf_url: Optional[str]
+    error: Optional[str]
 
-class DatosFactura(DatosFacturacionBase):
+class DatosFactura(BaseModel):
+    rut: str
+    email: EmailStr
     razon_social: str
     giro: str
     direccion_comercial: str
@@ -172,19 +185,17 @@ class DatosFactura(DatosFacturacionBase):
 
 class ResultadoFactura(BaseModel):
     exito: bool
-    folio: Optional[str] = None
-    pdf_url: Optional[str] = None
-    error: Optional[str] = None
-
-# --- E01/E03/E04/E05: Modelos de Admin ---
+    folio: Optional[str]
+    pdf_url: Optional[str]
+    error: Optional[str]
 
 class AsignarRol(BaseModel):
     email_usuario: EmailStr
     rol: str
 
 class AsignacionDespacho(BaseModel):
-    metodo: str # "Auto-asignar" o "Manual"
-    repartidor_id: Optional[str] = None
+    metodo: str
+    repartidor_id: Optional[str]
 
 class ResultadoAsignacion(BaseModel):
     mensaje: str
@@ -193,8 +204,6 @@ class ResultadoAsignacion(BaseModel):
 
 class PedidoColaCocina(BaseModel):
     id: str
-    promesa_entrega: str # "12:10"
-    ventana: str # "12:05-12:15"
-    llegada: str # "11:58"
-    estado: str # "En cola", "En preparación"
-    items: str # "Ensalada, Sandwich"
+    promesa_entrega: str
+    estado: str
+    items: str
