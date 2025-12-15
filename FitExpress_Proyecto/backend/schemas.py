@@ -2,15 +2,18 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
-# --- USUARIOS ---
+# ----------------------
+# USUARIOS
+# ----------------------
+
 class UsuarioCreate(BaseModel):
     nombre: str
     email: str
     password: str
-    rut: str
-    telefono: str
-    direccion: str
-    comuna: str
+    rut: Optional[str] = ""
+    telefono: Optional[str] = ""
+    direccion: Optional[str] = ""
+    comuna: Optional[str] = ""
     region: Optional[str] = "Metropolitana"
 
 class UsuarioUpdate(BaseModel):
@@ -30,18 +33,22 @@ class UsuarioOut(BaseModel):
     comuna: Optional[str] = None
     region: Optional[str] = None
     rol: str = "cliente"
-    class Config: from_attributes = True
+    
+    class Config:
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
     token_type: str
     usuario: UsuarioOut
 
-# --- ADMIN ---
 class CambioRol(BaseModel):
     nuevo_rol: str
 
-# --- PRODUCTOS ---
+# ----------------------
+# PRODUCTOS
+# ----------------------
+
 class ProductoCreate(BaseModel):
     nombre: str
     precio_base: int
@@ -69,14 +76,19 @@ class ProductoOut(BaseModel):
     tipo: str
     macros: Optional[dict] = None
     disponible: bool
-    class Config: from_attributes = True
+    
+    class Config:
+        from_attributes = True
 
-# --- CARRITO (AQUÍ ESTABA EL ERROR) ---
+# ----------------------
+# CARRITO
+# ----------------------
+
 class CarritoItemCreate(BaseModel):
     producto_id: int
     cantidad: int
     personalizacion: Optional[str] = None
-    precio_custom: Optional[int] = None # <--- ESTO FALTABA PARA GUARDAR EL PRECIO
+    precio_custom: Optional[int] = None 
 
 class CarritoItemOut(BaseModel):
     id: int
@@ -89,7 +101,10 @@ class CarritoOut(BaseModel):
     items: List[CarritoItemOut]
     total: int
 
-# --- PEDIDOS ---
+# ----------------------
+# PEDIDOS
+# ----------------------
+
 class PedidoCreate(BaseModel):
     direccion_envio: str
     metodo_pago: str
@@ -110,9 +125,21 @@ class PedidoOut(BaseModel):
     direccion_envio: Optional[str] = "Retiro"
     items: List[ItemPedidoOut]
     usuario: UsuarioOut
-    class Config: from_attributes = True
+    
+    class Config:
+        from_attributes = True
 
-# --- FACTURACIÓN ---
+# ----------------------
+# FACTURACIÓN
+# ----------------------
+
 class EmailRequest(BaseModel):
     email: str
     tipo_documento: str
+
+# ----------------------
+# SEGURIDAD (RECUPERAR CLAVE) - ¡ESTO FALTABA!
+# ----------------------
+class PasswordReset(BaseModel):
+    email: str
+    new_password: str

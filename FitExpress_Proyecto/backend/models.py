@@ -5,6 +5,7 @@ from .database import Base
 
 class Usuario(Base):
     __tablename__ = "usuarios"
+
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String)
     email = Column(String, unique=True, index=True)
@@ -16,38 +17,47 @@ class Usuario(Base):
     region = Column(String)
     rol = Column(String, default="cliente")
     
+    # Relaciones
     carrito = relationship("Carrito", back_populates="usuario", uselist=False)
     pedidos = relationship("Pedido", back_populates="usuario")
 
 class Producto(Base):
     __tablename__ = "productos"
+
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, index=True)
     precio_base = Column(Integer)
     imagen_url = Column(String)
     descripcion = Column(String)
     tipo = Column(String)
+    
+    # Información Nutricional
     kcal = Column(Integer)
     proteina = Column(Float)
     grasas = Column(Float)
     carbs = Column(Float)
+    
     disponible = Column(Boolean, default=True)
 
 class Carrito(Base):
     __tablename__ = "carritos"
+
     id = Column(Integer, primary_key=True, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    
     usuario = relationship("Usuario", back_populates="carrito")
     items = relationship("CarritoItem", back_populates="carrito", cascade="all, delete-orphan")
 
 class CarritoItem(Base):
     __tablename__ = "carrito_items"
+
     id = Column(Integer, primary_key=True, index=True)
     carrito_id = Column(Integer, ForeignKey("carritos.id"))
     producto_id = Column(Integer, ForeignKey("productos.id"))
     cantidad = Column(Integer, default=1)
+    
+    # Personalización y precio específico del momento de la selección
     personalizacion = Column(Text, nullable=True)
-    # NUEVO CAMPO: Para guardar el precio calculado con extras
     precio_guardado = Column(Integer, nullable=True) 
     
     carrito = relationship("Carrito", back_populates="items")
@@ -55,11 +65,14 @@ class CarritoItem(Base):
 
 class Pedido(Base):
     __tablename__ = "pedidos"
+
     id = Column(Integer, primary_key=True, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
     fecha_creacion = Column(DateTime, default=datetime.now)
     total = Column(Integer)
     estado = Column(String, default="Recibido") 
+    
+    # Datos de entrega y pago
     direccion_envio = Column(String)
     metodo_pago = Column(String)
     repartidor = Column(String, nullable=True)
@@ -69,9 +82,12 @@ class Pedido(Base):
 
 class ItemPedido(Base):
     __tablename__ = "items_pedido"
+
     id = Column(Integer, primary_key=True, index=True)
     pedido_id = Column(Integer, ForeignKey("pedidos.id"))
     producto_id = Column(Integer, ForeignKey("productos.id"))
+    
+    # Snapshot de los datos del producto al momento de la compra
     nombre_producto = Column(String)
     precio_unitario = Column(Integer)
     cantidad = Column(Integer)

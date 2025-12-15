@@ -51,6 +51,10 @@
     
     .btn-gestion { background: transparent; border: 1px solid var(--muted); color: var(--text); padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; margin-left: 10px; }
     .btn-gestion:hover { background: rgba(255,255,255,0.1); color: white; border-color: white; }
+    
+    /* Link recuperar pass */
+    .forgot-link { display: block; text-align: right; color: var(--accent); font-size: 14px; text-decoration: none; margin-bottom: 15px; }
+    .forgot-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -70,6 +74,9 @@
         <form id="loginForm">
           <input type="email" id="loginEmail" placeholder="Correo" required>
           <input type="password" id="loginPass" placeholder="Contraseña" required>
+          
+          <a href="B03-CambioContraseña.html" class="forgot-link">¿Olvidaste tu contraseña?</a>
+          
           <button type="submit" class="btn btn-primary" id="btnLogin">Entrar</button>
         </form>
         <a href="B01-RegistroUsuario.html" class="btn btn-secondary">Crear cuenta nueva</a>
@@ -139,7 +146,8 @@
                 const data = await res.json();
                 localStorage.setItem('access_token', data.access_token);
                 alert("¡Bienvenido! Redirigiendo...");
-                window.location.href = "index.html";
+                // Redirigir al perfil para confirmar carga de datos
+                loadProfile(data.access_token);
             } else {
                 alert("Credenciales incorrectas");
             }
@@ -157,6 +165,7 @@
                 document.getElementById('pEmail').textContent = user.email;
                 document.getElementById('pAvatar').textContent = user.nombre.charAt(0).toUpperCase();
                 
+                // Mostrar botón admin si corresponde
                 if (user.rol === 'admin') {
                     document.getElementById('btnAdmin').classList.remove('hidden');
                 }
@@ -168,11 +177,13 @@
 
                 showSection('viewProfile');
                 loadOrders(token);
-            } else logout();
+            } else {
+                logout(); // Token inválido o expirado
+            }
         } catch (e) { logout(); }
     }
 
-    // PEDIDOS (REDIRECCIÓN A B12 CONFIGURADA)
+    // PEDIDOS
     async function loadOrders(token) {
         try {
             const res = await fetch(`${API_URL}/pedidos/mis_pedidos`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -192,8 +203,8 @@
 
             list.innerHTML = orders.map(o => {
                 const statusClass = `st-${o.estado.replace(" ", "")}`;
-                
-                // AQUÍ ESTÁ LA MAGIA: El botón manda a B12 con el ID
+                const btnText = (o.estado === 'Recibido' || o.estado === 'Pagado') ? 'Ver / Cancelar' : 'Ver Detalle';
+
                 return `
                 <div class="order-item">
                     <div>
@@ -204,7 +215,7 @@
                         <div style="color:var(--accent);font-weight:bold">$${o.total.toLocaleString('es-CL')}</div>
                         <span class="order-status ${statusClass}">${o.estado}</span>
                         <button class="btn-gestion" onclick="window.location.href='B12-CancelacionPedido.html?id=${o.id}'">
-                            Ver Detalles / Cancelar
+                            ${btnText}
                         </button>
                     </div>
                 </div>
